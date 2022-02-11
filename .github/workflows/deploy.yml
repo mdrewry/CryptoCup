@@ -1,0 +1,26 @@
+name: Deploy to Firebase
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  functions-deploy:
+    name: Deploy-Functions
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2.3.2
+      - name: Install npm packages
+        run: |
+          cd functions
+          npm ci
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CRYPTOCUP_UF }}
