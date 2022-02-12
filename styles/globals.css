@@ -1,9 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@600');
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400');
+
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, Epilogue, Space Mono, sans-serif;
 }
 
 a {
@@ -23,9 +27,18 @@ a {
 h1 {
   color: #FFFFFF;
   font-size: 48px;
-  /* font-family: 'Epilogue'; */
-  /* font-style: normal; */
+  font-family: 'Epilogue';
+  font-style: normal;
   font-weight: 600;
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+h6 {
+  color: #FFFFFF;
+  font-family: 'Space Mono';
+  font-size: 20px;
+  font-weight: normal;
   margin-block-start: 0;
   margin-block-end: 0;
 }
@@ -33,7 +46,6 @@ h1 {
 p {
   color: #FFFFFF;
   font-family: 'Space Mono';
-  line-height: 30px;
   font-size: 20px;
   font-weight: normal;
   margin-block-start: 0;

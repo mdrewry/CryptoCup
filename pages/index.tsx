@@ -3,7 +3,19 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Link from "next/link"
+import Logo from "./Icons/Logo.js";
+import LaunchButton from "./Components/LaunchButton.js";
+// import { styled } from '@mui/material/styles';
+// import Button from '@mui/material/Button';
+// import { purple } from '@mui/material/colors';
 
+// const ColorButton = styled(Button)(({ theme }) => ({
+//   color: theme.palette.getContrastText(purple[500]),
+//   backgroundColor: purple[500],
+//   '&:hover': {
+//     backgroundColor: purple[700],
+//   },
+// }));
 
 const Home: NextPage = () => {
   return (
@@ -12,15 +24,21 @@ const Home: NextPage = () => {
         <title>Crypto Cup</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-        
         <div className={styles.navbar}>
-          <h1 className={styles.title}>
+          <div className={styles.containerLogo}>
+            <div className={styles.logo}>
+              <Logo />
+            </div>
+            <h1 className={styles.title}>
             Crypto Cup
-          </h1>
+            </h1>
+          </div>
           <div className={styles.launch}>
-            <p>ABOUT</p>
-            <p className={styles.faq}>FAQ</p>
-            <p className={styles.launchButton}>LAUNCH</p>
+            <h6 className={styles.about}>ABOUT</h6>
+            <h6 className={styles.faq}>FAQ</h6>
+            <div className={styles.launchButton}>
+              <LaunchButton variant="contained">LAUNCH</LaunchButton>
+            </div>
           </div>
         </div>
 

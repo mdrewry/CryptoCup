@@ -15,22 +15,34 @@
 .launch {
   flex-direction: row;
   display: flex;
-  margin-top: 68px;
+}
+
+.containerLogo {
+  display: flex;
+}
+
+.logo {
+  margin-left: 29px;
+  margin-top: 33px;
 }
 
 .title {
   margin-top: 52px;
-  margin-left: 128px;
-  line-height: 49px;
+}
+
+.about {
+  margin-top: 68px;
 }
 
 .faq{
   margin-left: 78px;
+  margin-top: 68px;
 }
 
 .launchButton{
-  margin-left: 107px;
-  margin-right: 70px;
+  margin-top: 56px;
+  margin-left: 78px;
+  margin-right: 51px;
 }
 
 .summaryContainer{
