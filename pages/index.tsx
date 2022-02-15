@@ -77,7 +77,7 @@ const Home: NextPage = () => {
 
         <div className={styles.container3}>
           <h4 className={styles.italicSpacing}>About Us</h4>
-          <div className={styles.about}>
+          <div className={styles.aboutus}>
             <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2> 
             <h2 className={styles.fantasy}>Fantasy</h2>
           </div>
