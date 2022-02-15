@@ -5,17 +5,13 @@ import styles from '../styles/Home.module.css'
 import Link from "next/link"
 import Logo from "./Icons/Logo.js";
 import LaunchButton from "./Components/LaunchButton.js";
-// import { styled } from '@mui/material/styles';
-// import Button from '@mui/material/Button';
-// import { purple } from '@mui/material/colors';
-
-// const ColorButton = styled(Button)(({ theme }) => ({
-//   color: theme.palette.getContrastText(purple[500]),
-//   backgroundColor: purple[500],
-//   '&:hover': {
-//     backgroundColor: purple[700],
-//   },
-// }));
+import CryptoCupGradient from "./Icons/CryptoCupGradient.js";
+import Diamond from "./Icons/Diamond.js";
+import LaunchCupButton from "./Components/LaunchCupButton.js";
+import LanguageIcon from '@mui/icons-material/Language';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import LocalAtmRoundedIcon from '@mui/icons-material/LocalAtmRounded';
+// import { AccessAlarm, LanguageIcon } from '@mui/icons-material';
 
 const Home: NextPage = () => {
   return (
@@ -29,9 +25,9 @@ const Home: NextPage = () => {
             <div className={styles.logo}>
               <Logo />
             </div>
-            <h1 className={styles.title}>
+            <h2 className={styles.title}>
             Crypto Cup
-            </h1>
+            </h2>
           </div>
           <div className={styles.launch}>
             <h6 className={styles.about}>ABOUT</h6>
@@ -43,21 +39,39 @@ const Home: NextPage = () => {
         </div>
 
         <div className={styles.summaryContainer}>
-          <h1 className={styles.newage}>
-              A New Age of Fantasy with
-          </h1>
-          <h1 className={styles.title1}>
-            Crypto Cup
-          </h1>
-          <p>Crypto Cup is an application that allows users to draft, compete, and keep track of live analytics on the top cryptocurrencies with ease. </p>
-          <p className={styles.launchCup}>LAUNCH CRYPTO CUP</p>
+          <h2>A New Age of Fantasy with</h2>
+          <div className={styles.title1}>
+            <CryptoCupGradient/>
+            <div className={styles.diamond}>
+              <Diamond/>
+            </div>
+          </div>
+          <div className={styles.summary}>
+            <p>Crypto Cup is an application that allows users to draft, compete, and keep track of live analytics on the top cryptocurrencies with ease. </p>
+          </div>
+          <div className={styles.launchCupButton}>
+              <LaunchCupButton variant="contained">LAUNCH CRYPTO CUP</LaunchCupButton>
+          </div>
         </div>
 
         <div className={styles.container1}>
-          <p>CREATE AND COMPETE IN CUPS WITH YOUR FRIENDS</p>
+          <div className={styles.container2}>
+            <div className={styles.star}>
+              <EmojiEventsIcon fontSize="large" sx={{ color: '#DA93D3' }}/>
+              <h6 className={styles.iconSpacing}>CREATE AND COMPETE IN CUPS WITH YOUR FRIENDS</h6>
+            </div>
+            <div className={styles.bet}>
+              <LocalAtmRoundedIcon fontSize="large" sx={{ color: '#DA93D3' }}/>
+              <h6 className={styles.iconSpacing}>BET ON THE PERFORMANCE OF YOUR FAVORITE CRYPTOCURRENCIES</h6>
+            </div>
+            <div className={styles.globe}>
+              <LanguageIcon fontSize="large" sx={{ color: '#DA93D3' }}/>
+              <h6 className={styles.iconSpacing}>IMPROVE YOUR RANKING ON VARIOUS LEADERBOARDS</h6>
+            </div>
+          </div>
         </div>
 
-        <div className={styles.container2}>
+        <div className={styles.container3}>
           <p>About Us</p>
           <h1>Every Crypto-Lover’s Fantasy</h1>
           <p>In Crypto Cup, users can create or register for cups to compete against their friends. Users bet on the upcoming performance of various cryptocurrencies. It’s like Fantasy for crypto-lovers!</p>

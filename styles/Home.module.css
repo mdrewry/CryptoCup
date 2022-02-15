@@ -50,20 +50,23 @@
   margin-left: 78px;
 }
 
-.newage{
-  line-height: 60px;
-}
-
 .title1{
-  color: #6B58B8;
-  font-size: 60px;
   margin-top: 12px;
   margin-bottom: 15px;
-  /* line-height: 61px; */
+  display: flex;
 }
 
-.launchCup{
-  margin-top: 43px;
+.diamond{
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.summary{
+  width: 585px;
+}
+
+.launchCupButton{
+  margin-top: 31px;
 }
 
 .container1{
@@ -73,7 +76,37 @@
   height: 188px;
 }
 
+.star{
+  width: 22.91%;
+  margin-top: 49px;
+  padding-left: 76px;
+  display: flex;
+}
+
+.bet{
+  width: 22.29%;
+  margin-top: 49px;
+  margin-left: 89px;
+  display: flex;
+}
+
+.globe{
+  width: 20.08%;
+  margin-top: 49px;
+  margin-left: 88px;
+  display: flex;
+}
+
+.iconSpacing {
+  margin-left: 21px;
+}
+
 .container2{
+  justify-content: space-around;
+  display: flex;
+}
+
+.container3{
   margin-left: 80px;
 }
 
