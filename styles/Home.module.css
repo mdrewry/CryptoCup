@@ -1,111 +1,185 @@
 .container {
-  padding: 0 2rem;
+  background-color: #13172C;
+  /* min-height: 100vh; */
 }
 
-.main {
-  min-height: 100vh;
-  padding: 4rem 0;
-  flex: 1;
+.navbar {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.launch {
+  display: flex;
+}
+
+.containerLogo {
+  display: flex;
+}
+
+.logo {
+  margin-left: 29px;
+  margin-top: 33px;
+}
+
+.title {
+  margin-top: 52px;
+}
+
+.about {
+  margin-top: 68px;
+}
+
+.faq{
+  margin-left: 78px;
+  margin-top: 68px;
+}
+
+.launchButton{
+  margin-top: 56px;
+  margin-left: 78px;
+  margin-right: 51px;
+}
+
+.summaryContainer{
+  display: flex;
+  margin-top: 84px;
+}
+
+.summaryContainer1{
+  margin-left: 10%;
+}
+
+.graph{
+  margin-right: 10%;
+}
+
+.title1{
+  margin-top: 12px;
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.diamond{
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.summary{
+  width: 60%;
+}
+
+.launchCupButton{
+  margin-top: 31px;
+}
+
+.container1{
+  margin-top: 74px;
+  margin-bottom: 45px;
+  background-color: rgba(47, 56, 105, 0.6);
+  height: 188px;
+}
+
+.star{
+  width: 22.91%;
+  margin-top: 49px;
+  padding-left: 76px;
+  display: flex;
+}
+
+.bet{
+  width: 22.29%;
+  margin-top: 49px;
+  margin-left: 89px;
+  display: flex;
+}
+
+.globe{
+  width: 20.08%;
+  margin-top: 49px;
+  margin-left: 88px;
+  display: flex;
+}
+
+.iconSpacing {
+  margin-left: 21px;
+}
+
+.container2{
+  justify-content: space-around;
+  display: flex;
+}
+
+.container3{
+  margin-left: 80px;
+  margin-right: 100px;
+}
+
+.italicSpacing {
+  margin-bottom: 13px;
+}
+
+.about{
+  display: flex;
+}
+
+.headerSpacing{
+  margin-bottom: 31px;
+}
+
+.fantasy{
+  font-style: italic;
+}
+
+.aboutSpacing{
+  margin-bottom: 45px;
+}
+
+.questionContainer{
+  display: flex;
+}
+
+.question{
+  margin-bottom: 6px;
+  margin-left: 20px;
+}
+
+.answer{
+  margin-bottom: 29px;
+  margin-left: 32px;
+}
+
+.answer3{
+  margin-bottom: 71px;
+  margin-left: 32px;
 }
 
 .footer {
   display: flex;
-  flex: 1;
-  padding: 2rem 0;
-  border-top: 1px solid #eaeaea;
-  justify-content: center;
-  align-items: center;
+  height:  220px;
+  justify-content: space-between;
+  background: rgba(47, 56, 105, 1);
 }
 
-.footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
+.logo1 {
+  margin-left: 29px;
+  margin-top: 60px;
 }
 
-.title a {
-  color: #0070f3;
-  text-decoration: none;
+.title2 {
+  margin-top: 79px;
 }
 
-.title a:hover,
-.title a:focus,
-.title a:active {
-  text-decoration: underline;
+.login{
+  margin-left: 73px;
+  margin-right: 51px;
+  margin-top: 68px;
 }
 
-.title {
-  margin: 0;
-  line-height: 1.15;
-  font-size: 4rem;
-}
-
-.title,
-.description {
-  text-align: center;
-}
-
-.description {
-  margin: 4rem 0;
-  line-height: 1.5;
-  font-size: 1.5rem;
-}
-
-.code {
-  background: #fafafa;
-  border-radius: 5px;
-  padding: 0.75rem;
-  font-size: 1.1rem;
-  font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-    Bitstream Vera Sans Mono, Courier New, monospace;
-}
-
-.grid {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  max-width: 800px;
-}
-
-.card {
-  margin: 1rem;
-  padding: 1.5rem;
-  text-align: left;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-  max-width: 300px;
-}
-
-.card:hover,
-.card:focus,
-.card:active {
-  color: #0070f3;
-  border-color: #0070f3;
-}
-
-.card h2 {
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
-}
-
-.card p {
-  margin: 0;
-  font-size: 1.25rem;
-  line-height: 1.5;
-}
-
-.logo {
-  height: 1em;
-  margin-left: 0.5rem;
+.tos{
+  margin-top: 31px;
+  margin-right: 51px;
+  text-align: right;
 }
 
 @media (max-width: 600px) {
