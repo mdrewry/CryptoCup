@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { useRouter } from "next/router"
-import {db} from "../firebase/clientApp"
+import {db} from "../config/firebase.config"
 import {collection,getDocs} from "firebase/firestore";
 import {useState,useEffect} from "react";
 
