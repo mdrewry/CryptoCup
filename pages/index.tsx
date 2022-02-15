@@ -5,17 +5,14 @@ import styles from '../styles/Home.module.css'
 import Link from "next/link"
 import Logo from "./Icons/Logo.js";
 import LaunchButton from "./Components/LaunchButton.js";
-// import { styled } from '@mui/material/styles';
-// import Button from '@mui/material/Button';
-// import { purple } from '@mui/material/colors';
-
-// const ColorButton = styled(Button)(({ theme }) => ({
-//   color: theme.palette.getContrastText(purple[500]),
-//   backgroundColor: purple[500],
-//   '&:hover': {
-//     backgroundColor: purple[700],
-//   },
-// }));
+import CryptoCupGradient from "./Icons/CryptoCupGradient.js";
+import Diamond from "./Icons/Diamond.js";
+import Graph from "./Icons/Graph.js";
+import LaunchCupButton from "./Components/LaunchCupButton.js";
+import LanguageIcon from '@mui/icons-material/Language';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import LocalAtmRoundedIcon from '@mui/icons-material/LocalAtmRounded';
+import FaqDiamond from "./Icons/FaqDiamond.js";
 
 const Home: NextPage = () => {
   return (
@@ -29,9 +26,7 @@ const Home: NextPage = () => {
             <div className={styles.logo}>
               <Logo />
             </div>
-            <h1 className={styles.title}>
-            Crypto Cup
-            </h1>
+            <h2 className={styles.title}>Crypto Cup</h2>
           </div>
           <div className={styles.launch}>
             <h6 className={styles.about}>ABOUT</h6>
@@ -43,54 +38,96 @@ const Home: NextPage = () => {
         </div>
 
         <div className={styles.summaryContainer}>
-          <h1 className={styles.newage}>
-              A New Age of Fantasy with
-          </h1>
-          <h1 className={styles.title1}>
-            Crypto Cup
-          </h1>
-          <p>Crypto Cup is an application that allows users to draft, compete, and keep track of live analytics on the top cryptocurrencies with ease. </p>
-          <p className={styles.launchCup}>LAUNCH CRYPTO CUP</p>
+          <div className={styles.summaryContainer1}>
+            <h2>A New Age of Fantasy with</h2>
+            <div className={styles.title1}>
+              <CryptoCupGradient/>
+              <div className={styles.diamond}>
+                <Diamond/>
+              </div>
+            </div>
+            <div className={styles.summary}>
+              <p>Crypto Cup is an application that allows users to draft, compete, and keep track of live analytics on the top cryptocurrencies with ease. </p>
+            </div>
+            <div className={styles.launchCupButton}>
+                <LaunchCupButton variant="contained">LAUNCH CRYPTO CUP</LaunchCupButton>
+            </div>
+          </div>
+          <div className={styles.graph}>
+            <Graph />
+          </div>
         </div>
 
         <div className={styles.container1}>
-          <p>CREATE AND COMPETE IN CUPS WITH YOUR FRIENDS</p>
+          <div className={styles.container2}>
+            <div className={styles.star}>
+              <EmojiEventsIcon fontSize="large" sx={{ color: '#DA93D3' }}/>
+              <h6 className={styles.iconSpacing}>CREATE AND COMPETE IN CUPS WITH YOUR FRIENDS</h6>
+            </div>
+            <div className={styles.bet}>
+              <LocalAtmRoundedIcon fontSize="large" sx={{ color: '#DA93D3' }}/>
+              <h6 className={styles.iconSpacing}>BET ON THE PERFORMANCE OF YOUR FAVORITE CRYPTOCURRENCIES</h6>
+            </div>
+            <div className={styles.globe}>
+              <LanguageIcon fontSize="large" sx={{ color: '#DA93D3' }}/>
+              <h6 className={styles.iconSpacing}>IMPROVE YOUR RANKING ON VARIOUS LEADERBOARDS</h6>
+            </div>
+          </div>
         </div>
 
-        <div className={styles.container2}>
-          <p>About Us</p>
-          <h1>Every Crypto-Lover’s Fantasy</h1>
-          <p>In Crypto Cup, users can create or register for cups to compete against their friends. Users bet on the upcoming performance of various cryptocurrencies. It’s like Fantasy for crypto-lovers!</p>
-          <p>Crypto Cup is an application made by Mark Drewry, Andrew Gil, Amer Khalifa, Nickolas Phen, Rohan Samanta, and Andrea Relova for our University of Florida Computer Science Senior Project. Go Gators!</p>
-          <p>FAQ</p>
-          <h1>Frequently Asked Questions</h1>
-          <p>What is Crypto Cup?</p>
-          <p>See above.</p>
-          <p>How do I start playing?</p>
-          <p>Create an account with the “launch” button above. Then, join an existing cup with a registration code or create your own cup and send the link to your friends. Crypto Cup will walk you through the rest!</p>
-          <p>What cryptocurrencies are available to “bet” on in Crypto Cup?</p>
-          <p>Right now, ___ are available to bet on in cups.</p>
+        <div className={styles.container3}>
+          <h4 className={styles.italicSpacing}>About Us</h4>
+          <div className={styles.about}>
+            <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2> 
+            <h2 className={styles.fantasy}>Fantasy</h2>
+          </div>
+          <p className={styles.aboutSpacing}>In Crypto Cup, users can create or register for cups to compete against their friends. Users bet on the upcoming performance of various cryptocurrencies. It’s like Fantasy for crypto-lovers!</p>
+          <p className={styles.aboutSpacing}>Crypto Cup is an application made by Mark Drewry, Andrew Gil, Amer Khalifa, Nickolas Phen, Rohan Samanta, and Andrea Relova for our University of Florida Computer Science Senior Project. Go Gators!</p>
+          <h4 className={styles.italicSpacing}>FAQ</h4>
+          <h2 className={styles.headerSpacing}>Frequently Asked Questions</h2>
+          <div className={styles.questionContainer}>
+            <FaqDiamond/>
+            <h5 className={styles.question}>What is Crypto Cup?</h5>
+          </div>
+          <p className={styles.answer}>See above.</p>
+          <div className={styles.questionContainer}>
+            <FaqDiamond/>
+            <h5 className={styles.question}>How do I start playing?</h5>
+          </div>
+          <p className={styles.answer}>Create an account with the “launch” button above. Then, join an existing cup with a registration code or create your own cup and send the link to your friends. Crypto Cup will walk you through the rest!</p>
+          <div className={styles.questionContainer}>
+            <FaqDiamond/>
+            <h5 className={styles.question}>What cryptocurrencies are available to “bet” on in Crypto Cup?</h5>
+          </div>
+          <p className={styles.answer3}>Right now, ___ are available to bet on in cups.</p>
         </div>
 
         <div className={styles.footer}>
-          <h1 className={styles.title}>
-            Crypto Cup
-          </h1>
-          <div className={styles.launch}>
-            <p>ABOUT</p>
-            <p className={styles.faq}>FAQ</p>
-            <Link
-                href={{
-                  pathname: "/login"
-                }}
-                >
-              <a className={styles.login}>LOG IN/SIGN UP</a>
-            </Link>
-        </div>
+          <div className={styles.containerLogo}>
+            <div className={styles.logo1}>
+              <Logo />
+            </div>
+            <h2 className={styles.title2}>Crypto Cup</h2>
           </div>
-          
 
-        
+          <div>
+            <div className={styles.launch}>
+              <h6 className={styles.about}>ABOUT</h6>
+              <h6 className={styles.faq}>FAQ</h6>
+              <Link
+                  href={{
+                    pathname: "/login"
+                  }}
+                  >
+                <a className={styles.login}>LOG IN/SIGN UP</a>
+              </Link>
+            </div>
+            <div className={styles.tos}>
+              <h6>Insert License Here</h6>
+              <h6>Terms of Service</h6>
+            </div>
+          </div>
+        </div>
     </div>
   )
 }
