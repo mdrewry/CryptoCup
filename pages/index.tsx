@@ -7,6 +7,7 @@ import Logo from "./Icons/Logo.js";
 import LaunchButton from "./Components/LaunchButton.js";
 import CryptoCupGradient from "./Icons/CryptoCupGradient.js";
 import Diamond from "./Icons/Diamond.js";
+import Graph from "./Icons/Graph.js";
 import LaunchCupButton from "./Components/LaunchCupButton.js";
 import LanguageIcon from '@mui/icons-material/Language';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -37,18 +38,23 @@ const Home: NextPage = () => {
         </div>
 
         <div className={styles.summaryContainer}>
-          <h2>A New Age of Fantasy with</h2>
-          <div className={styles.title1}>
-            <CryptoCupGradient/>
-            <div className={styles.diamond}>
-              <Diamond/>
+          <div className={styles.summaryContainer1}>
+            <h2>A New Age of Fantasy with</h2>
+            <div className={styles.title1}>
+              <CryptoCupGradient/>
+              <div className={styles.diamond}>
+                <Diamond/>
+              </div>
+            </div>
+            <div className={styles.summary}>
+              <p>Crypto Cup is an application that allows users to draft, compete, and keep track of live analytics on the top cryptocurrencies with ease. </p>
+            </div>
+            <div className={styles.launchCupButton}>
+                <LaunchCupButton variant="contained">LAUNCH CRYPTO CUP</LaunchCupButton>
             </div>
           </div>
-          <div className={styles.summary}>
-            <p>Crypto Cup is an application that allows users to draft, compete, and keep track of live analytics on the top cryptocurrencies with ease. </p>
-          </div>
-          <div className={styles.launchCupButton}>
-              <LaunchCupButton variant="contained">LAUNCH CRYPTO CUP</LaunchCupButton>
+          <div className={styles.graph}>
+            <Graph />
           </div>
         </div>
 
@@ -71,7 +77,10 @@ const Home: NextPage = () => {
 
         <div className={styles.container3}>
           <h4 className={styles.italicSpacing}>About Us</h4>
-          <h2 className={styles.headerSpacing}>Every Crypto-Lover’s Fantasy</h2>
+          <div className={styles.about}>
+            <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2> 
+            <h2 className={styles.fantasy}>Fantasy</h2>
+          </div>
           <p className={styles.aboutSpacing}>In Crypto Cup, users can create or register for cups to compete against their friends. Users bet on the upcoming performance of various cryptocurrencies. It’s like Fantasy for crypto-lovers!</p>
           <p className={styles.aboutSpacing}>Crypto Cup is an application made by Mark Drewry, Andrew Gil, Amer Khalifa, Nickolas Phen, Rohan Samanta, and Andrea Relova for our University of Florida Computer Science Senior Project. Go Gators!</p>
           <h4 className={styles.italicSpacing}>FAQ</h4>
@@ -95,26 +104,30 @@ const Home: NextPage = () => {
 
         <div className={styles.footer}>
           <div className={styles.containerLogo}>
-            <div className={styles.logo}>
+            <div className={styles.logo1}>
               <Logo />
             </div>
-            <h2 className={styles.title}>Crypto Cup</h2>
+            <h2 className={styles.title2}>Crypto Cup</h2>
           </div>
-          <div className={styles.launch}>
-            <p>ABOUT</p>
-            <p className={styles.faq}>FAQ</p>
-            <Link
-                href={{
-                  pathname: "/login"
-                }}
-                >
-              <a className={styles.login}>LOG IN/SIGN UP</a>
-            </Link>
-        </div>
-          </div>
-          
 
-        
+          <div>
+            <div className={styles.launch}>
+              <h6 className={styles.about}>ABOUT</h6>
+              <h6 className={styles.faq}>FAQ</h6>
+              <Link
+                  href={{
+                    pathname: "/login"
+                  }}
+                  >
+                <a className={styles.login}>LOG IN/SIGN UP</a>
+              </Link>
+            </div>
+            <div className={styles.tos}>
+              <h6>Insert License Here</h6>
+              <h6>Terms of Service</h6>
+            </div>
+          </div>
+        </div>
     </div>
   )
 }

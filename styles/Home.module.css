@@ -1,9 +1,6 @@
 .container {
   background-color: #13172C;
   /* min-height: 100vh; */
-  /* flex: 1;
-  display: flex;
-  flex-direction: column; */
 }
 
 .navbar {
@@ -13,7 +10,6 @@
 }
 
 .launch {
-  flex-direction: row;
   display: flex;
 }
 
@@ -46,8 +42,16 @@
 }
 
 .summaryContainer{
+  display: flex;
   margin-top: 84px;
-  margin-left: 78px;
+}
+
+.summaryContainer1{
+  margin-left: 10%;
+}
+
+.graph{
+  margin-right: 10%;
 }
 
 .title1{
@@ -62,7 +66,7 @@
 }
 
 .summary{
-  width: 585px;
+  width: 60%;
 }
 
 .launchCupButton{
@@ -70,7 +74,7 @@
 }
 
 .container1{
-  margin-top: 179px;
+  margin-top: 74px;
   margin-bottom: 45px;
   background-color: rgba(47, 56, 105, 0.6);
   height: 188px;
@@ -114,8 +118,16 @@
   margin-bottom: 13px;
 }
 
+.about{
+  display: flex;
+}
+
 .headerSpacing{
   margin-bottom: 31px;
+}
+
+.fantasy{
+  font-style: italic;
 }
 
 .aboutSpacing{
@@ -144,32 +156,30 @@
 .footer {
   display: flex;
   height:  220px;
-  /* flex-grow: 1; */
-  flex-direction: row;
   justify-content: space-between;
   background: rgba(47, 56, 105, 1);
+}
+
+.logo1 {
+  margin-left: 29px;
+  margin-top: 60px;
+}
+
+.title2 {
+  margin-top: 79px;
 }
 
 .login{
   margin-left: 73px;
   margin-right: 51px;
+  margin-top: 68px;
 }
 
-/* .footer {
-  display: flex;
-  flex: 1;
-  padding: 2rem 0;
-  border-top: 1px solid #eaeaea;
-  justify-content: center;
-  align-items: center;
+.tos{
+  margin-top: 31px;
+  margin-right: 51px;
+  text-align: right;
 }
-
-.footer a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-} */
 
 @media (max-width: 600px) {
   .grid {
