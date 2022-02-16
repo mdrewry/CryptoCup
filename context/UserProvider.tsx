@@ -1,12 +1,7 @@
 import React, { Component, createContext } from "react";
 import { auth, db } from "../config/firebase.config";
 import { doc, getDoc } from "firebase/firestore";
-
-type User = {
-  uid: string;
-  email: string;
-  wallet: string;
-};
+import {User} from "../lib.d";
 
 const USER: User = { uid: "", email: "", wallet: "" };
 
