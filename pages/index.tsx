@@ -64,13 +64,11 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <div className={styles.container1}>
-        <div className={styles.container2}>
-          <div className={styles.star}>
-            <EmojiEventsIcon fontSize="large" sx={{ color: "#DA93D3" }} />
-            <h6 className={styles.iconSpacing}>
-              CREATE AND COMPETE IN CUPS WITH YOUR FRIENDS
-            </h6>
+        <div className={styles.container3}>
+          <h4 className={styles.italicSpacing}>About Us</h4>
+          <div className={styles.aboutus}>
+            <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2> 
+            <h2 className={styles.fantasy}>Fantasy</h2>
           </div>
           <div className={styles.bet}>
             <LocalAtmRoundedIcon fontSize="large" sx={{ color: "#DA93D3" }} />
