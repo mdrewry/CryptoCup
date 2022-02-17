@@ -5,8 +5,8 @@ export default function Diamond() {
         <path d="M10 0L0 18.5L10 37L20 18.5L10 0Z" fill="url(#paint0_linear_14_96)"/>
         <defs>
             <linearGradient id="paint0_linear_14_96" x1="20" y1="18" x2="-1.80414e-08" y2="18" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#37CCC3"/>
-                <stop offset="1" stop-color="#89E4DF"/>
+                <stop stopColor="#37CCC3"/>
+                <stop offset="1" stopColor="#89E4DF"/>
             </linearGradient>
         </defs>
     </svg>
