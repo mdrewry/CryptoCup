@@ -1,0 +1,20 @@
+.header {
+  margin-left: 20px;
+}
+.title {
+  font-size: 20px;
+  line-height: normal;
+}
+.subtitle {
+  font-size: 12px;
+  line-height: normal;
+}
+.headerSection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.spacer {
+  margin-bottom: 30px;
+}

@@ -3,16 +3,16 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
-import Logo from "./Icons/Logo.js";
-import LaunchButton from "./Components/LaunchButton.js";
-import CryptoCupGradient from "./Icons/CryptoCupGradient.js";
-import Diamond from "./Icons/Diamond.js";
-import Graph from "./Icons/Graph.js";
-import LaunchCupButton from "./Components/LaunchCupButton.js";
+import Logo from "../Icons/Logo.js";
+import LaunchButton from "../Components/LaunchButton.js";
+import CryptoCupGradient from "../Icons/CryptoCupGradient.js";
+import Diamond from "../Icons/Diamond.js";
+import Graph from "../Icons/Graph.js";
+import LaunchCupButton from "../Components/LaunchCupButton.js";
 import LanguageIcon from "@mui/icons-material/Language";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import LocalAtmRoundedIcon from "@mui/icons-material/LocalAtmRounded";
-import FaqDiamond from "./Icons/FaqDiamond.js";
+import FaqDiamond from "../Icons/FaqDiamond.js";
 
 const Home: NextPage = () => {
   return (
@@ -64,11 +64,13 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-        <div className={styles.container3}>
-          <h4 className={styles.italicSpacing}>About Us</h4>
-          <div className={styles.aboutus}>
-            <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2> 
-            <h2 className={styles.fantasy}>Fantasy</h2>
+      <div className={styles.container1}>
+        <div className={styles.container2}>
+          <div className={styles.star}>
+            <EmojiEventsIcon fontSize="large" sx={{ color: "#DA93D3" }} />
+            <h6 className={styles.iconSpacing}>
+              CREATE AND COMPETE IN CUPS WITH YOUR FRIENDS
+            </h6>
           </div>
           <div className={styles.bet}>
             <LocalAtmRoundedIcon fontSize="large" sx={{ color: "#DA93D3" }} />
@@ -87,7 +89,7 @@ const Home: NextPage = () => {
 
       <div className={styles.container3}>
         <h4 className={styles.italicSpacing}>About Us</h4>
-        <div className={styles.about}>
+        <div className={styles.aboutus}>
           <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2>
           <h2 className={styles.fantasy}>Fantasy</h2>
         </div>
