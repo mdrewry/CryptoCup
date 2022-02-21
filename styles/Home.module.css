@@ -18,6 +18,7 @@
 .summaryContainer{
   margin-top: 53px;
   margin-left: 78px;
+  display: flex;
 }
 
 .title1{

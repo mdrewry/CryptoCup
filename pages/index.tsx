@@ -43,7 +43,7 @@ const Home: NextPage = () => {
         </Grid>
       </Grid>
 
-      <Grid className={styles.summaryContainer} container spacing={0}>
+      <Grid className={styles.summaryContainer}>
         <Grid item xs>
           <h2>A New Age of Fantasy with</h2>
           <div className={styles.title1}>
@@ -58,7 +58,7 @@ const Home: NextPage = () => {
           <div className={styles.launchCupButton}>
               <LaunchCupButton variant="contained">LAUNCH CRYPTO CUP</LaunchCupButton>
           </div>
-          </Grid>
+        </Grid>
         <Grid item xs>
           <Graph />
         </Grid>
