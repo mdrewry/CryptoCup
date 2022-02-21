@@ -1,0 +1,31 @@
+.header {
+  margin-left: 20px;
+}
+.title {
+  font-size: 20px;
+  line-height: normal;
+}
+.subtitle {
+  font-size: 12px;
+  line-height: normal;
+}
+.headerSection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.spacer {
+  margin-top: 50px;
+}
+.filler {
+  flex-grow: 1;
+}
+
+.walletStatus {
+  color: #89e4df;
+}
+.walletStatusSubheader {
+  font-size: 12px;
+  line-height: 18px;
+  margin-bottom: 20px;
+}

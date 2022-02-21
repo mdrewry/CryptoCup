@@ -2,9 +2,9 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import { useRouter } from "next/router"
-import Logo from "./Icons/Logo.js";
-import LaunchButton from "./Components/LaunchButton.js";
-import Graph from "./Icons/Graph.js";
+import Logo from "../Icons/Logo.js";
+import LaunchButton from "../Components/LaunchButton.js";
+import Graph from "../Icons/Graph.js";
 import Grid from '@mui/material/Grid';
 
 const Login: NextPage = () => {
