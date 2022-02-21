@@ -29,7 +29,7 @@ const theme = createTheme({
 function MyApp({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
   const [path, setPath] = useState(pathname.substring(1).split("/")[0]);
-  const displaySidebar = ["", "login"].some((route) => route === path);
+  const displaySidebar = !["", "login"].some((route) => route === path);
   const sideBarWidth = 270;
   useEffect(() => {
     setPath(pathname.substring(1).split("/")[0]);
