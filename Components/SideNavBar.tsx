@@ -1,17 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
+import Link from "next/link";
 import { UserContext } from "../context/UserProvider";
 import { WalletContext } from "../context/WalletProvider";
 import styles from "../styles/SideNavBar.module.css";
 import Web3 from "web3";
 import Drawer from "@mui/material/Drawer";
+import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import LeaderboardIcon from "@mui/icons-material/Leaderboard";
 import PaidIcon from "@mui/icons-material/Paid";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import FadeButton from "./FadeButton";
 
 type SideNavBarProps = { sideBarWidth: number; path: string };
@@ -74,7 +78,7 @@ const Content = ({ path }: ContentProps) => {
       alert("Error during signing. Please refresh and try again.");
     }
   }
-
+  console.log(path);
   return (
     <>
       <div className={styles.headerSection}>
@@ -90,34 +94,82 @@ const Content = ({ path }: ContentProps) => {
       </div>
       <Stack className={styles.spacer} spacing={2}>
         {routes.map((route, id) => (
-          <Button
-            key={id}
-            startIcon={
-              <>
-                {route.path == "dashboard" && <DashboardIcon />}
-                {route.path == "mycups" && <EmojiEventsIcon />}
-                {route.path == "leaderboard" && <LeaderboardIcon />}
-                {route.path == "cryptoinfo" && <PaidIcon />}
-                {route.path == "news" && <NewspaperIcon />}
-              </>
-            }
-            style={{
-              background: `${route.path === path ? "#DA93D3" : "#13172C"}`,
-              fontFamily: "Space Mono",
-              fontSize: 20,
-              borderRadius: 60,
-              fontWeight: 700,
-              height: 55,
-              padding: 10,
-              width: "100%",
-              color: "white",
-              justifyContent: "flex-start",
+          <Link
+            href={{
+              pathname: `/${route.path}`,
             }}
+            key={id}
           >
-            {route.name}
-          </Button>
+            <Button
+              startIcon={
+                <>
+                  {route.path == "dashboard" && <DashboardIcon />}
+                  {route.path == "mycups" && <EmojiEventsIcon />}
+                  {route.path == "leaderboard" && <LeaderboardIcon />}
+                  {route.path == "cryptoinfo" && <PaidIcon />}
+                  {route.path == "news" && <NewspaperIcon />}
+                </>
+              }
+              style={{
+                background: `${route.path === path ? "#DA93D3" : "#13172C"}`,
+                fontFamily: "Space Mono",
+                fontSize: 20,
+                borderRadius: 60,
+                fontWeight: 700,
+                height: 55,
+                padding: 10,
+                width: "100%",
+                color: "white",
+                justifyContent: "flex-start",
+              }}
+            >
+              {route.name}
+            </Button>
+          </Link>
         ))}
       </Stack>
+      <Stack className={styles.spacer} spacing={2}>
+        <Button
+          style={{
+            background: "#2F386999",
+            fontFamily: "Space Mono",
+            fontSize: 20,
+            borderRadius: 60,
+            fontWeight: 700,
+            height: 55,
+            padding: 10,
+            width: "100%",
+            color: "white",
+          }}
+        >
+          Create a Cup
+        </Button>
+        <Button
+          style={{
+            background: "#2F386999",
+            fontFamily: "Space Mono",
+            fontSize: 20,
+            borderRadius: 60,
+            fontWeight: 700,
+            height: 55,
+            padding: 10,
+            width: "100%",
+            color: "white",
+          }}
+        >
+          Join a Cup
+        </Button>
+      </Stack>
+      <div className={styles.filler} />
+      {!walletConnected && (
+        <>
+          <h6>Wallet Status:</h6>
+          <h6 className={styles.walletStatus}>Disconnected</h6>
+          <p className={styles.walletStatusSubheader}>
+            You must be connected to join a cup.
+          </p>
+        </>
+      )}
       <FadeButton
         disabled={walletConnected}
         variant="contained"
@@ -129,22 +181,33 @@ const Content = ({ path }: ContentProps) => {
   );
 };
 const SideNavBar = ({ sideBarWidth, path }: SideNavBarProps) => {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+  const [mobileOpen, setMobileOpen] = useState(true);
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event &&
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
+      }
+
+      setMobileOpen(open);
+    };
   return (
     <>
-      <Drawer
-        variant="temporary"
+      <SwipeableDrawer
+        anchor="left"
         open={mobileOpen}
-        onClose={handleDrawerToggle}
-        ModalProps={{
-          keepMounted: true,
-        }}
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
         sx={{
-          display: { xs: "none", sm: "block" },
+          display: { xs: "block", sm: "none" },
           "& .MuiDrawer-paper": {
             width: `${sideBarWidth}px`,
             boxSizing: "border-box",
+            overflowX: "hidden",
             backgroundColor: "#13172C",
             border: "solid",
             borderColor: "white",
@@ -158,11 +221,28 @@ const SideNavBar = ({ sideBarWidth, path }: SideNavBarProps) => {
             paddingBottom: "39px",
             paddingLeft: "17px",
             paddingRight: "17px",
+            position: "relative",
           },
         }}
       >
         <Content path={path} />
-      </Drawer>
+        <IconButton
+          style={{
+            position: "absolute",
+            top: "50%",
+            backgroundColor: "#2F3869",
+            color: "white",
+            borderRadius: "50%",
+            right: -40,
+            zIndex: 10,
+            padding: 20,
+          }}
+        >
+          <ArrowBackIosNewIcon
+            style={{ fontSize: "50px", position: "relative", left: -15 }}
+          />
+        </IconButton>
+      </SwipeableDrawer>
       <Drawer
         variant="permanent"
         sx={{

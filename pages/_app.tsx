@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import { useState, useEffect } from "react";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
@@ -25,9 +26,12 @@ const theme = createTheme({
 });
 function MyApp({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
-  const path = pathname.substring(1).split("/")[0];
-  const displaySidebar = !["123", "login123"].some((route) => route === path);
+  const [path, setPath] = useState(pathname.substring(1).split("/")[0]);
+  const displaySidebar = !["", "login"].some((route) => route === path);
   const sideBarWidth = 270;
+  useEffect(() => {
+    setPath(pathname.substring(1).split("/")[0]);
+  }, [pathname]);
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex" }}>
