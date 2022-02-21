@@ -1,16 +1,5 @@
 .container {
   background-color: #13172C;
-  /* min-height: 100vh; */
-}
-
-.navbar {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.launch {
-  display: flex;
 }
 
 .containerLogo {
@@ -26,32 +15,9 @@
   margin-top: 52px;
 }
 
-.about {
-  margin-top: 68px;
-}
-
-.faq{
-  margin-left: 78px;
-  margin-top: 68px;
-}
-
-.launchButton{
-  margin-top: 56px;
-  margin-left: 78px;
-  margin-right: 51px;
-}
-
 .summaryContainer{
-  display: flex;
-  margin-top: 84px;
-}
-
-.summaryContainer1{
-  margin-left: 10%;
-}
-
-.graph{
-  margin-right: 10%;
+  margin-top: 53px;
+  margin-left: 78px;
 }
 
 .title1{
@@ -80,34 +46,13 @@
   height: 188px;
 }
 
-.star{
-  width: 22.91%;
-  margin-top: 49px;
-  padding-left: 76px;
-  display: flex;
-}
-
-.bet{
-  width: 22.29%;
-  margin-top: 49px;
-  margin-left: 89px;
-  display: flex;
-}
-
-.globe{
-  width: 20.08%;
-  margin-top: 49px;
-  margin-left: 88px;
-  display: flex;
-}
-
 .iconSpacing {
   margin-left: 21px;
 }
 
 .container2{
-  justify-content: space-around;
   display: flex;
+  margin-left: 76px;
 }
 
 .container3{
@@ -155,25 +100,22 @@
 }
 
 .footer {
-  display: flex;
   height:  220px;
-  justify-content: space-between;
   background: rgba(47, 56, 105, 1);
 }
 
+.footer1 {
+  display: flex;
+  margin-top: 53px;
+}
+
 .logo1 {
-  margin-left: 29px;
+  margin-left: 53px;
   margin-top: 60px;
 }
 
 .title2 {
   margin-top: 79px;
-}
-
-.login{
-  margin-left: 73px;
-  margin-right: 51px;
-  margin-top: 68px;
 }
 
 .tos{
@@ -182,9 +124,9 @@
   text-align: right;
 }
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
   .grid {
     width: 100%;
     flex-direction: column;
   }
-}
+} */
