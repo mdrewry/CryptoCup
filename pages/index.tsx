@@ -13,7 +13,6 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import LocalAtmRoundedIcon from "@mui/icons-material/LocalAtmRounded";
 import FaqDiamond from "../Icons/FaqDiamond.js";
 import Grid from '@mui/material/Grid';
-import Footer from "../Components/Footer";
 
 const Home: NextPage = () => {
   return (
@@ -132,10 +131,7 @@ const Home: NextPage = () => {
         <p className={styles.answer3}>
           Right now, ___ are available to bet on in cups.
         </p>
-      </div>
-
-      <Footer/>
-      
+      </div>      
     </div>
   );
 };

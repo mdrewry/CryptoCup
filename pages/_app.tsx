@@ -6,6 +6,8 @@ import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { orange } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import SideNavBar from "../Components/SideNavBar";
+import Footer from "../Components/Footer";
+
 declare module "@mui/material/styles" {
   interface Theme {
     status: {
@@ -55,6 +57,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           }}
         >
           <Component {...pageProps} />
+          <Footer/>
         </Box>
       </Box>
     </ThemeProvider>
