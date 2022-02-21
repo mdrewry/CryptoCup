@@ -99,35 +99,3 @@
   margin-bottom: 71px;
   margin-left: 32px;
 }
-
-.footer {
-  height:  220px;
-  background: rgba(47, 56, 105, 1);
-}
-
-.footer1 {
-  display: flex;
-  margin-top: 53px;
-}
-
-.logo1 {
-  margin-left: 53px;
-  margin-top: 60px;
-}
-
-.title2 {
-  margin-top: 79px;
-}
-
-.tos{
-  margin-top: 31px;
-  margin-right: 51px;
-  text-align: right;
-}
-
-/* @media (max-width: 600px) {
-  .grid {
-    width: 100%;
-    flex-direction: column;
-  }
-} */

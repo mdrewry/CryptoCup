@@ -1,0 +1,28 @@
+.footer {
+    height:  220px;
+    background: rgba(47, 56, 105, 1);
+  }
+
+  .containerLogo {
+    display: flex;
+  }
+
+  .logo {
+    margin-left: 53px;
+    margin-top: 60px;
+  }
+
+  .title {
+    margin-top: 79px;
+  }
+
+  .footer1 {
+    display: flex;
+    margin-top: 53px;
+  }
+
+  .tos{
+    margin-top: 31px;
+    margin-right: 51px;
+    text-align: right;
+  }
