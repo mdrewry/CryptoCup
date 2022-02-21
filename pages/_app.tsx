@@ -27,14 +27,14 @@ const theme = createTheme({
 function MyApp({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
   const [path, setPath] = useState(pathname.substring(1).split("/")[0]);
-  const displaySidebar = !["", "login"].some((route) => route === path);
+  const displaySidebar = ["", "login"].some((route) => route === path);
   const sideBarWidth = 270;
   useEffect(() => {
     setPath(pathname.substring(1).split("/")[0]);
   }, [pathname]);
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: "flex", height: '100vh' }}>
         {displaySidebar && (
           <Box
             component="nav"
@@ -48,6 +48,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           component="main"
           sx={{
             flexGrow: 1,
+            overflow: 'auto',
             width: {
               sm: displaySidebar ? `calc(100% - ${sideBarWidth}px)` : "100%",
             },
