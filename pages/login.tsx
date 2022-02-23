@@ -86,12 +86,27 @@ const Login: NextPage = () => {
               </h2>
               <Link
                 href={{
-                    pathname: "/signup"
+                  pathname: "/signup",
                 }}
                 >
-                <h2 className={styles.signup}>
-                  Sign up
-                </h2>
+                <Button
+                  style={{
+                    background: "#13172C",
+                    fontFamily: "Epilogue",
+                    fontSize: 48,
+                    borderRadius: 60,
+                    fontWeight: 300,
+                    height: 60,
+                    padding: 10,
+                    width: 200,
+                    color: "white",
+                    justifyContent: "flex-start",
+                    textTransform: "none",
+                    marginLeft: -5,
+                  }}
+                >
+                  Sign Up
+                </Button>
               </Link>
             </Grid>
             <Grid className={styles.labelSpacing} item xs>
@@ -144,6 +159,7 @@ const Login: NextPage = () => {
                     padding: 10,
                     width: 214,
                     color: "white",
+                    textTransform: "none",
                   }}
                 >
                   Log In

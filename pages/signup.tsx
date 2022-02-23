@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import homestyles from '../styles/Home.module.css'
-import styles from '../styles/Login.module.css'
+import styles from '../styles/Signup.module.css'
 import { styled } from '@mui/material/styles';
 import { makeStyles } from "@material-ui/core/styles";
 import { useRouter } from "next/router"
@@ -78,20 +78,35 @@ const Signup: NextPage = () => {
         <Grid className={styles.loginContainer}>
           <Grid item xs>
             <Grid className={styles.titleContainer} item xs>
-              <h2 className={styles.login}>
-                  Log In&nbsp;
+              <h2 className={styles.signup}>
+                  Sign Up&nbsp;
               </h2>
               <h2 className={styles.or}>
                   or&nbsp;
               </h2>
               <Link
                 href={{
-                    pathname: "/signup"
+                  pathname: "/login",
                 }}
                 >
-                <h2 className={styles.signup}>
-                  Sign up
-                </h2>
+                <Button
+                  style={{
+                    background: "#13172C",
+                    fontFamily: "Epilogue",
+                    fontSize: 48,
+                    borderRadius: 60,
+                    fontWeight: 300,
+                    height: 60,
+                    padding: 10,
+                    width: 164,
+                    color: "white",
+                    justifyContent: "flex-start",
+                    textTransform: "none",
+                    marginLeft: -5,
+                  }}
+                >
+                  Log In
+                </Button>
               </Link>
             </Grid>
             <Grid className={styles.labelSpacing} item xs>
@@ -106,11 +121,18 @@ const Signup: NextPage = () => {
             <Grid item xs>
               <StyledTextField/>
             </Grid>
-            <div className={styles.forgor}>
-              <Grid className={styles.forgot} item xs>
-                <p>Forgot Password?</p>
-              </Grid>
-            </div>
+            <Grid className={styles.labelSpacing} item xs>
+              <p>Confirm Password</p>
+            </Grid>
+            <Grid item xs>
+              <StyledTextField/>
+            </Grid>
+            <Grid className={styles.labelSpacing} item xs>
+              <p>Birthday</p>
+            </Grid>
+            <Grid item xs>
+              <StyledTextField/>
+            </Grid>
             
             <Grid item xs>
               <FormControlLabel
@@ -126,13 +148,13 @@ const Signup: NextPage = () => {
                     icon={<CircleIcon />} 
                     checkedIcon={<CircleIcon />} 
                   />}
-                label="Remember Me"
+                label="I agree to the Terms of Service and Privacy Policy."
                 labelPlacement="end"
               />
             </Grid>            
 
             <Grid item xs>
-              <div className={styles.loginButton}>
+              <div className={styles.signupButton}>
                 <Button
                   style={{
                     background: "rgba(47, 56, 105, 0.6)",
@@ -144,9 +166,10 @@ const Signup: NextPage = () => {
                     padding: 10,
                     width: 214,
                     color: "white",
+                    textTransform: "none",
                   }}
                 >
-                  Log In
+                  Sign Up
                 </Button>
               </div>
             </Grid>

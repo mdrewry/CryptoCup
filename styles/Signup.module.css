@@ -8,8 +8,8 @@
     display: flex;
 }
 
-.login {
-    color: #89E4DF;
+.signup {
+    color: #DA93D3;
     font-weight: 700;
 }
 
@@ -21,20 +21,11 @@
     margin-top: 27px;
 }
 
-.forgor {
-    width: 525px;
-}
-
-.forgot {
-    margin-top: 25px;
-    text-align: right;
-}
-
 .checkboxPos {
     margin-right: 16px;
 }
 
-.loginButton {
+.signupButton {
     width: 525px;
     margin-top: 52px;
     margin-bottom: 167px;
