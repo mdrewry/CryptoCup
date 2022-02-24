@@ -15,6 +15,10 @@ import Checkbox from '@mui/material/Checkbox';
 import CircleIcon from '@mui/icons-material/Circle';
 import Button from "@mui/material/Button";
 import Link from "next/link";
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import * as React from 'react';
 
 const Signup: NextPage = () => {
     const router = useRouter()
@@ -28,12 +32,44 @@ const Signup: NextPage = () => {
       },
       '& .MuiInputBase-input': {
         borderRadius: 25,
-        fontSize: 18,
+        fontFamily: 'Space Mono',
+        fontSize: 20,
         color: '#ffffff',
         backgroundColor: 'rgba(47, 56, 105, 0.6)',
         width: 500,
         padding: '15px 15px',
       },
+      '&:focus': {
+        borderRadius: 25,
+      },
+    }));
+
+    const BirthdayTextField = styled(InputBase)(({ theme }) => ({
+      "&": {
+        marginTop: '6px'
+      },
+      '& .MuiInputBase-input': {
+        borderRadius: 25,
+        fontFamily: 'Space Mono',
+        fontSize: 20,
+        color: '#ffffff',
+        backgroundColor: 'rgba(47, 56, 105, 0.6)',
+        width: 140,
+        padding: '15px 15px',
+      },
+      '& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus': {
+        borderRadius: 25,
+      },
+      '&:focus': {
+        borderRadius: 25,
+        padding: '15px 15px',
+      },
+      '& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon': {
+        color: '#ffffff',
+      },
+      '& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon': {
+        color: '#ffffff',
+      }
     }));
 
     const useStyles = makeStyles(theme => ({
@@ -42,10 +78,18 @@ const Signup: NextPage = () => {
           color: '#ffffff',
           fontSize: "20px",
           fontFamily: "Space Mono",
+          width: '500px',
+          marginTop: '30px',
         }
       }
     }));
     const classes = useStyles();
+
+    const [month, setMonth] = React.useState('');
+
+    const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+      setMonth(event.target.value);
+    };
   
     return (
       <div className={homestyles.container}>
@@ -130,11 +174,40 @@ const Signup: NextPage = () => {
             <Grid className={styles.labelSpacing} item xs>
               <p>Birthday</p>
             </Grid>
-            <Grid item xs>
-              <StyledTextField/>
+
+            <Grid container>
+              <Grid item xs={3}>
+                <Select
+                  value={month}
+                  displayEmpty
+                  input={<BirthdayTextField/>}
+                  onChange={handleChange}
+                  IconComponent={KeyboardArrowDownIcon}
+                  >
+                  <MenuItem disabled value=""> Month </MenuItem>
+                  <MenuItem value={1}>1</MenuItem>
+                  <MenuItem value={2}>2</MenuItem>
+                  <MenuItem value={3}>3</MenuItem>
+                  <MenuItem value={4}>4</MenuItem>
+                  <MenuItem value={5}>5</MenuItem>
+                  <MenuItem value={6}>6</MenuItem>
+                  <MenuItem value={7}>7</MenuItem>
+                  <MenuItem value={8}>8</MenuItem>
+                  <MenuItem value={9}>9</MenuItem>
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={11}>11</MenuItem>
+                  <MenuItem value={12}>12</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item xs={2.8}>
+                <BirthdayTextField placeholder="Day"/>
+              </Grid>
+              <Grid item xs>
+                <BirthdayTextField placeholder="Year"/>
+              </Grid>
             </Grid>
             
-            <Grid item xs>
+            <Grid container item xs>
               <FormControlLabel
               className={classes.root}
                 control={

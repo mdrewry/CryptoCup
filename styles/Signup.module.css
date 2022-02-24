@@ -27,7 +27,12 @@
 
 .signupButton {
     width: 525px;
-    margin-top: 52px;
-    margin-bottom: 167px;
+    margin-top: 29px;
+    margin-bottom: 28px;
     text-align: center;
+}
+
+.dropdown {
+    color: #ffffff;
+    pointer-events: auto;
 }
