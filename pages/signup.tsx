@@ -14,35 +14,19 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import CircleIcon from '@mui/icons-material/Circle';
 import Button from "@mui/material/Button";
+import FormControl from '@mui/material/FormControl';
 import Link from "next/link";
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import * as React from 'react';
+import React, { useState, useEffect, useContext, useRef } from "react";
+import { UserContext } from "../context/UserProvider";
 
 const Signup: NextPage = () => {
     const router = useRouter()
     const {
       query: { id },
     } = router
-
-    const StyledTextField = styled(InputBase)(({ theme }) => ({
-      "&": {
-        marginTop: '9px'
-      },
-      '& .MuiInputBase-input': {
-        borderRadius: 25,
-        fontFamily: 'Space Mono',
-        fontSize: 20,
-        color: '#ffffff',
-        backgroundColor: 'rgba(47, 56, 105, 0.6)',
-        width: 500,
-        padding: '15px 15px',
-      },
-      '&:focus': {
-        borderRadius: 25,
-      },
-    }));
 
     const BirthdayTextField = styled(InputBase)(({ theme }) => ({
       "&": {
@@ -73,7 +57,24 @@ const Signup: NextPage = () => {
     }));
 
     const useStyles = makeStyles(theme => ({
-      root: {
+      textField: {
+        "&": {
+          marginTop: '9px'
+        },
+        '& .MuiInputBase-input': {
+          borderRadius: 25,
+          fontFamily: 'Space Mono',
+          fontSize: 20,
+          color: '#ffffff',
+          backgroundColor: 'rgba(47, 56, 105, 0.6)',
+          width: 500,
+          padding: '15px 15px',
+        },
+        '&:focus': {
+          borderRadius: 25,
+        },
+      },
+      tos: {
         "& .css-ahj2mt-MuiTypography-root": {
           color: '#ffffff',
           fontSize: "20px",
@@ -84,12 +85,59 @@ const Signup: NextPage = () => {
       }
     }));
     const classes = useStyles();
+    // const user = useContext(UserContext);
 
+    // const inputRef = useRef<any>();
+   
     const [month, setMonth] = React.useState('');
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+    const [confirmPass, setConfirmPass] = React.useState('');
+    console.log(password)
+    console.log(confirmPass)
+
+    // useEffect(() => {
+    //   inputRef.current.focus();
+    // }, []);
+
+    const changeEmail = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+      setEmail(event.target.value);
+    };
+
+    const changePassword = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+      setPassword(event.target.value);
+    };
+
+    const changeConfirm = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+      setConfirmPass(event.target.value);
+    };
 
     const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
       setMonth(event.target.value);
     };
+
+    async function signUp() {
+      try {
+        const response = await fetch("/api/signup", {
+          method: "POST",
+          // body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email:"john.smith@email.com", password:"admin" }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+  
+        if (data.error) {
+          alert(data.error);
+        } else {
+          alert("User created.");
+        }
+      } catch (error) {
+        console.log(error);
+        alert("Error creating user.");
+      }
+    }
   
     return (
       <div className={homestyles.container}>
@@ -153,24 +201,45 @@ const Signup: NextPage = () => {
                 </Button>
               </Link>
             </Grid>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Email</p>
-            </Grid>
-            <Grid item xs>
-              <StyledTextField/>
-            </Grid>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Password</p>
-            </Grid>
-            <Grid item xs>
-              <StyledTextField/>
-            </Grid>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Confirm Password</p>
-            </Grid>
-            <Grid item xs>
-              <StyledTextField/>
-            </Grid>
+
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Email</p>
+              </Grid>
+              <Grid item xs>
+                <InputBase 
+                  className={classes.textField}
+                  onChange={changeEmail}
+                  value={email}
+                />
+              </Grid>
+            </FormControl>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Password</p>
+              </Grid>
+              <Grid item xs>
+                <InputBase 
+                  className={classes.textField}
+                  onChange={changePassword}
+                  value={password}
+                  type="password"
+                />
+              </Grid>
+            </FormControl>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Confirm Password</p>
+              </Grid>
+              <Grid item xs>
+                <InputBase 
+                  className={classes.textField}
+                  onChange={changeConfirm}
+                  value={confirmPass}
+                  type="password"
+                />
+              </Grid>
+            </FormControl>
             <Grid className={styles.labelSpacing} item xs>
               <p>Birthday</p>
             </Grid>
@@ -183,6 +252,7 @@ const Signup: NextPage = () => {
                   input={<BirthdayTextField/>}
                   onChange={handleChange}
                   IconComponent={KeyboardArrowDownIcon}
+                  type="month"
                   >
                   <MenuItem disabled value=""> Month </MenuItem>
                   <MenuItem value={1}>1</MenuItem>
@@ -209,7 +279,7 @@ const Signup: NextPage = () => {
             
             <Grid container item xs>
               <FormControlLabel
-              className={classes.root}
+              className={classes.tos}
                 control={
                   <Checkbox
                     className={styles.checkboxPos}
@@ -241,6 +311,7 @@ const Signup: NextPage = () => {
                     color: "white",
                     textTransform: "none",
                   }}
+                  onClick={signUp}
                 >
                   Sign Up
                 </Button>

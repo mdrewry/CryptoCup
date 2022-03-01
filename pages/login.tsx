@@ -28,11 +28,14 @@ const Login: NextPage = () => {
       },
       '& .MuiInputBase-input': {
         borderRadius: 25,
-        fontSize: 18,
+        fontSize: 20,
         color: '#ffffff',
         backgroundColor: 'rgba(47, 56, 105, 0.6)',
         width: 500,
         padding: '15px 15px',
+      },
+      '&:focus': {
+        borderRadius: 25,
       },
     }));
 
