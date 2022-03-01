@@ -1,8 +1,8 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Crypto Cup
 
 ## Getting Started
 
-First, run the development server:
+Running the application:
 
 ```bash
 npm run dev
@@ -10,9 +10,30 @@ npm run dev
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Don't forget to install node dependeices!
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```bash
+npm i
+# or
+npm install
+```
+
+Install latest stable version of Node.js with NPM (Node Package Manager):
+
+```bash
+npm cache clean -f
+npm install -g n
+sudo n stable
+yarn dev
+```
+
+- [http://localhost:3000](http://localhost:3000) - Landing page
+- [http://localhost:3000/login](http://localhost:3000/login) - Login page
+- [http://localhost:3000/dashboard](http://localhost:3000/dashboard) - Landing Page
+- [http://localhost:3000/mycups](http://localhost:3000/mycups) - My Cups page
+- [http://localhost:3000/leaderboard](http://localhost:3000/leaderboard) - Leaderboard page
+- [http://localhost:3000/cryptoinfo](http://localhost:3000/cryptoinfo) - Crypto Information page
+- [http://localhost:3000/news](http://localhost:3000/news) - News page
 
 [API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
 
@@ -20,15 +41,21 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+Some resouces that would be helpful:
 
+- [Figma](https://www.figma.com/file/GP2cYMcSf2HlVeHlHrj94C/Crypto-Cup?node-id=2%3A2) - Figma Design Doc link
+- [Vercel Cyrpto Cup App](https://cryptocup.vercel.app/) - Cyrpto Cup on a public url that is up-to-date with main
+- [Jira Board](https://cryptocup.atlassian.net/jira/software/c/projects/CRYP/boards/1/roadmap?statuses=2%2C4) - Jira Board
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Authors
 
-## Deploy on Vercel
+- Mark Drewry
+- Andrew Gil
+- Amer Khalifa
+- Nickolas Phen
+- Andrea Relova
+- Rohan Samanta
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Senior Project
