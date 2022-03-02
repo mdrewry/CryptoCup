@@ -4,7 +4,7 @@ import homestyles from "../styles/Home.module.css";
 import styles from "../styles/Signup.module.css";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/core/styles";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import Logo from "../Icons/Logo.js";
 import LaunchButton from "../Components/LaunchButton.js";
 import Graph from "../Icons/Graph.js";
@@ -93,7 +93,8 @@ const Signup: NextPage = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
-  console.log(month);
+  const [wallet, setWallet] = React.useState("");
+  // console.log(month);
   //console.log(email);
   //console.log(password);
   //console.log(confirmPass);
@@ -142,7 +143,7 @@ const Signup: NextPage = () => {
     try {
       const response = await fetch("/api/signup", {
         method: "POST",
-        body: JSON.stringify({ email, password, month, day, year }),
+        body: JSON.stringify({ email, password, month, day, year, wallet }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -152,6 +153,7 @@ const Signup: NextPage = () => {
         alert(data.error.message);
       } else {
         alert("User created.");
+        Router.push("/dashboard");
       }
     } catch (error) {
       alert(error);

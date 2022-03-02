@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import Link from "next/link";
 import Logo from "../Icons/Logo.js";
 import LaunchButton from "../Components/LaunchButton.js";
 import CryptoCupGradient from "../Icons/CryptoCupGradient.js";

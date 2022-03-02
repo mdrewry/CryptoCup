@@ -71,7 +71,7 @@ const Login: NextPage = () => {
   async function signIn() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      Router.push("/");
+      Router.push("/dashboard");
       alert("Log In Successful!");
     } catch (error) {
       console.log(error);
