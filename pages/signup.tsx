@@ -1,259 +1,362 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import homestyles from '../styles/Home.module.css'
-import styles from '../styles/Signup.module.css'
-import { styled } from '@mui/material/styles';
+import type { NextPage } from "next";
+import Head from "next/head";
+import homestyles from "../styles/Home.module.css";
+import styles from "../styles/Signup.module.css";
+import { styled } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/core/styles";
-import { useRouter } from "next/router"
+import Router, { useRouter } from "next/router";
 import Logo from "../Icons/Logo.js";
 import LaunchButton from "../Components/LaunchButton.js";
 import Graph from "../Icons/Graph.js";
-import Grid from '@mui/material/Grid';
-import InputBase from '@mui/material/InputBase';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import CircleIcon from '@mui/icons-material/Circle';
+import Grid from "@mui/material/Grid";
+import InputBase from "@mui/material/InputBase";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import CircleIcon from "@mui/icons-material/Circle";
 import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
 import Link from "next/link";
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import * as React from 'react';
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import React, { useState, useEffect, useContext, useRef } from "react";
 
 const Signup: NextPage = () => {
-    const router = useRouter()
-    const {
-      query: { id },
-    } = router
+  const router = useRouter();
+  const {
+    query: { id },
+  } = router;
 
-    const StyledTextField = styled(InputBase)(({ theme }) => ({
+  const useStyles = makeStyles((theme) => ({
+    textField: {
       "&": {
-        marginTop: '9px'
+        marginTop: "9px",
       },
-      '& .MuiInputBase-input': {
+      "& .MuiInputBase-input": {
         borderRadius: 25,
-        fontFamily: 'Space Mono',
+        fontFamily: "Space Mono",
         fontSize: 20,
-        color: '#ffffff',
-        backgroundColor: 'rgba(47, 56, 105, 0.6)',
+        color: "#ffffff",
+        backgroundColor: "rgba(47, 56, 105, 0.6)",
         width: 500,
-        padding: '15px 15px',
+        padding: "15px 15px",
       },
-      '&:focus': {
+      "&:focus": {
         borderRadius: 25,
       },
-    }));
-
-    const BirthdayTextField = styled(InputBase)(({ theme }) => ({
+    },
+    birthday: {
       "&": {
-        marginTop: '6px'
+        marginTop: "6px",
       },
-      '& .MuiInputBase-input': {
+      "& .MuiInputBase-input": {
         borderRadius: 25,
-        fontFamily: 'Space Mono',
+        fontFamily: "Space Mono",
         fontSize: 20,
-        color: '#ffffff',
-        backgroundColor: 'rgba(47, 56, 105, 0.6)',
+        color: "#ffffff",
+        backgroundColor: "rgba(47, 56, 105, 0.6)",
         width: 140,
-        padding: '15px 15px',
+        padding: "15px 15px",
       },
-      '& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus': {
+      "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
         borderRadius: 25,
       },
-      '&:focus': {
+      "&:focus": {
         borderRadius: 25,
-        padding: '15px 15px',
+        padding: "15px 15px",
       },
-      '& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon': {
-        color: '#ffffff',
+      "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
+        color: "#ffffff",
       },
-      '& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon': {
-        color: '#ffffff',
+      "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
+        color: "#ffffff",
+      },
+    },
+    tos: {
+      "& .css-ahj2mt-MuiTypography-root": {
+        color: "#ffffff",
+        fontSize: "20px",
+        fontFamily: "Space Mono",
+        width: "500px",
+        marginTop: "30px",
+      },
+    },
+  }));
+  const classes = useStyles();
+  // const user = useContext(UserContext);
+
+  // const inputRef = useRef<any>();
+
+  const [month, setMonth] = React.useState("");
+  const [day, setDay] = React.useState("");
+  const [year, setYear] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [confirmPass, setConfirmPass] = React.useState("");
+  const [wallet, setWallet] = React.useState("");
+  // console.log(month);
+  //console.log(email);
+  //console.log(password);
+  //console.log(confirmPass);
+
+  // useEffect(() => {
+  //   inputRef.current.focus();
+  // }, []);
+
+  const changeEmail = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setEmail(event.target.value);
+  };
+
+  const changePassword = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setPassword(event.target.value);
+  };
+
+  const changeConfirm = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setConfirmPass(event.target.value);
+  };
+
+  const changeMonth = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setMonth(event.target.value);
+  };
+
+  const changeDay = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setDay(event.target.value);
+  };
+
+  const changeYear = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setYear(event.target.value);
+  };
+
+  async function signUp() {
+    try {
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        body: JSON.stringify({ email, password, month, day, year, wallet }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (data.error) {
+        alert(data.error.message);
+      } else {
+        alert("User created.");
+        Router.push("/dashboard");
       }
-    }));
+    } catch (error) {
+      alert(error);
+    }
+  }
 
-    const useStyles = makeStyles(theme => ({
-      root: {
-        "& .css-ahj2mt-MuiTypography-root": {
-          color: '#ffffff',
-          fontSize: "20px",
-          fontFamily: "Space Mono",
-          width: '500px',
-          marginTop: '30px',
-        }
-      }
-    }));
-    const classes = useStyles();
+  return (
+    <div className={homestyles.container}>
+      <Head>
+        <title>Sign Up</title>
+        <meta name="description" content="Generated by create next app" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-    const [month, setMonth] = React.useState('');
-
-    const handleChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-      setMonth(event.target.value);
-    };
-  
-    return (
-      <div className={homestyles.container}>
-        <Head>
-          <title>Sign Up</title>
-          <meta name="description" content="Generated by create next app" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        
-        <Grid container spacing={0} alignItems="center">
-          <Grid item xs={9}>
-            <div className={homestyles.containerLogo}>
-              <div className={homestyles.logo}>
-                <Logo />
-              </div>
-              <h2 className={homestyles.title}>Crypto Cup</h2>
+      <Grid container spacing={0} alignItems="center">
+        <Grid item xs={9}>
+          <div className={homestyles.containerLogo}>
+            <div className={homestyles.logo}>
+              <Logo />
             </div>
-          </Grid>
-          <Grid item xs>
-            <h6>ABOUT</h6>
-          </Grid>
-          <Grid item xs={0.8}>
-            <h6>FAQ</h6>
-          </Grid>
-          <Grid item xs>
-            <LaunchButton variant="contained">LAUNCH</LaunchButton>
-          </Grid>
+            <h2 className={homestyles.title}>Crypto Cup</h2>
+          </div>
         </Grid>
+        <Grid item xs>
+          <h6>ABOUT</h6>
+        </Grid>
+        <Grid item xs={0.8}>
+          <h6>FAQ</h6>
+        </Grid>
+        <Grid item xs>
+          <LaunchButton variant="contained">LAUNCH</LaunchButton>
+        </Grid>
+      </Grid>
 
-        <Grid className={styles.loginContainer}>
-          <Grid item xs>
-            <Grid className={styles.titleContainer} item xs>
-              <h2 className={styles.signup}>
-                  Sign Up&nbsp;
-              </h2>
-              <h2 className={styles.or}>
-                  or&nbsp;
-              </h2>
-              <Link
-                href={{
-                  pathname: "/login",
+      <Grid className={styles.loginContainer}>
+        <Grid item xs>
+          <Grid className={styles.titleContainer} item xs>
+            <h2 className={styles.signup}>Sign Up&nbsp;</h2>
+            <h2 className={styles.or}>or&nbsp;</h2>
+            <Link
+              href={{
+                pathname: "/login",
+              }}
+            >
+              <Button
+                style={{
+                  background: "#13172C",
+                  fontFamily: "Epilogue",
+                  fontSize: 48,
+                  borderRadius: 60,
+                  fontWeight: 300,
+                  height: 60,
+                  padding: 10,
+                  width: 164,
+                  color: "white",
+                  justifyContent: "flex-start",
+                  textTransform: "none",
+                  marginLeft: -5,
                 }}
-                >
-                <Button
-                  style={{
-                    background: "#13172C",
-                    fontFamily: "Epilogue",
-                    fontSize: 48,
-                    borderRadius: 60,
-                    fontWeight: 300,
-                    height: 60,
-                    padding: 10,
-                    width: 164,
-                    color: "white",
-                    justifyContent: "flex-start",
-                    textTransform: "none",
-                    marginLeft: -5,
-                  }}
-                >
-                  Log In
-                </Button>
-              </Link>
-            </Grid>
+              >
+                Log In
+              </Button>
+            </Link>
+          </Grid>
+
+          <FormControl>
             <Grid className={styles.labelSpacing} item xs>
               <p>Email</p>
             </Grid>
             <Grid item xs>
-              <StyledTextField/>
+              <InputBase
+                className={classes.textField}
+                onChange={changeEmail}
+                value={email}
+                type="email"
+              />
             </Grid>
+          </FormControl>
+          <FormControl>
             <Grid className={styles.labelSpacing} item xs>
               <p>Password</p>
             </Grid>
             <Grid item xs>
-              <StyledTextField/>
+              <InputBase
+                className={classes.textField}
+                onChange={changePassword}
+                value={password}
+                type="password"
+              />
             </Grid>
+          </FormControl>
+          <FormControl>
             <Grid className={styles.labelSpacing} item xs>
               <p>Confirm Password</p>
             </Grid>
             <Grid item xs>
-              <StyledTextField/>
-            </Grid>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Birthday</p>
-            </Grid>
-
-            <Grid container>
-              <Grid item xs={3}>
-                <Select
-                  value={month}
-                  displayEmpty
-                  input={<BirthdayTextField/>}
-                  onChange={handleChange}
-                  IconComponent={KeyboardArrowDownIcon}
-                  >
-                  <MenuItem disabled value=""> Month </MenuItem>
-                  <MenuItem value={1}>1</MenuItem>
-                  <MenuItem value={2}>2</MenuItem>
-                  <MenuItem value={3}>3</MenuItem>
-                  <MenuItem value={4}>4</MenuItem>
-                  <MenuItem value={5}>5</MenuItem>
-                  <MenuItem value={6}>6</MenuItem>
-                  <MenuItem value={7}>7</MenuItem>
-                  <MenuItem value={8}>8</MenuItem>
-                  <MenuItem value={9}>9</MenuItem>
-                  <MenuItem value={10}>10</MenuItem>
-                  <MenuItem value={11}>11</MenuItem>
-                  <MenuItem value={12}>12</MenuItem>
-                </Select>
-              </Grid>
-              <Grid item xs={2.8}>
-                <BirthdayTextField placeholder="Day"/>
-              </Grid>
-              <Grid item xs>
-                <BirthdayTextField placeholder="Year"/>
-              </Grid>
-            </Grid>
-            
-            <Grid container item xs>
-              <FormControlLabel
-              className={classes.root}
-                control={
-                  <Checkbox
-                    className={styles.checkboxPos}
-                    sx={{
-                      color: 'rgba(47, 56, 105, 0.6)',
-                      '&.Mui-checked': {
-                        color: '#6B58B8',
-                      },}}
-                    icon={<CircleIcon />} 
-                    checkedIcon={<CircleIcon />} 
-                  />}
-                label="I agree to the Terms of Service and Privacy Policy."
-                labelPlacement="end"
+              <InputBase
+                className={classes.textField}
+                onChange={changeConfirm}
+                value={confirmPass}
+                type="password"
               />
-            </Grid>            
+            </Grid>
+          </FormControl>
+          <Grid className={styles.labelSpacing} item xs>
+            <p>Birthday</p>
+          </Grid>
 
+          <Grid container>
+            <Grid item xs={3}>
+              <Select
+                onChange={changeMonth}
+                displayEmpty
+                input={<InputBase className={classes.birthday}/>}
+                IconComponent={KeyboardArrowDownIcon}
+                type="number"
+              >
+                <MenuItem disabled value="">
+                  {" "}
+                  Month{" "}
+                </MenuItem>
+                <MenuItem value={1}>1</MenuItem>
+                <MenuItem value={2}>2</MenuItem>
+                <MenuItem value={3}>3</MenuItem>
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={5}>5</MenuItem>
+                <MenuItem value={6}>6</MenuItem>
+                <MenuItem value={7}>7</MenuItem>
+                <MenuItem value={8}>8</MenuItem>
+                <MenuItem value={9}>9</MenuItem>
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={11}>11</MenuItem>
+                <MenuItem value={12}>12</MenuItem>
+              </Select>
+            </Grid>
+            <Grid item xs={2.8}>
+              <InputBase
+                className={classes.birthday}
+                placeholder="Day" 
+                type="number" 
+                onChange={changeDay}
+              />
+            </Grid>
             <Grid item xs>
-              <div className={styles.signupButton}>
-                <Button
-                  style={{
-                    background: "rgba(47, 56, 105, 0.6)",
-                    fontFamily: "Space Mono",
-                    fontSize: 20,
-                    borderRadius: 25,
-                    fontWeight: 700,
-                    height: 50,
-                    padding: 10,
-                    width: 214,
-                    color: "white",
-                    textTransform: "none",
-                  }}
-                >
-                  Sign Up
-                </Button>
-              </div>
+              <InputBase
+                className={classes.birthday}
+                placeholder="Year" 
+                type="number" 
+                onChange={changeYear}
+              />
             </Grid>
           </Grid>
-        
+
+          <Grid container item xs>
+            <FormControlLabel
+              className={classes.tos}
+              control={
+                <Checkbox
+                  className={styles.checkboxPos}
+                  sx={{
+                    color: "rgba(47, 56, 105, 0.6)",
+                    "&.Mui-checked": {
+                      color: "#6B58B8",
+                    },
+                  }}
+                  icon={<CircleIcon />}
+                  checkedIcon={<CircleIcon />}
+                />
+              }
+              label="I agree to the Terms of Service and Privacy Policy."
+              labelPlacement="end"
+            />
+          </Grid>
+
           <Grid item xs>
-            <Graph />
+            <div className={styles.signupButton}>
+              <Button
+                style={{
+                  background: "rgba(47, 56, 105, 0.6)",
+                  fontFamily: "Space Mono",
+                  fontSize: 20,
+                  borderRadius: 25,
+                  fontWeight: 700,
+                  height: 50,
+                  padding: 10,
+                  width: 214,
+                  color: "white",
+                  textTransform: "none",
+                }}
+                onClick={signUp}
+              >
+                Sign Up
+              </Button>
+            </div>
           </Grid>
         </Grid>
-      </div>
-    )
-  }
-  
-  export default Signup
+
+        <Grid item xs>
+          <Graph />
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
+
+export default Signup;
