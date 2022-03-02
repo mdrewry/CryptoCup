@@ -20,7 +20,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { UserContext } from "../context/UserProvider";
 
 const Signup: NextPage = () => {
   const router = useRouter();
