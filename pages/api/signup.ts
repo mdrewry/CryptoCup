@@ -19,8 +19,8 @@ export default async function handler(
     await db.collection("users").doc(user.uid).set({
       email,
     });
-  } catch {
-    res.status(500).json({ error: "Error creating user." });
+  } catch (error) {
+    res.status(500).json({ error });
     return;
   }
 
