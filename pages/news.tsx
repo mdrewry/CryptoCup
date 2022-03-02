@@ -5,10 +5,12 @@ import { useRouter } from "next/router"
 import { collection, deleteDoc, doc, DocumentData, getDocs, limit, query, QueryDocumentSnapshot, updateDoc, where } from "firebase/firestore";
 import {db} from "../config/firebase.config"
 import {useState,useEffect} from "react";
+import FadeDisplay from "../Components/FadeDisplay";
 
 
 
 import { List,Grid } from '@mui/material'
+import { style } from '@mui/system';
 
 
 const News: NextPage = () => {
@@ -26,8 +28,7 @@ const News: NextPage = () => {
         result.push(c);
       }
       )
-      setTrending(result[0]);
-      delete result[0];
+      setTrending(result.pop());
       setNewsDocs(result);
     };
     useEffect(()=>{
@@ -49,30 +50,45 @@ const News: NextPage = () => {
             News
           </h1>
           <p></p>
-          <p>Trending</p>
+          <h5 className={styles.newsTitle}>Trending</h5>
           {loading ? (<div>loading</div>) :
-            <div>
-              <img src={trending.get("imageURL")} width="450" height="300"></img>
-              <a href={trending.get("source")}>
-              <h5>{trending.get("title")}</h5>
-              </a>
-              <h5>{trending.get("tag")}</h5>
+          <div>
+          <a href={trending.get("source")}>
+            <div className={styles.trendCard}>
+              <img src={trending.get("imageURL")} width="50%" height="25%"></img>
             </div>
+            
+            <div className={styles.newsSource}>
+              <h5>{trending.get("title")}</h5>
+              <h6>{trending.get("sourceName")}</h6>
+            </div>
+          </a>
+          <FadeDisplay className = {styles.newsSource} variant="contained" disabled={true}>{trending.get("tag")}</FadeDisplay>
+          <h6 className = {styles.newsSource}>{trending.get("text")}</h6>
+          </div>
           }
-          <h5 className={styles.title}>
+          <h1 className={styles.title}>
             Read More
-          </h5>
-          {loading ? (<div>loading</div>) :
+          </h1>
+          {loading ? (<div></div>) :
               <Grid container xs={12}>
                 {
+                  
                   newsDocs.map((article)=>
-                    
                     <Grid item xs={4} >
-                    <img src={article.get("imageURL")} width="450" height="300"></img>
-                    <a href={article.get("source")}>
-                    <h5>{article.get("title")}</h5>
-                    </a>
-                    <h5>{article.get("tag")}</h5>
+                      <div>
+                        <a href={article.get("source")}>
+                          <div className={styles.newsCard}>
+                            <img src={article.get("imageURL")} width="90%" height="300"></img>
+                          </div>
+                          
+                          <div className={styles.newsSource}>
+                            <h5>{article.get("title")}</h5>
+                            <h6>{article.get("sourceName")}</h6>
+                          </div>
+                        </a>
+                        <FadeDisplay className = {styles.newsSource} variant="contained" disabled={true}>{article.get("tag")}</FadeDisplay>
+                      </div>
                     </Grid>
                   )
                 }
