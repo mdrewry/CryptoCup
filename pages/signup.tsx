@@ -141,9 +141,10 @@ const Signup: NextPage = () => {
 
   async function signUp() {
     try {
+      const birthday = month+"/"+day+"/"+year;
       const response = await fetch("/api/signup", {
         method: "POST",
-        body: JSON.stringify({ email, password, month, day, year, wallet }),
+        body: JSON.stringify({ email, password, birthday, wallet }),
         headers: {
           "Content-Type": "application/json",
         },
