@@ -8,13 +8,14 @@ import {useState,useEffect} from "react";
 
 
 
-import { List } from '@mui/material'
+import { List,Grid } from '@mui/material'
 
 
 const News: NextPage = () => {
     const router = useRouter();
     const [loading,setLoading] = useState<boolean>(true);
     const [newsDocs,setNewsDocs] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
+    const [trending,setTrending] = useState<DocumentData>([]);
     const newsRef=collection(db,"news");
     
 
@@ -25,6 +26,8 @@ const News: NextPage = () => {
         result.push(c);
       }
       )
+      setTrending(result[0]);
+      delete result[0];
       setNewsDocs(result);
     };
     useEffect(()=>{
@@ -47,27 +50,34 @@ const News: NextPage = () => {
           </h1>
           <p></p>
           <p>Trending</p>
-          <h2 className={styles.title}>
-            *News Article Title*
-          </h2>
-          <p>*News Source*</p>
-
-          <h5 className={styles.title}>
-            Based on your Interests
-          </h5>
-          <p>Interest #1</p>
           {loading ? (<div>loading</div>) :
-                (newsDocs.map((c)=>
-                <List
-                sx={{
-                    alignItems: 'center'
-                  }}>
-                    {c.get("title")}
-                </List>
-                ))
-            }
-          <p>Interest #2</p>
-          <p>Interest #3</p>
+            <div>
+              <img src={trending.get("imageURL")} width="450" height="300"></img>
+              <a href={trending.get("source")}>
+              <h5>{trending.get("title")}</h5>
+              </a>
+              <h5>{trending.get("tag")}</h5>
+            </div>
+          }
+          <h5 className={styles.title}>
+            Read More
+          </h5>
+          {loading ? (<div>loading</div>) :
+              <Grid container xs={12}>
+                {
+                  newsDocs.map((article)=>
+                    
+                    <Grid item xs={4} >
+                    <img src={article.get("imageURL")} width="450" height="300"></img>
+                    <a href={article.get("source")}>
+                    <h5>{article.get("title")}</h5>
+                    </a>
+                    <h5>{article.get("tag")}</h5>
+                    </Grid>
+                  )
+                }
+              </Grid>
+          }
           
         </main>
   
