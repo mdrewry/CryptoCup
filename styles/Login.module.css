@@ -1,0 +1,42 @@
+.loginContainer{
+    margin-top: 39px;
+    margin-left: 78px;
+    display: flex;
+  }
+
+.titleContainer{
+    display: flex;
+}
+
+.login {
+    color: #89E4DF;
+    font-weight: 700;
+}
+
+.or {
+    font-weight: 100;
+}
+
+.labelSpacing {
+    margin-top: 27px;
+}
+
+.forgor {
+    width: 525px;
+}
+
+.forgot {
+    margin-top: 25px;
+    text-align: right;
+}
+
+.checkboxPos {
+    margin-right: 16px;
+}
+
+.loginButton {
+    width: 525px;
+    margin-top: 52px;
+    margin-bottom: 167px;
+    text-align: center;
+}
