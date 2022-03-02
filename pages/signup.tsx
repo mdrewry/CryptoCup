@@ -27,34 +27,6 @@ const Signup: NextPage = () => {
     query: { id },
   } = router;
 
-  const BirthdayTextField = styled(InputBase)(({ theme }) => ({
-    "&": {
-      marginTop: "6px",
-    },
-    "& .MuiInputBase-input": {
-      borderRadius: 25,
-      fontFamily: "Space Mono",
-      fontSize: 20,
-      color: "#ffffff",
-      backgroundColor: "rgba(47, 56, 105, 0.6)",
-      width: 140,
-      padding: "15px 15px",
-    },
-    "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
-      borderRadius: 25,
-    },
-    "&:focus": {
-      borderRadius: 25,
-      padding: "15px 15px",
-    },
-    "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
-      color: "#ffffff",
-    },
-    "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
-      color: "#ffffff",
-    },
-  }));
-
   const useStyles = makeStyles((theme) => ({
     textField: {
       "&": {
@@ -73,6 +45,33 @@ const Signup: NextPage = () => {
         borderRadius: 25,
       },
     },
+    birthday: {
+      "&": {
+        marginTop: "6px",
+      },
+      "& .MuiInputBase-input": {
+        borderRadius: 25,
+        fontFamily: "Space Mono",
+        fontSize: 20,
+        color: "#ffffff",
+        backgroundColor: "rgba(47, 56, 105, 0.6)",
+        width: 140,
+        padding: "15px 15px",
+      },
+      "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
+        borderRadius: 25,
+      },
+      "&:focus": {
+        borderRadius: 25,
+        padding: "15px 15px",
+      },
+      "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
+        color: "#ffffff",
+      },
+      "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
+        color: "#ffffff",
+      },
+    },
     tos: {
       "& .css-ahj2mt-MuiTypography-root": {
         color: "#ffffff",
@@ -89,9 +88,12 @@ const Signup: NextPage = () => {
   // const inputRef = useRef<any>();
 
   const [month, setMonth] = React.useState("");
+  const [day, setDay] = React.useState("");
+  const [year, setYear] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
+  console.log(month);
   //console.log(email);
   //console.log(password);
   //console.log(confirmPass);
@@ -118,17 +120,29 @@ const Signup: NextPage = () => {
     setConfirmPass(event.target.value);
   };
 
-  const handleChange = (event: {
+  const changeMonth = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
     setMonth(event.target.value);
+  };
+
+  const changeDay = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setDay(event.target.value);
+  };
+
+  const changeYear = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setYear(event.target.value);
   };
 
   async function signUp() {
     try {
       const response = await fetch("/api/signup", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, month, day, year }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -212,6 +226,7 @@ const Signup: NextPage = () => {
                 className={classes.textField}
                 onChange={changeEmail}
                 value={email}
+                type="email"
               />
             </Grid>
           </FormControl>
@@ -248,12 +263,11 @@ const Signup: NextPage = () => {
           <Grid container>
             <Grid item xs={3}>
               <Select
-                value={month}
+                onChange={changeMonth}
                 displayEmpty
-                input={<BirthdayTextField />}
-                onChange={handleChange}
+                input={<InputBase className={classes.birthday}/>}
                 IconComponent={KeyboardArrowDownIcon}
-                type="month"
+                type="number"
               >
                 <MenuItem disabled value="">
                   {" "}
@@ -274,10 +288,20 @@ const Signup: NextPage = () => {
               </Select>
             </Grid>
             <Grid item xs={2.8}>
-              <BirthdayTextField placeholder="Day" />
+              <InputBase
+                className={classes.birthday}
+                placeholder="Day" 
+                type="number" 
+                onChange={changeDay}
+              />
             </Grid>
             <Grid item xs>
-              <BirthdayTextField placeholder="Year" />
+              <InputBase
+                className={classes.birthday}
+                placeholder="Year" 
+                type="number" 
+                onChange={changeYear}
+              />
             </Grid>
           </Grid>
 

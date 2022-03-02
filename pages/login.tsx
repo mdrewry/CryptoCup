@@ -151,6 +151,7 @@ const Login: NextPage = () => {
                 className={classes.textField}
                 onChange={changeEmail}
                 value={email}
+                type="email"
               />
             </Grid>
           </FormControl>
