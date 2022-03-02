@@ -93,8 +93,9 @@ const Signup: NextPage = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [confirmPass, setConfirmPass] = React.useState("");
-  console.log(password);
-  console.log(confirmPass);
+  //console.log(email);
+  //console.log(password);
+  //console.log(confirmPass);
 
   // useEffect(() => {
   //   inputRef.current.focus();
@@ -135,7 +136,7 @@ const Signup: NextPage = () => {
       });
       const data = await response.json();
       if (data.error) {
-        alert(data.error);
+        alert(data.error.message);
       } else {
         alert("User created.");
       }
