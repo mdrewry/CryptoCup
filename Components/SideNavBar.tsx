@@ -78,18 +78,19 @@ const Content = ({ path }: ContentProps) => {
       alert("Error during signing. Please refresh and try again.");
     }
   }
-  console.log(path);
   return (
     <>
       <div className={styles.headerSection}>
         <Avatar
           sx={{ width: 80, height: 80 }}
-          alt={user.firstName}
-          src={user.img}
+          // alt={user.firstName}
+          // src={user.img}
+          src={user.uid}
+          alt={user.uid}
         />
         <div className={styles.header}>
-          <h4 className={styles.title}>{user.firstName} User</h4>
-          <h5 className={styles.subtitle}>{user.uid}123213</h5>
+          {/* <h4 className={styles.title}>{user.firstName} User</h4> */}
+          <h5 className={styles.subtitle}>{user.uid.substring(0, 10)}</h5>
         </div>
       </div>
       <Stack className={styles.spacer} spacing={2}>

@@ -4,7 +4,7 @@ import homestyles from "../styles/Home.module.css";
 import styles from "../styles/Signup.module.css";
 import { styled } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/core/styles";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Logo from "../Icons/Logo.js";
 import LaunchButton from "../Components/LaunchButton.js";
 import Graph from "../Icons/Graph.js";
@@ -22,11 +22,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import React, { useState, useEffect, useContext, useRef } from "react";
 
 const Signup: NextPage = () => {
-  const router = useRouter();
-  const {
-    query: { id },
-  } = router;
-
   const useStyles = makeStyles((theme) => ({
     textField: {
       "&": {
@@ -153,7 +148,6 @@ const Signup: NextPage = () => {
         alert(data.error.message);
       } else {
         alert("User created.");
-        Router.push("/dashboard");
       }
     } catch (error) {
       alert(error);
@@ -267,7 +261,7 @@ const Signup: NextPage = () => {
               <Select
                 onChange={changeMonth}
                 displayEmpty
-                input={<InputBase className={classes.birthday}/>}
+                input={<InputBase className={classes.birthday} />}
                 IconComponent={KeyboardArrowDownIcon}
                 type="number"
               >
@@ -292,16 +286,16 @@ const Signup: NextPage = () => {
             <Grid item xs={2.8}>
               <InputBase
                 className={classes.birthday}
-                placeholder="Day" 
-                type="number" 
+                placeholder="Day"
+                type="number"
                 onChange={changeDay}
               />
             </Grid>
             <Grid item xs>
               <InputBase
                 className={classes.birthday}
-                placeholder="Year" 
-                type="number" 
+                placeholder="Year"
+                type="number"
                 onChange={changeYear}
               />
             </Grid>
