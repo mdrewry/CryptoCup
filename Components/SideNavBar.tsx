@@ -78,7 +78,6 @@ const Content = ({ path }: ContentProps) => {
       alert("Error during signing. Please refresh and try again.");
     }
   }
-  console.log(path);
   return (
     <>
       <div className={styles.headerSection}>

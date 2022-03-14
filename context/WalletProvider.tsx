@@ -37,7 +37,6 @@ class WalletProvider extends Component<{}, { wallet: Wallet }> {
   };
 
   render() {
-    console.log(this.state.wallet);
     return (
       <WalletContext.Provider value={this.state.wallet}>
         {this.props.children}

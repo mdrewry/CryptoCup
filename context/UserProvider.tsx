@@ -30,6 +30,7 @@ class UserProvider extends Component<{}, { user: User }> {
 
   componentDidMount = () => {
     auth.onAuthStateChanged(async (userAuth) => {
+      console.log("triggered");
       const user: User = { ...USER };
       if (userAuth) {
         const userDocRef = doc(db, "users", userAuth.uid);
@@ -43,6 +44,7 @@ class UserProvider extends Component<{}, { user: User }> {
           user.firstName = data.firstName;
         }
       }
+
       localStorage.setItem("user", user ? JSON.stringify(user) : "");
       this.setState({ user });
     });
