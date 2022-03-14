@@ -81,13 +81,9 @@ const Content = ({ path }: ContentProps) => {
   return (
     <>
       <div className={styles.headerSection}>
-        <Avatar
-          sx={{ width: 80, height: 80 }}
-          alt={user.firstName}
-          src={user.img}
-        />
+        <Avatar sx={{ width: 80, height: 80 }} alt={user.uid} src={user.uid} />
         <div className={styles.header}>
-          <h4 className={styles.title}>{user.firstName} User</h4>
+          <h4 className={styles.title}>{user.uid} User</h4>
           <h5 className={styles.subtitle}>{user.uid}123213</h5>
         </div>
       </div>

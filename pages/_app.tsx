@@ -1,13 +1,14 @@
 import "../styles/globals.css";
 import { useState, useEffect, useContext } from "react";
 import type { AppProps } from "next/app";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import { orange } from "@mui/material/colors";
 import Box from "@mui/material/Box";
 import SideNavBar from "../Components/SideNavBar";
 import Footer from "../Components/Footer";
-import UserProvider, { UserContext } from "../context/UserProvider";
+import AuthRouteManagement from "../Components/AuthRouteManagement";
+import UserProvider from "../context/UserProvider";
 import WalletProvider from "../context/WalletProvider";
 declare module "@mui/material/styles" {
   interface Theme {
@@ -28,41 +29,12 @@ const theme = createTheme({
   },
 });
 function MyApp({ Component, pageProps }: AppProps) {
-  const user = useContext(UserContext);
   const { pathname } = useRouter();
   const [path, setPath] = useState(pathname.substring(1).split("/")[0]);
   const displaySidebar = !["", "login", "signup"].some(
     (route) => route === path
   );
   const sideBarWidth = 270;
-
-  useEffect(() => {
-    const parsedPath = pathname.substring(1).split("/")[0];
-    if (user.uid === "") {
-      if (!["", "login", "signup"].some((r) => r === parsedPath))
-        Router.push("/");
-    } else Router.push("/dashboard");
-  }, [user]);
-
-  useEffect(() => {
-    const parsedPath = pathname.substring(1).split("/")[0];
-    if (
-      user.uid === "" &&
-      ["dashboard", "mycups", "leaderboard", "cryptoinfo", "news"].some(
-        (r) => r === parsedPath
-      )
-    ) {
-      Router.push("/");
-    } else if (
-      user.uid !== "" &&
-      ["", "login", "signup"].some((r) => r === parsedPath)
-    ) {
-      Router.push("/dashboard");
-      setPath(parsedPath);
-    } else {
-      setPath(parsedPath);
-    }
-  }, [pathname]);
 
   return (
     <UserProvider>
@@ -94,6 +66,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               }}
             >
               <Component {...pageProps} />
+              <AuthRouteManagement pathname={pathname} setPath={setPath} />
               <Footer />
             </Box>
           </Box>

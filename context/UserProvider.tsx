@@ -6,11 +6,9 @@ type User = {
   uid: string;
   email: string;
   wallet: string;
-  img: string;
-  firstName: string;
 };
 
-const USER: User = { uid: "", email: "", wallet: "", img: "", firstName: "" };
+const USER: User = { uid: "", email: "", wallet: "" };
 
 export const UserContext = createContext({ ...USER });
 
@@ -30,7 +28,6 @@ class UserProvider extends Component<{}, { user: User }> {
 
   componentDidMount = () => {
     auth.onAuthStateChanged(async (userAuth) => {
-      console.log("triggered");
       const user: User = { ...USER };
       if (userAuth) {
         const userDocRef = doc(db, "users", userAuth.uid);
@@ -40,11 +37,8 @@ class UserProvider extends Component<{}, { user: User }> {
           user.uid = userAuth.uid;
           user.email = data.email;
           user.wallet = data.wallet;
-          user.img = data.img;
-          user.firstName = data.firstName;
         }
       }
-
       localStorage.setItem("user", user ? JSON.stringify(user) : "");
       this.setState({ user });
     });
