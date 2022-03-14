@@ -1,0 +1,11 @@
+.padding{
+    padding: 25px;
+}
+
+.cuptype{
+    color: #ffffff;
+    border-radius: 25px;
+    background: #DA93D3;
+    width: 60px;
+    text-align: center;
+}
