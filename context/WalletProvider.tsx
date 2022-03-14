@@ -24,7 +24,6 @@ class WalletProvider extends Component<{}, { wallet: Wallet }> {
   }
 
   connect = async () => {
-    console.log("connecting wallet");
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
