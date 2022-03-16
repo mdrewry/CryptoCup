@@ -31,12 +31,7 @@ const routes: routeType[] = [
 const Content = ({ path }: ContentProps) => {
   const user = useContext(UserContext);
   const wallet = useContext(WalletContext);
-  const [walletConnected, setWalletConnected] = useState(user.wallet !== "");
-
-  useEffect(() => {
-    setWalletConnected(user.wallet !== "");
-  }, [user.wallet]);
-
+  const walletLinked = user.wallet !== "";
   async function linkWallet() {
     let web3 = new Web3(Web3.givenProvider);
     let acc = wallet.address;
@@ -78,18 +73,19 @@ const Content = ({ path }: ContentProps) => {
       alert("Error during signing. Please refresh and try again.");
     }
   }
-  console.log(path);
   return (
     <>
       <div className={styles.headerSection}>
         <Avatar
           sx={{ width: 80, height: 80 }}
-          alt={user.firstName}
-          src={user.img}
+          // alt={user.firstName}
+          // src={user.img}
+          src={user.uid}
+          alt={user.uid}
         />
         <div className={styles.header}>
-          <h4 className={styles.title}>{user.firstName} User</h4>
-          <h5 className={styles.subtitle}>{user.uid}123213</h5>
+          {/* <h4 className={styles.title}>{user.firstName} User</h4> */}
+          <h5 className={styles.subtitle}>{user.uid.substring(0, 10)}</h5>
         </div>
       </div>
       <Stack className={styles.spacer} spacing={2}>
@@ -161,22 +157,29 @@ const Content = ({ path }: ContentProps) => {
         </Button>
       </Stack>
       <div className={styles.filler} />
-      {!walletConnected && (
+
+      <h6>Wallet Status:</h6>
+      <h6 className={styles.walletStatus}>
+        {user.wallet ? "Connected" : "Disconnected"}
+      </h6>
+      <p className={styles.walletStatusSubheader}>
+        You must be connected to join a cup.
+      </p>
+      {user.wallet ? (
+        <FadeButton variant="contained">Connected</FadeButton>
+      ) : (
         <>
-          <h6>Wallet Status:</h6>
-          <h6 className={styles.walletStatus}>Disconnected</h6>
-          <p className={styles.walletStatusSubheader}>
-            You must be connected to join a cup.
-          </p>
+          {wallet.address ? (
+            <FadeButton variant="contained" onClick={wallet.connect}>
+              Connect Wallet
+            </FadeButton>
+          ) : (
+            <FadeButton variant="contained" onClick={linkWallet}>
+              Link Wallet
+            </FadeButton>
+          )}
         </>
       )}
-      <FadeButton
-        disabled={walletConnected}
-        variant="contained"
-        onClick={linkWallet}
-      >
-        {walletConnected ? "Connected" : "Connect Now"}
-      </FadeButton>
     </>
   );
 };

@@ -30,6 +30,7 @@ firebase-debug.log
 .env.development.local
 .env.test.local
 .env.production.local
+secrets.env
 
 # vercel
 .vercel

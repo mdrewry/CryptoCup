@@ -24,7 +24,6 @@ class WalletProvider extends Component<{}, { wallet: Wallet }> {
   }
 
   connect = async () => {
-    console.log("connecting wallet");
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
@@ -37,7 +36,6 @@ class WalletProvider extends Component<{}, { wallet: Wallet }> {
   };
 
   render() {
-    console.log(this.state.wallet);
     return (
       <WalletContext.Provider value={this.state.wallet}>
         {this.props.children}
