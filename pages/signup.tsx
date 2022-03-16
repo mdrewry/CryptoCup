@@ -20,10 +20,14 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import React, { useState, useEffect, useContext, useRef } from "react";
+import TextField from "@mui/material/TextField";
 
 const Signup: NextPage = () => {
   const useStyles = makeStyles((theme) => ({
     textField: {
+      [`& fieldset`]: {
+        borderRadius: 25,
+      },
       "&": {
         marginTop: "9px",
       },
@@ -36,9 +40,9 @@ const Signup: NextPage = () => {
         width: 500,
         padding: "15px 15px",
       },
-      "&:focus": {
-        borderRadius: 25,
-      },
+      // "&:focus": {
+      //   /borderRadius: 25,
+      // },
     },
     birthday: {
       "&": {
@@ -82,61 +86,98 @@ const Signup: NextPage = () => {
 
   // const inputRef = useRef<any>();
 
-  const [month, setMonth] = React.useState("");
-  const [day, setDay] = React.useState("");
-  const [year, setYear] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPass, setConfirmPass] = React.useState("");
   const [wallet, setWallet] = React.useState("");
-  // console.log(month);
-  //console.log(email);
-  //console.log(password);
-  //console.log(confirmPass);
 
   // useEffect(() => {
   //   inputRef.current.focus();
   // }, []);
 
-  const changeEmail = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setEmail(event.target.value);
+  const initialFormValues = {
+    //fullName: "",
+    email: "",
+    password: "",
+    confirm: "",
+    month: "Month",
+    day: "Day",
+    year: "Year",
+    //message:"",
+    //formSubmitted: false,
+    //success: false
+  }
+  const [values, setValues] = useState(initialFormValues);
+  const [errors, setErrors] = useState({} as any);
+
+  const validate: any = (fieldValues = values) => {
+    let temp: any = { ...errors }
+
+    // if ("fullName" in fieldValues)
+    //   temp.fullName = fieldValues.fullName ? "" : "This field is required."
+
+    if ("email" in fieldValues) {
+      temp.email = fieldValues.email ? "" : "This field is required."
+      if (fieldValues.email)
+        temp.email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.email)
+          ? ""
+          : "Email is not valid."
+    }
+
+    if ("password" in fieldValues)
+      temp.password =
+        fieldValues.password ? "" : "This field is required."
+
+    if ("confirm" in fieldValues)
+      temp.confirm =
+        fieldValues.confirm ? "" : "This field is required."
+    
+    if ("month" in fieldValues)
+      temp.password =
+        fieldValues.password ? "" : "This field is required."
+
+    if ("day" in fieldValues)
+      temp.password =
+        fieldValues.password ? "" : "This field is required."
+
+    if ("year" in fieldValues)
+      temp.password =
+        fieldValues.password ? "" : "This field is required."
+
+    setErrors({
+      ...temp
+    });
+  }
+
+  const handleInputValue = (e: any) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value
+    });
+    validate({ [name]: value });
   };
 
-  const changePassword = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setPassword(event.target.value);
+  const formIsValid = (fieldValues = values) => {
+    const isValid =
+      fieldValues.email && fieldValues.password
+      fieldValues.confirm && fieldValues.day
+      fieldValues.month && fieldValues.year
+      Object.values(errors).every((x) => x === "");
+
+    return isValid;
   };
 
-  const changeConfirm = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setConfirmPass(event.target.value);
-  };
-
-  const changeMonth = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setMonth(event.target.value);
-  };
-
-  const changeDay = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setDay(event.target.value);
-  };
-
-  const changeYear = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setYear(event.target.value);
+  const handleFormSubmit = async (e: any) => {
+    e.preventDefault();
+    if (formIsValid()) {
+      // await postContactForm(values);
+      alert("You've posted your form!")
+    }
   };
 
   async function signUp() {
     try {
-      const birthday = month+"/"+day+"/"+year;
+      const birthday = initialFormValues.month+"/"+initialFormValues.day+"/"+initialFormValues.year;
+      const email = initialFormValues.email;
+      const password = initialFormValues.password;
       const response = await fetch("/api/signup", {
         method: "POST",
         body: JSON.stringify({ email, password, birthday, wallet }),
@@ -213,30 +254,39 @@ const Signup: NextPage = () => {
               </Button>
             </Link>
           </Grid>
-
+          {/* <form autoComplete="off" onSubmit={handleFormSubmit}> */}
           <FormControl>
             <Grid className={styles.labelSpacing} item xs>
               <p>Email</p>
             </Grid>
             <Grid item xs>
-              <InputBase
+              <TextField
                 className={classes.textField}
-                onChange={changeEmail}
-                value={email}
-                type="email"
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                name={"email"}
+                {...(errors["email"] && {
+                  error: true,
+                  helperText: errors["email"]
+                })}
               />
             </Grid>
           </FormControl>
+          {/* </form> */}
           <FormControl>
             <Grid className={styles.labelSpacing} item xs>
               <p>Password</p>
             </Grid>
             <Grid item xs>
-              <InputBase
+              <TextField
                 className={classes.textField}
-                onChange={changePassword}
-                value={password}
-                type="password"
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                name={"password"}
+                {...(errors["password"] && {
+                  error: true,
+                  helperText: errors["password"]
+                })}
               />
             </Grid>
           </FormControl>
@@ -245,11 +295,15 @@ const Signup: NextPage = () => {
               <p>Confirm Password</p>
             </Grid>
             <Grid item xs>
-              <InputBase
+              <TextField
                 className={classes.textField}
-                onChange={changeConfirm}
-                value={confirmPass}
-                type="password"
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                name={"confirm"}
+                {...(errors["confirm"] && {
+                  error: true,
+                  helperText: errors["confirm"]
+                })}
               />
             </Grid>
           </FormControl>
@@ -260,7 +314,7 @@ const Signup: NextPage = () => {
           <Grid container>
             <Grid item xs={3}>
               <Select
-                onChange={changeMonth}
+                onChange={handleInputValue}
                 displayEmpty
                 input={<InputBase className={classes.birthday} />}
                 IconComponent={KeyboardArrowDownIcon}
@@ -289,7 +343,7 @@ const Signup: NextPage = () => {
                 className={classes.birthday}
                 placeholder="Day"
                 type="number"
-                onChange={changeDay}
+                onChange={handleInputValue}
               />
             </Grid>
             <Grid item xs>
@@ -297,7 +351,7 @@ const Signup: NextPage = () => {
                 className={classes.birthday}
                 placeholder="Year"
                 type="number"
-                onChange={changeYear}
+                onChange={handleInputValue}
               />
             </Grid>
           </Grid>
@@ -339,6 +393,8 @@ const Signup: NextPage = () => {
                   textTransform: "none",
                 }}
                 onClick={signUp}
+                type="submit"
+                disabled={!formIsValid()}
               >
                 Sign Up
               </Button>
