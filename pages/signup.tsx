@@ -21,6 +21,7 @@ import Select from "@mui/material/Select";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import TextField from "@mui/material/TextField";
+import FormHelperText from "@mui/material/FormHelperText";
 
 const Signup: NextPage = () => {
   const useStyles = makeStyles((theme) => ({
@@ -45,6 +46,9 @@ const Signup: NextPage = () => {
       // },
     },
     birthday: {
+      [`& fieldset`]: {
+        borderRadius: 25,
+      },
       "&": {
         marginTop: "6px",
       },
@@ -57,19 +61,19 @@ const Signup: NextPage = () => {
         width: 140,
         padding: "15px 15px",
       },
-      "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
-        borderRadius: 25,
-      },
-      "&:focus": {
-        borderRadius: 25,
-        padding: "15px 15px",
-      },
-      "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
-        color: "#ffffff",
-      },
-      "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
-        color: "#ffffff",
-      },
+      // "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
+      //   borderRadius: 25,
+      // },
+      // "&:focus": {
+      //   borderRadius: 25,
+      //   padding: "15px 15px",
+      // },
+      // "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
+      //   color: "#ffffff",
+      // },
+      // "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
+      //   color: "#ffffff",
+      // },
     },
     tos: {
       "& .css-ahj2mt-MuiTypography-root": {
@@ -85,7 +89,25 @@ const Signup: NextPage = () => {
   // const user = useContext(UserContext);
 
   // const inputRef = useRef<any>();
-
+  // const months = [
+  //   {
+  //     value: 'USD',
+  //     label: '$',
+  //   },
+  //   {
+  //     value: 'EUR',
+  //     label: '€',
+  //   },
+  //   {
+  //     value: 'BTC',
+  //     label: '฿',
+  //   },
+  //   {
+  //     value: 'JPY',
+  //     label: '¥',
+  //   },
+  // ];
+  const months = [1,2,3,4,5,6,7,8,9,10,11,12];
   const [wallet, setWallet] = React.useState("");
 
   // useEffect(() => {
@@ -97,14 +119,16 @@ const Signup: NextPage = () => {
     email: "",
     password: "",
     confirm: "",
-    month: "Month",
-    day: "Day",
-    year: "Year",
+    month: "",
+    day: "",
+    year: "",
+    tos: false,
     //message:"",
     //formSubmitted: false,
     //success: false
   }
   const [values, setValues] = useState(initialFormValues);
+  const [tosError, setTosError] = useState(false);
   const [errors, setErrors] = useState({} as any);
 
   const validate: any = (fieldValues = values) => {
@@ -130,19 +154,29 @@ const Signup: NextPage = () => {
         fieldValues.confirm ? "" : "This field is required."
     
     if ("month" in fieldValues)
-      temp.password =
-        fieldValues.password ? "" : "This field is required."
+      temp.month =
+        fieldValues.month ? "" : "This field is required."
 
     if ("day" in fieldValues)
-      temp.password =
-        fieldValues.password ? "" : "This field is required."
+      temp.day =
+        fieldValues.day ? "" : "This field is required."
 
     if ("year" in fieldValues)
-      temp.password =
-        fieldValues.password ? "" : "This field is required."
+      temp.year =
+        fieldValues.year ? "" : "This field is required."
+    
+    if ("tos" in fieldValues)
+      fieldValues.tos ? setTosError(false) : setTosError(true)
 
     setErrors({
       ...temp
+    });
+  }
+
+  const handleTos = (e: any) => {
+    setValues({
+      ...values,
+      ["tos"]: e.target.checked
     });
   }
 
@@ -157,9 +191,10 @@ const Signup: NextPage = () => {
 
   const formIsValid = (fieldValues = values) => {
     const isValid =
-      fieldValues.email && fieldValues.password
-      fieldValues.confirm && fieldValues.day
-      fieldValues.month && fieldValues.year
+      fieldValues.email && fieldValues.password &&
+      fieldValues.confirm && fieldValues.day &&
+      fieldValues.month && fieldValues.year &&
+      fieldValues.tos
       Object.values(errors).every((x) => x === "");
 
     return isValid;
@@ -174,25 +209,28 @@ const Signup: NextPage = () => {
   };
 
   async function signUp() {
-    try {
-      const birthday = initialFormValues.month+"/"+initialFormValues.day+"/"+initialFormValues.year;
-      const email = initialFormValues.email;
-      const password = initialFormValues.password;
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        body: JSON.stringify({ email, password, birthday, wallet }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (data.error) {
-        alert(data.error.message);
-      } else {
-        alert("User created.");
+    validate(values);
+    if(formIsValid()){
+      try {
+        const birthday = values.month+"/"+values.day+"/"+values.year;
+        const email = values.email;
+        const password = values.password;
+        const response = await fetch("/api/signup", {
+          method: "POST",
+          body: JSON.stringify({ email, password, birthday, wallet }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        if (data.error) {
+          alert(data.error.message);
+        } else {
+          alert("User created.");
+        }
+      } catch (error) {
+        alert(error);
       }
-    } catch (error) {
-      alert(error);
     }
   }
 
@@ -283,6 +321,7 @@ const Signup: NextPage = () => {
                 onChange={handleInputValue}
                 onBlur={handleInputValue}
                 name={"password"}
+                type="password"
                 {...(errors["password"] && {
                   error: true,
                   helperText: errors["password"]
@@ -300,6 +339,7 @@ const Signup: NextPage = () => {
                 onChange={handleInputValue}
                 onBlur={handleInputValue}
                 name={"confirm"}
+                type="password"
                 {...(errors["confirm"] && {
                   error: true,
                   helperText: errors["confirm"]
@@ -313,68 +353,80 @@ const Signup: NextPage = () => {
 
           <Grid container>
             <Grid item xs={3}>
-              <Select
+              <TextField
+                className={classes.birthday}
+                select
                 onChange={handleInputValue}
-                displayEmpty
-                input={<InputBase className={classes.birthday} />}
-                IconComponent={KeyboardArrowDownIcon}
+                onBlur={handleInputValue}
+                placeholder="Month"
                 type="number"
+                name={"month"}
+                {...(errors["month"] && {
+                  error: true,
+                  helperText: errors["month"]
+                })}
               >
-                <MenuItem disabled value="">
-                  {" "}
-                  Month{" "}
-                </MenuItem>
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={7}>7</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={11}>11</MenuItem>
-                <MenuItem value={12}>12</MenuItem>
-              </Select>
+                <MenuItem value="Month" disabled>Month</MenuItem>
+                {months.map((index) => (
+                  <MenuItem value={index}>{index}</MenuItem>
+                ))}
+              </TextField>
+
             </Grid>
             <Grid item xs={2.8}>
-              <InputBase
+              <TextField
                 className={classes.birthday}
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
                 placeholder="Day"
                 type="number"
-                onChange={handleInputValue}
+                name={"day"}
+                {...(errors["day"] && {
+                  error: true,
+                  helperText: errors["day"]
+                })}
               />
             </Grid>
             <Grid item xs>
-              <InputBase
+              <TextField
                 className={classes.birthday}
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
                 placeholder="Year"
                 type="number"
-                onChange={handleInputValue}
+                name={"year"}
+                {...(errors["year"] && {
+                  error: true,
+                  helperText: errors["year"]
+                })}
               />
             </Grid>
           </Grid>
 
           <Grid container item xs>
-            <FormControlLabel
-              className={classes.tos}
-              control={
-                <Checkbox
-                  className={styles.checkboxPos}
-                  sx={{
-                    color: "rgba(47, 56, 105, 0.6)",
-                    "&.Mui-checked": {
-                      color: "#6B58B8",
-                    },
-                  }}
-                  icon={<CircleIcon />}
-                  checkedIcon={<CircleIcon />}
-                />
-              }
-              label="I agree to the Terms of Service and Privacy Policy."
-              labelPlacement="end"
-            />
+            <FormControl error={true}>
+              <FormControlLabel
+                className={classes.tos}
+                control={
+                  <Checkbox
+                    className={styles.checkboxPos}
+                    onChange={handleTos}
+                    sx={{
+                      color: "rgba(47, 56, 105, 0.6)",
+                      "&.Mui-checked": {
+                        color: "#6B58B8",
+                      },
+                    }}
+                    icon={<CircleIcon />}
+                    checkedIcon={<CircleIcon />}
+                    name={"tos"}
+                  />
+                }
+                label="I agree to the Terms of Service and Privacy Policy."
+                labelPlacement="end"
+              />
+              {tosError ? <FormHelperText>This field is required.</FormHelperText> : <div></div>}
+            </FormControl>
           </Grid>
 
           <Grid item xs>
@@ -393,8 +445,8 @@ const Signup: NextPage = () => {
                   textTransform: "none",
                 }}
                 onClick={signUp}
-                type="submit"
-                disabled={!formIsValid()}
+                // type="submit"
+                // disabled={!formIsValid()}
               >
                 Sign Up
               </Button>
