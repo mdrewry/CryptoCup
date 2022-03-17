@@ -125,36 +125,48 @@ const Content = ({ path }: ContentProps) => {
         ))}
       </Stack>
       <Stack className={styles.spacer} spacing={2}>
-        <Button
-          style={{
-            background: "#2F386999",
-            fontFamily: "Space Mono",
-            fontSize: 20,
-            borderRadius: 60,
-            fontWeight: 700,
-            height: 55,
-            padding: 10,
-            width: "100%",
-            color: "white",
+        <Link
+          href={{
+            pathname: "/createcup",
           }}
         >
-          Create a Cup
-        </Button>
-        <Button
-          style={{
-            background: "#2F386999",
-            fontFamily: "Space Mono",
-            fontSize: 20,
-            borderRadius: 60,
-            fontWeight: 700,
-            height: 55,
-            padding: 10,
-            width: "100%",
-            color: "white",
+          <Button
+            style={{
+              background: "#2F386999",
+              fontFamily: "Space Mono",
+              fontSize: 20,
+              borderRadius: 60,
+              fontWeight: 700,
+              height: 55,
+              padding: 10,
+              width: "100%",
+              color: "white",
+            }}
+          >
+            Create a Cup
+          </Button>
+        </Link>
+        <Link
+          href={{
+            pathname: "/joincup",
           }}
         >
-          Join a Cup
-        </Button>
+          <Button
+            style={{
+              background: "#2F386999",
+              fontFamily: "Space Mono",
+              fontSize: 20,
+              borderRadius: 60,
+              fontWeight: 700,
+              height: 55,
+              padding: 10,
+              width: "100%",
+              color: "white",
+            }}
+          >
+            Join a Cup
+          </Button>
+        </Link>
       </Stack>
       <div className={styles.filler} />
 

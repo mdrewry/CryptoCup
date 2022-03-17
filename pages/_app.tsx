@@ -24,9 +24,18 @@ declare module "@mui/material/styles" {
   }
 }
 const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#2F3869",
+    },
+    secondary: {
+      main: "#DA93D3",
+    },
+  },
   status: {
     danger: orange[500],
   },
+  components: {},
 });
 function MyApp({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
