@@ -41,9 +41,6 @@ const Signup: NextPage = () => {
         width: 500,
         padding: "15px 15px",
       },
-      // "&:focus": {
-      //   /borderRadius: 25,
-      // },
     },
     birthday: {
       [`& fieldset`]: {
@@ -61,19 +58,6 @@ const Signup: NextPage = () => {
         width: 140,
         padding: "15px 15px",
       },
-      // "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
-      //   borderRadius: 25,
-      // },
-      // "&:focus": {
-      //   borderRadius: 25,
-      //   padding: "15px 15px",
-      // },
-      // "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
-      //   color: "#ffffff",
-      // },
-      // "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
-      //   color: "#ffffff",
-      // },
     },
     tos: {
       "& .css-ahj2mt-MuiTypography-root": {
@@ -86,36 +70,13 @@ const Signup: NextPage = () => {
     },
   }));
   const classes = useStyles();
-  // const user = useContext(UserContext);
 
-  // const inputRef = useRef<any>();
-  // const months = [
-  //   {
-  //     value: 'USD',
-  //     label: '$',
-  //   },
-  //   {
-  //     value: 'EUR',
-  //     label: '€',
-  //   },
-  //   {
-  //     value: 'BTC',
-  //     label: '฿',
-  //   },
-  //   {
-  //     value: 'JPY',
-  //     label: '¥',
-  //   },
-  // ];
   const months = [1,2,3,4,5,6,7,8,9,10,11,12];
   const [wallet, setWallet] = React.useState("");
 
-  // useEffect(() => {
-  //   inputRef.current.focus();
-  // }, []);
-
   const initialFormValues = {
-    //fullName: "",
+    first: "",
+    last: "",
     email: "",
     password: "",
     confirm: "",
@@ -123,9 +84,6 @@ const Signup: NextPage = () => {
     day: "",
     year: "",
     tos: false,
-    //message:"",
-    //formSubmitted: false,
-    //success: false
   }
   const [values, setValues] = useState(initialFormValues);
   const [tosError, setTosError] = useState(false);
@@ -134,8 +92,11 @@ const Signup: NextPage = () => {
   const validate: any = (fieldValues = values) => {
     let temp: any = { ...errors }
 
-    // if ("fullName" in fieldValues)
-    //   temp.fullName = fieldValues.fullName ? "" : "This field is required."
+    if ("first" in fieldValues)
+      temp.first = fieldValues.first ? "" : "This field is required."
+
+    if ("last" in fieldValues)
+      temp.last = fieldValues.last ? "" : "This field is required."
 
     if ("email" in fieldValues) {
       temp.email = fieldValues.email ? "" : "This field is required."
@@ -191,6 +152,7 @@ const Signup: NextPage = () => {
 
   const formIsValid = (fieldValues = values) => {
     const isValid =
+      fieldValues.first && fieldValues.last &&
       fieldValues.email && fieldValues.password &&
       fieldValues.confirm && fieldValues.day &&
       fieldValues.month && fieldValues.year &&
@@ -200,24 +162,25 @@ const Signup: NextPage = () => {
     return isValid;
   };
 
-  const handleFormSubmit = async (e: any) => {
-    e.preventDefault();
-    if (formIsValid()) {
-      // await postContactForm(values);
-      alert("You've posted your form!")
-    }
-  };
+  // const handleFormSubmit = async (e: any) => {
+  //   e.preventDefault();
+  //   if (formIsValid()) {
+  //     // await postContactForm(values);
+  //     alert("You've posted your form!")
+  //   }
+  // };
 
   async function signUp() {
     validate(values);
     if(formIsValid()){
       try {
-        const birthday = values.month+"/"+values.day+"/"+values.year;
+        const fullname = values.first+" "+values.last;
         const email = values.email;
         const password = values.password;
+        const birthday = values.month+"/"+values.day+"/"+values.year;
         const response = await fetch("/api/signup", {
           method: "POST",
-          body: JSON.stringify({ email, password, birthday, wallet }),
+          body: JSON.stringify({ fullname, email, password, birthday, wallet }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -292,7 +255,41 @@ const Signup: NextPage = () => {
               </Button>
             </Link>
           </Grid>
-          {/* <form autoComplete="off" onSubmit={handleFormSubmit}> */}
+          {/* <form autoComplete="off" onSubmit={handleFormSubmit}></form> */}
+          <FormControl>
+            <Grid className={styles.labelSpacing} item xs>
+              <p>First Name</p>
+            </Grid>
+            <Grid item xs>
+              <TextField
+                className={classes.textField}
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                name={"first"}
+                {...(errors["first"] && {
+                  error: true,
+                  helperText: errors["first"]
+                })}
+              />
+            </Grid>
+          </FormControl>
+          <FormControl>
+            <Grid className={styles.labelSpacing} item xs>
+              <p>Last Name</p>
+            </Grid>
+            <Grid item xs>
+              <TextField
+                className={classes.textField}
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                name={"last"}
+                {...(errors["last"] && {
+                  error: true,
+                  helperText: errors["last"]
+                })}
+              />
+            </Grid>
+          </FormControl>
           <FormControl>
             <Grid className={styles.labelSpacing} item xs>
               <p>Email</p>
@@ -310,7 +307,6 @@ const Signup: NextPage = () => {
               />
             </Grid>
           </FormControl>
-          {/* </form> */}
           <FormControl>
             <Grid className={styles.labelSpacing} item xs>
               <p>Password</p>
