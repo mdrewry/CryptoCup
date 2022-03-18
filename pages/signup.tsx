@@ -2,14 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import homestyles from "../styles/Home.module.css";
 import styles from "../styles/Signup.module.css";
-import { styled } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/core/styles";
-import { useRouter } from "next/router";
 import Logo from "../Icons/Logo.js";
 import LaunchButton from "../Components/LaunchButton.js";
 import Graph from "../Icons/Graph.js";
 import Grid from "@mui/material/Grid";
-import InputBase from "@mui/material/InputBase";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import CircleIcon from "@mui/icons-material/Circle";
@@ -17,8 +14,6 @@ import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import Link from "next/link";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import TextField from "@mui/material/TextField";
 import FormHelperText from "@mui/material/FormHelperText";
@@ -59,6 +54,23 @@ const Signup: NextPage = () => {
         padding: "15px 15px",
       },
     },
+    month: {
+      [`& fieldset`]: {
+        borderRadius: 25,
+      },
+      "&": {
+        marginTop: "6px",
+      },
+      "& .MuiInputBase-input": {
+        borderRadius: 25,
+        fontFamily: "Space Mono",
+        fontSize: 20,
+        color: "rgb(127,131,142)",
+        backgroundColor: "rgba(47, 56, 105, 0.6)",
+        width: 140,
+        padding: "15px 15px",
+      },
+    },
     tos: {
       "& .css-ahj2mt-MuiTypography-root": {
         color: "#ffffff",
@@ -80,7 +92,7 @@ const Signup: NextPage = () => {
     email: "",
     password: "",
     confirm: "",
-    month: "",
+    month: 0,
     day: "",
     year: "",
     tos: false,
@@ -92,11 +104,21 @@ const Signup: NextPage = () => {
   const validate: any = (fieldValues = values) => {
     let temp: any = { ...errors }
 
-    if ("first" in fieldValues)
+    if ("first" in fieldValues) {
       temp.first = fieldValues.first ? "" : "This field is required."
+      if (fieldValues.first)
+        temp.first = /^[a-z ,.'-]+$/i.test(fieldValues.first)
+          ? ""
+          : "First name is not valid."
+    }
 
-    if ("last" in fieldValues)
+    if ("last" in fieldValues) {
       temp.last = fieldValues.last ? "" : "This field is required."
+      if (fieldValues.last)
+        temp.last = /^[a-z ,.'-]+$/i.test(fieldValues.last)
+          ? ""
+          : "Last name is not valid."
+    }
 
     if ("email" in fieldValues) {
       temp.email = fieldValues.email ? "" : "This field is required."
@@ -106,25 +128,46 @@ const Signup: NextPage = () => {
           : "Email is not valid."
     }
 
-    if ("password" in fieldValues)
+    if ("password" in fieldValues) {
       temp.password =
         fieldValues.password ? "" : "This field is required."
+        if (fieldValues.password)
+        temp.password = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(fieldValues.password)
+          ? ""
+          : "Password must be at least 6 characters long containing numbers and letters."
+    }
 
-    if ("confirm" in fieldValues)
+    if ("confirm" in fieldValues) {
       temp.confirm =
         fieldValues.confirm ? "" : "This field is required."
+        if (fieldValues.confirm)
+        temp.confirm = (fieldValues.confirm == values.password)
+          ? ""
+          : "Password and confirm password does not match."
+    }
     
     if ("month" in fieldValues)
       temp.month =
-        fieldValues.month ? "" : "This field is required."
+      values.month != 0 && !isNaN(fieldValues.month)
+        ? "" : "This field is required."
 
-    if ("day" in fieldValues)
+    if ("day" in fieldValues) {
       temp.day =
         fieldValues.day ? "" : "This field is required."
+        if (fieldValues.day)
+        temp.day = /\b([1-9]|[12]\d|3[01])\b/.test(fieldValues.day)
+          ? ""
+          : "Day is not valid."
+    }
 
-    if ("year" in fieldValues)
+    if ("year" in fieldValues) {
       temp.year =
         fieldValues.year ? "" : "This field is required."
+        if (fieldValues.year)
+        temp.year = /^19\d{2}|20[0-2]\d$/.test(fieldValues.year)
+          ? ""
+          : "Year is not valid."
+    }
     
     if ("tos" in fieldValues)
       fieldValues.tos ? setTosError(false) : setTosError(true)
@@ -156,7 +199,7 @@ const Signup: NextPage = () => {
       fieldValues.email && fieldValues.password &&
       fieldValues.confirm && fieldValues.day &&
       fieldValues.month && fieldValues.year &&
-      fieldValues.tos
+      fieldValues.tos &&
       Object.values(errors).every((x) => x === "");
 
     return isValid;
@@ -349,24 +392,47 @@ const Signup: NextPage = () => {
 
           <Grid container>
             <Grid item xs={3}>
-              <TextField
-                className={classes.birthday}
+              {
+                values.month == 0 || isNaN(values.month)
+                ?
+                <TextField
+                className={classes.month}
                 select
                 onChange={handleInputValue}
                 onBlur={handleInputValue}
-                placeholder="Month"
                 type="number"
                 name={"month"}
+                defaultValue='none'
                 {...(errors["month"] && {
                   error: true,
                   helperText: errors["month"]
                 })}
               >
-                <MenuItem value="Month" disabled>Month</MenuItem>
+                <MenuItem value="none" disabled>Month</MenuItem>
                 {months.map((index) => (
                   <MenuItem value={index}>{index}</MenuItem>
                 ))}
               </TextField>
+              :
+              <TextField
+                className={classes.birthday}
+                select
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                type="number"
+                name={"month"}
+                defaultValue='none'
+                {...(errors["month"] && {
+                  error: true,
+                  helperText: errors["month"]
+                })}
+              >
+                <MenuItem value="none" disabled>Month</MenuItem>
+                {months.map((index) => (
+                  <MenuItem value={index}>{index}</MenuItem>
+                ))}
+              </TextField>
+              }
 
             </Grid>
             <Grid item xs={2.8}>
@@ -377,6 +443,7 @@ const Signup: NextPage = () => {
                 placeholder="Day"
                 type="number"
                 name={"day"}
+                InputProps={{ inputProps: { min: 1, max: 31 } }}
                 {...(errors["day"] && {
                   error: true,
                   helperText: errors["day"]
@@ -391,6 +458,7 @@ const Signup: NextPage = () => {
                 placeholder="Year"
                 type="number"
                 name={"year"}
+                InputProps={{ inputProps: { min: 1900, max: 2022 } }}
                 {...(errors["year"] && {
                   error: true,
                   helperText: errors["year"]
