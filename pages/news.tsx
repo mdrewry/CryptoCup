@@ -11,6 +11,7 @@ import FadeDisplay from "../Components/FadeDisplay";
 
 import { List,Grid } from '@mui/material'
 import { style } from '@mui/system';
+import { ResultStorage } from 'firebase-functions/v1/testLab';
 
 
 const News: NextPage = () => {
@@ -28,7 +29,10 @@ const News: NextPage = () => {
         result.push(c);
       }
       )
-      setTrending(result.pop());
+      if(result.length>0){
+        setTrending(result[0]);
+        result.pop();
+      }
       setNewsDocs(result);
     };
     useEffect(()=>{
