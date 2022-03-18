@@ -7,7 +7,7 @@ import Logo from "../Icons/Logo.js";
 import LaunchButton from "../Components/LaunchButton.js";
 import Graph from "../Icons/Graph.js";
 import Grid from "@mui/material/Grid";
-import InputBase from "@mui/material/InputBase";
+import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import CircleIcon from "@mui/icons-material/Circle";
@@ -21,6 +21,9 @@ import { auth } from "../config/firebase.config";
 const Login: NextPage = () => {
   const useStyles = makeStyles((theme) => ({
     textField: {
+      [`& fieldset`]: {
+        borderRadius: 25,
+      },
       "&": {
         marginTop: "9px",
       },
@@ -33,9 +36,6 @@ const Login: NextPage = () => {
         width: 500,
         padding: "15px 15px",
       },
-      "&:focus": {
-        borderRadius: 25,
-      },
     },
     tos: {
       "& .css-ahj2mt-MuiTypography-root": {
@@ -47,28 +47,67 @@ const Login: NextPage = () => {
   }));
   const classes = useStyles();
 
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const initialFormValues = {
+    email: "",
+    password: "",
+  }
+  const [values, setValues] = useState(initialFormValues);
+  const [errors, setErrors] = useState({} as any);
 
-  const changeEmail = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setEmail(event.target.value);
+  const validate: any = (fieldValues = values) => {
+    let temp: any = { ...errors }
+
+    if ("email" in fieldValues) {
+      temp.email = fieldValues.email ? "" : "This field is required."
+      if (fieldValues.email)
+        temp.email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.email)
+          ? ""
+          : "Email is not valid."
+    }
+
+    if ("password" in fieldValues) {
+      temp.password =
+        fieldValues.password ? "" : "This field is required."
+        if (fieldValues.password)
+        temp.password = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(fieldValues.password)
+          ? ""
+          : "Password must be at least 6 characters long containing numbers and letters."
+    }
+
+    setErrors({
+      ...temp
+    });
+  }
+
+  const handleInputValue = (e: any) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value
+    });
+    validate({ [name]: value });
   };
 
-  const changePassword = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setPassword(event.target.value);
+  const formIsValid = (fieldValues = values) => {
+    const isValid =
+      fieldValues.email && fieldValues.password &&
+      Object.values(errors).every((x) => x === "");
+
+    return isValid;
   };
 
   async function signIn() {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      alert("Log In Successful!");
-    } catch (error) {
-      console.log(error);
-      alert("Error signing in.");
+    validate(values);
+    if(formIsValid()){
+      try {
+        const email = values.email;
+        const password = values.password;
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("Log In Successful!");
+      } catch (error) {
+        console.log(error);
+        alert("Error signing in.");
+      }
     }
   }
 
@@ -136,11 +175,15 @@ const Login: NextPage = () => {
               <p>Email</p>
             </Grid>
             <Grid item xs>
-              <InputBase
+              <TextField
                 className={classes.textField}
-                onChange={changeEmail}
-                value={email}
-                type="email"
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                name={"email"}
+                {...(errors["email"] && {
+                  error: true,
+                  helperText: errors["email"]
+                })}
               />
             </Grid>
           </FormControl>
@@ -149,11 +192,16 @@ const Login: NextPage = () => {
               <p>Password</p>
             </Grid>
             <Grid item xs>
-              <InputBase
+              <TextField
                 className={classes.textField}
-                onChange={changePassword}
-                value={password}
+                onChange={handleInputValue}
+                onBlur={handleInputValue}
+                name={"password"}
                 type="password"
+                {...(errors["password"] && {
+                  error: true,
+                  helperText: errors["password"]
+                })}
               />
             </Grid>
           </FormControl>
