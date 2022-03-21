@@ -12,7 +12,6 @@ const Footer = () => {
   async function logout() {
     try {
       await signOut(auth);
-      alert("Log Out Success!");
     } catch (error) {
       console.log(error);
       alert("Error signing out.");

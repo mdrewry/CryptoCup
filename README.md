@@ -19,7 +19,7 @@ npm install
 ```
 
 Make a .env.local file: 
-- (add necessary firebase content to file)
+- add necessary firebase content to file
 
 Install latest stable version of Node.js with NPM (Node Package Manager):
 
