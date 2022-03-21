@@ -17,6 +17,8 @@ import MenuItem from "@mui/material/MenuItem";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import TextField from "@mui/material/TextField";
 import FormHelperText from "@mui/material/FormHelperText";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebase.config";
 
 const Signup: NextPage = () => {
   const useStyles = makeStyles((theme) => ({
@@ -84,11 +86,10 @@ const Signup: NextPage = () => {
   const classes = useStyles();
 
   const months = [1,2,3,4,5,6,7,8,9,10,11,12];
-  const [wallet, setWallet] = React.useState("");
 
   const initialFormValues = {
-    first: "",
-    last: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirm: "",
@@ -104,18 +105,18 @@ const Signup: NextPage = () => {
   const validate: any = (fieldValues = values) => {
     let temp: any = { ...errors }
 
-    if ("first" in fieldValues) {
-      temp.first = fieldValues.first ? "" : "This field is required."
-      if (fieldValues.first)
-        temp.first = /^[a-z ,.'-]+$/i.test(fieldValues.first)
+    if ("firstName" in fieldValues) {
+      temp.firstName = fieldValues.firstName ? "" : "This field is required."
+      if (fieldValues.firstName)
+        temp.firstName = /^[a-z ,.'-]+$/i.test(fieldValues.firstName)
           ? ""
           : "First name is not valid."
     }
 
-    if ("last" in fieldValues) {
-      temp.last = fieldValues.last ? "" : "This field is required."
-      if (fieldValues.last)
-        temp.last = /^[a-z ,.'-]+$/i.test(fieldValues.last)
+    if ("lastName" in fieldValues) {
+      temp.lastName = fieldValues.lastName ? "" : "This field is required."
+      if (fieldValues.lastName)
+        temp.lastName = /^[a-z ,.'-]+$/i.test(fieldValues.lastName)
           ? ""
           : "Last name is not valid."
     }
@@ -195,7 +196,7 @@ const Signup: NextPage = () => {
 
   const formIsValid = (fieldValues = values) => {
     const isValid =
-      fieldValues.first && fieldValues.last &&
+      fieldValues.firstName && fieldValues.lastName &&
       fieldValues.email && fieldValues.password &&
       fieldValues.confirm && fieldValues.day &&
       fieldValues.month && fieldValues.year &&
@@ -210,13 +211,13 @@ const Signup: NextPage = () => {
     e.preventDefault();
     if(formIsValid()){
       try {
-        const fullname = values.first+" "+values.last;
+        const fullname = values.firstName+" "+values.lastName;
         const email = values.email;
         const password = values.password;
         const birthday = values.month+"/"+values.day+"/"+values.year;
         const response = await fetch("/api/signup", {
           method: "POST",
-          body: JSON.stringify({ fullname, email, password, birthday, wallet }),
+          body: JSON.stringify({ fullname, email, password, birthday }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -225,7 +226,8 @@ const Signup: NextPage = () => {
         if (data.error) {
           alert(data.error.message);
         } else {
-          alert("User created.");
+          // alert("User created.");
+          await signInWithEmailAndPassword(auth, email, password);
         }
       } catch (error) {
         alert(error);
@@ -301,10 +303,10 @@ const Signup: NextPage = () => {
                   className={classes.textField}
                   onChange={handleInputValue}
                   onBlur={handleInputValue}
-                  name={"first"}
-                  {...(errors["first"] && {
+                  name={"firstName"}
+                  {...(errors["firstName"] && {
                     error: true,
-                    helperText: errors["first"]
+                    helperText: errors["firstName"]
                   })}
                 />
               </Grid>
@@ -318,10 +320,10 @@ const Signup: NextPage = () => {
                   className={classes.textField}
                   onChange={handleInputValue}
                   onBlur={handleInputValue}
-                  name={"last"}
-                  {...(errors["last"] && {
+                  name={"lastName"}
+                  {...(errors["lastName"] && {
                     error: true,
-                    helperText: errors["last"]
+                    helperText: errors["lastName"]
                   })}
                 />
               </Grid>

@@ -104,7 +104,6 @@ const Login: NextPage = () => {
         const email = values.email;
         const password = values.password;
         await signInWithEmailAndPassword(auth, email, password);
-        alert("Log In Successful!");
       } catch (error) {
         console.log(error);
         alert("Enter a valid email or password.");
@@ -171,90 +170,90 @@ const Login: NextPage = () => {
             </Link>
           </Grid>
           <form autoComplete="off" onSubmit={signIn}>
-          <FormControl>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Email</p>
-            </Grid>
-            <Grid item xs>
-              <TextField
-                className={classes.textField}
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                name={"email"}
-                {...(errors["email"] && {
-                  error: true,
-                  helperText: errors["email"]
-                })}
-              />
-            </Grid>
-          </FormControl>
-          <FormControl>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Password</p>
-            </Grid>
-            <Grid item xs>
-              <TextField
-                className={classes.textField}
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                name={"password"}
-                type="password"
-                {...(errors["password"] && {
-                  error: true,
-                  helperText: errors["password"]
-                })}
-              />
-            </Grid>
-          </FormControl>
-          <div className={styles.forgor}>
-            <Grid className={styles.forgot} item xs>
-              <p>Forgot Password?</p>
-            </Grid>
-          </div>
-
-          <Grid item xs>
-            <FormControlLabel
-              className={classes.tos}
-              control={
-                <Checkbox
-                  className={styles.checkboxPos}
-                  sx={{
-                    color: "rgba(47, 56, 105, 0.6)",
-                    "&.Mui-checked": {
-                      color: "#6B58B8",
-                    },
-                  }}
-                  icon={<CircleIcon />}
-                  checkedIcon={<CircleIcon />}
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Email</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"email"}
+                  {...(errors["email"] && {
+                    error: true,
+                    helperText: errors["email"]
+                  })}
                 />
-              }
-              label="Remember Me"
-              labelPlacement="end"
-            />
-          </Grid>
-
-          <Grid item xs>
-            <div className={styles.loginButton}>
-              <Button
-                style={{
-                  background: "rgba(47, 56, 105, 0.6)",
-                  fontFamily: "Space Mono",
-                  fontSize: 20,
-                  borderRadius: 25,
-                  fontWeight: 700,
-                  height: 50,
-                  padding: 10,
-                  width: 214,
-                  color: "white",
-                  textTransform: "none",
-                }}
-                // onClick={signIn}
-                type="submit"
-              >
-                Log In
-              </Button>
+              </Grid>
+            </FormControl>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Password</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"password"}
+                  type="password"
+                  {...(errors["password"] && {
+                    error: true,
+                    helperText: errors["password"]
+                  })}
+                />
+              </Grid>
+            </FormControl>
+            <div className={styles.forgor}>
+              <Grid className={styles.forgot} item xs>
+                <p>Forgot Password?</p>
+              </Grid>
             </div>
-          </Grid>
+
+            <Grid item xs>
+              <FormControlLabel
+                className={classes.tos}
+                control={
+                  <Checkbox
+                    className={styles.checkboxPos}
+                    sx={{
+                      color: "rgba(47, 56, 105, 0.6)",
+                      "&.Mui-checked": {
+                        color: "#6B58B8",
+                      },
+                    }}
+                    icon={<CircleIcon />}
+                    checkedIcon={<CircleIcon />}
+                  />
+                }
+                label="Remember Me"
+                labelPlacement="end"
+              />
+            </Grid>
+
+            <Grid item xs>
+              <div className={styles.loginButton}>
+                <Button
+                  style={{
+                    background: "rgba(47, 56, 105, 0.6)",
+                    fontFamily: "Space Mono",
+                    fontSize: 20,
+                    borderRadius: 25,
+                    fontWeight: 700,
+                    height: 50,
+                    padding: 10,
+                    width: 214,
+                    color: "white",
+                    textTransform: "none",
+                  }}
+                  // onClick={signIn}
+                  type="submit"
+                >
+                  Log In
+                </Button>
+              </div>
+            </Grid>
           </form>
         </Grid>
 
