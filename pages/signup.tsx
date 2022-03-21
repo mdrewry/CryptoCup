@@ -123,7 +123,7 @@ const Signup: NextPage = () => {
     if ("email" in fieldValues) {
       temp.email = fieldValues.email ? "" : "This field is required."
       if (fieldValues.email)
-        temp.email = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(fieldValues.email)
+        temp.email = /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(fieldValues.email)
           ? ""
           : "Email is not valid."
     }
@@ -205,16 +205,9 @@ const Signup: NextPage = () => {
     return isValid;
   };
 
-  // const handleFormSubmit = async (e: any) => {
-  //   e.preventDefault();
-  //   if (formIsValid()) {
-  //     // await postContactForm(values);
-  //     alert("You've posted your form!")
-  //   }
-  // };
-
-  async function signUp() {
+  async function signUp(e: any) {
     validate(values);
+    e.preventDefault();
     if(formIsValid()){
       try {
         const fullname = values.first+" "+values.last;
@@ -298,224 +291,223 @@ const Signup: NextPage = () => {
               </Button>
             </Link>
           </Grid>
-          {/* <form autoComplete="off" onSubmit={handleFormSubmit}></form> */}
-          <FormControl>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>First Name</p>
-            </Grid>
-            <Grid item xs>
-              <TextField
-                className={classes.textField}
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                name={"first"}
-                {...(errors["first"] && {
-                  error: true,
-                  helperText: errors["first"]
-                })}
-              />
-            </Grid>
-          </FormControl>
-          <FormControl>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Last Name</p>
-            </Grid>
-            <Grid item xs>
-              <TextField
-                className={classes.textField}
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                name={"last"}
-                {...(errors["last"] && {
-                  error: true,
-                  helperText: errors["last"]
-                })}
-              />
-            </Grid>
-          </FormControl>
-          <FormControl>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Email</p>
-            </Grid>
-            <Grid item xs>
-              <TextField
-                className={classes.textField}
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                name={"email"}
-                {...(errors["email"] && {
-                  error: true,
-                  helperText: errors["email"]
-                })}
-              />
-            </Grid>
-          </FormControl>
-          <FormControl>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Password</p>
-            </Grid>
-            <Grid item xs>
-              <TextField
-                className={classes.textField}
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                name={"password"}
-                type="password"
-                {...(errors["password"] && {
-                  error: true,
-                  helperText: errors["password"]
-                })}
-              />
-            </Grid>
-          </FormControl>
-          <FormControl>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Confirm Password</p>
-            </Grid>
-            <Grid item xs>
-              <TextField
-                className={classes.textField}
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                name={"confirm"}
-                type="password"
-                {...(errors["confirm"] && {
-                  error: true,
-                  helperText: errors["confirm"]
-                })}
-              />
-            </Grid>
-          </FormControl>
-          <Grid className={styles.labelSpacing} item xs>
-            <p>Birthday</p>
-          </Grid>
-
-          <Grid container>
-            <Grid item xs={3}>
-              {
-                values.month == 0 || isNaN(values.month)
-                ?
+          <form autoComplete="off" onSubmit={signUp}>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>First Name</p>
+              </Grid>
+              <Grid item xs>
                 <TextField
-                className={classes.month}
-                select
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                type="number"
-                name={"month"}
-                defaultValue='none'
-                {...(errors["month"] && {
-                  error: true,
-                  helperText: errors["month"]
-                })}
-              >
-                <MenuItem value="none" disabled>Month</MenuItem>
-                {months.map((index) => (
-                  <MenuItem value={index}>{index}</MenuItem>
-                ))}
-              </TextField>
-              :
-              <TextField
-                className={classes.birthday}
-                select
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                type="number"
-                name={"month"}
-                defaultValue='none'
-                {...(errors["month"] && {
-                  error: true,
-                  helperText: errors["month"]
-                })}
-              >
-                <MenuItem value="none" disabled>Month</MenuItem>
-                {months.map((index) => (
-                  <MenuItem value={index}>{index}</MenuItem>
-                ))}
-              </TextField>
-              }
-
-            </Grid>
-            <Grid item xs={2.8}>
-              <TextField
-                className={classes.birthday}
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                placeholder="Day"
-                type="number"
-                name={"day"}
-                InputProps={{ inputProps: { min: 1, max: 31 } }}
-                {...(errors["day"] && {
-                  error: true,
-                  helperText: errors["day"]
-                })}
-              />
-            </Grid>
-            <Grid item xs>
-              <TextField
-                className={classes.birthday}
-                onChange={handleInputValue}
-                onBlur={handleInputValue}
-                placeholder="Year"
-                type="number"
-                name={"year"}
-                InputProps={{ inputProps: { min: 1900, max: 2022 } }}
-                {...(errors["year"] && {
-                  error: true,
-                  helperText: errors["year"]
-                })}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container item xs>
-            <FormControl error={true}>
-              <FormControlLabel
-                className={classes.tos}
-                control={
-                  <Checkbox
-                    className={styles.checkboxPos}
-                    onChange={handleTos}
-                    sx={{
-                      color: "rgba(47, 56, 105, 0.6)",
-                      "&.Mui-checked": {
-                        color: "#6B58B8",
-                      },
-                    }}
-                    icon={<CircleIcon />}
-                    checkedIcon={<CircleIcon />}
-                    name={"tos"}
-                  />
-                }
-                label="I agree to the Terms of Service and Privacy Policy."
-                labelPlacement="end"
-              />
-              {tosError ? <FormHelperText>This field is required.</FormHelperText> : <div></div>}
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"first"}
+                  {...(errors["first"] && {
+                    error: true,
+                    helperText: errors["first"]
+                  })}
+                />
+              </Grid>
             </FormControl>
-          </Grid>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Last Name</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"last"}
+                  {...(errors["last"] && {
+                    error: true,
+                    helperText: errors["last"]
+                  })}
+                />
+              </Grid>
+            </FormControl>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Email</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"email"}
+                  {...(errors["email"] && {
+                    error: true,
+                    helperText: errors["email"]
+                  })}
+                />
+              </Grid>
+            </FormControl>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Password</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"password"}
+                  type="password"
+                  {...(errors["password"] && {
+                    error: true,
+                    helperText: errors["password"]
+                  })}
+                />
+              </Grid>
+            </FormControl>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Confirm Password</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"confirm"}
+                  type="password"
+                  {...(errors["confirm"] && {
+                    error: true,
+                    helperText: errors["confirm"]
+                  })}
+                />
+              </Grid>
+            </FormControl>
+            <Grid className={styles.labelSpacing} item xs>
+              <p>Birthday</p>
+            </Grid>
 
-          <Grid item xs>
-            <div className={styles.signupButton}>
-              <Button
-                style={{
-                  background: "rgba(47, 56, 105, 0.6)",
-                  fontFamily: "Space Mono",
-                  fontSize: 20,
-                  borderRadius: 25,
-                  fontWeight: 700,
-                  height: 50,
-                  padding: 10,
-                  width: 214,
-                  color: "white",
-                  textTransform: "none",
-                }}
-                onClick={signUp}
-                // type="submit"
-                // disabled={!formIsValid()}
-              >
-                Sign Up
-              </Button>
-            </div>
-          </Grid>
+            <Grid container>
+              <Grid item xs={3}>
+                {
+                  values.month == 0 || isNaN(values.month)
+                  ?
+                  <TextField
+                  className={classes.month}
+                  select
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  type="number"
+                  name={"month"}
+                  defaultValue='none'
+                  {...(errors["month"] && {
+                    error: true,
+                    helperText: errors["month"]
+                  })}
+                >
+                  <MenuItem key={0} value="none" disabled>Month</MenuItem>
+                  {months.map((index) => (
+                    <MenuItem key={index} value={index}>{index}</MenuItem>
+                  ))}
+                </TextField>
+                :
+                <TextField
+                  className={classes.birthday}
+                  select
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  type="number"
+                  name={"month"}
+                  defaultValue='none'
+                  {...(errors["month"] && {
+                    error: true,
+                    helperText: errors["month"]
+                  })}
+                >
+                  <MenuItem value="none" disabled>Month</MenuItem>
+                  {months.map((index) => (
+                    <MenuItem value={index}>{index}</MenuItem>
+                  ))}
+                </TextField>
+                }
+
+              </Grid>
+              <Grid item xs={2.8}>
+                <TextField
+                  className={classes.birthday}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  placeholder="Day"
+                  type="number"
+                  name={"day"}
+                  InputProps={{ inputProps: { min: 1, max: 31 } }}
+                  {...(errors["day"] && {
+                    error: true,
+                    helperText: errors["day"]
+                  })}
+                />
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.birthday}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  placeholder="Year"
+                  type="number"
+                  name={"year"}
+                  InputProps={{ inputProps: { min: 1900, max: 2022 } }}
+                  {...(errors["year"] && {
+                    error: true,
+                    helperText: errors["year"]
+                  })}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item xs>
+              <FormControl error={true}>
+                <FormControlLabel
+                  className={classes.tos}
+                  control={
+                    <Checkbox
+                      className={styles.checkboxPos}
+                      onChange={handleTos}
+                      sx={{
+                        color: "rgba(47, 56, 105, 0.6)",
+                        "&.Mui-checked": {
+                          color: "#6B58B8",
+                        },
+                      }}
+                      icon={<CircleIcon />}
+                      checkedIcon={<CircleIcon />}
+                      name={"tos"}
+                    />
+                  }
+                  label="I agree to the Terms of Service and Privacy Policy."
+                  labelPlacement="end"
+                />
+                {tosError ? <FormHelperText>This field is required.</FormHelperText> : <div></div>}
+              </FormControl>
+            </Grid>
+            
+            <Grid item xs>
+              <div className={styles.signupButton}>
+                <Button
+                  style={{
+                    background: "rgba(47, 56, 105, 0.6)",
+                    fontFamily: "Space Mono",
+                    fontSize: 20,
+                    borderRadius: 25,
+                    fontWeight: 700,
+                    height: 50,
+                    padding: 10,
+                    width: 214,
+                    color: "white",
+                    textTransform: "none",
+                  }}
+                  type="submit"
+                >
+                  Sign Up
+                </Button>
+              </div>
+            </Grid>
+          </form>
         </Grid>
 
         <Grid item xs>

@@ -96,8 +96,9 @@ const Login: NextPage = () => {
     return isValid;
   };
 
-  async function signIn() {
+  async function signIn(e: any) {
     validate(values);
+    e.preventDefault();
     if(formIsValid()){
       try {
         const email = values.email;
@@ -106,7 +107,7 @@ const Login: NextPage = () => {
         alert("Log In Successful!");
       } catch (error) {
         console.log(error);
-        alert("Error signing in.");
+        alert("Enter a valid email or password.");
       }
     }
   }
@@ -169,7 +170,7 @@ const Login: NextPage = () => {
               </Button>
             </Link>
           </Grid>
-
+          <form autoComplete="off" onSubmit={signIn}>
           <FormControl>
             <Grid className={styles.labelSpacing} item xs>
               <p>Email</p>
@@ -247,12 +248,14 @@ const Login: NextPage = () => {
                   color: "white",
                   textTransform: "none",
                 }}
-                onClick={signIn}
+                // onClick={signIn}
+                type="submit"
               >
                 Log In
               </Button>
             </div>
           </Grid>
+          </form>
         </Grid>
 
         <Grid item xs>
