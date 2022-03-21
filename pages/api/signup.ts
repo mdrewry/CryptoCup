@@ -29,7 +29,7 @@ export default async function handler(
       totalPercentGain: 0,
       walletVerified: false,
       newsPreferences: [],
-      imageURL: [],
+      imageURL: "",
     });
   } catch (error) {
     res.status(500).json({ error });
