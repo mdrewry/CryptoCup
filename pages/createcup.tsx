@@ -133,48 +133,108 @@ const CreateCup: NextPage = () => {
         </h6>
       </div>
       <div className={createCupStyles.container}>
-        <FormControl>
-          {page == 0 ? (
-            <Grid>
-              <Grid item xs={12}>
-                <h4>1. Basic Information</h4>
+        <form autoComplete="off" onSubmit={createCup}>
+          <FormControl>
+            {page == 0 ? (
+              <Grid>
+                <Grid item xs={12}>
+                  <h4>1. Basic Information</h4>
+                </Grid>
+                <Grid item xs={12}>
+                  <p className={createCupStyles.fieldName}>Cup Name: </p>
+                  <TextField
+                    className={classes.textField}
+                    name="cupName"
+                    onChange={handleInputValue}
+                    onBlur={handleInputValue}
+                    {...(errors["cupName"] && {
+                      error: true,
+                      helperText: errors["cupName"],
+                    })}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <p className={createCupStyles.fieldName}>Cup Password: </p>
+                  <TextField
+                    className={classes.textField}
+                    name="password"
+                    type="password"
+                    onChange={handleInputValue}
+                    onBlur={handleInputValue}
+                    {...(errors["password"] && {
+                      error: true,
+                      helperText: errors["password"],
+                    })}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <p className={createCupStyles.fieldName}>Cup Name: </p>
-                <TextField
-                  className={classes.textField}
-                  name="cupName"
-                  onChange={handleInputValue}
-                  onBlur={handleInputValue}
-                  {...(errors["cupName"] && {
-                    error: true,
-                    helperText: errors["cupName"],
-                  })}
-                />
+            ) : (
+              <Grid>
+                <Grid item xs={12}>
+                  <h4>2. Cup Settings</h4>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <p className={createCupStyles.fieldName}>Start Date: </p>
+                  <TextField
+                    className={classes.textField}
+                    name="buyIn"
+                    type="number"
+                    onChange={handleInputValue}
+                    onBlur={handleInputValue}
+                    {...(errors["buyIn"] && {
+                      error: true,
+                      helperText: errors["buyIn"],
+                    })}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <p className={createCupStyles.fieldName}>End Date: </p>
+                  <TextField
+                    className={classes.textField}
+                    name="buyIn"
+                    type="number"
+                    onChange={handleInputValue}
+                    onBlur={handleInputValue}
+                    {...(errors["buyIn"] && {
+                      error: true,
+                      helperText: errors["buyIn"],
+                    })}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <p className={createCupStyles.fieldName}>Buy-In: </p>
+                  <TextField
+                    className={classes.textField}
+                    name="buyIn"
+                    type="number"
+                    onChange={handleInputValue}
+                    onBlur={handleInputValue}
+                    {...(errors["buyIn"] && {
+                      error: true,
+                      helperText: errors["buyIn"],
+                    })}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <p className={createCupStyles.fieldName}>
+                    Player In-Game Budget:{" "}
+                  </p>
+                  <TextField
+                    className={classes.textField}
+                    name="inGameBudget"
+                    type="number"
+                    onChange={handleInputValue}
+                    onBlur={handleInputValue}
+                    {...(errors["inGameBudget"] && {
+                      error: true,
+                      helperText: errors["inGameBudget"],
+                    })}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12}>
-                <p className={createCupStyles.fieldName}>Cup Password: </p>
-                <TextField
-                  className={classes.textField}
-                  name="password"
-                  type="password"
-                  onChange={handleInputValue}
-                  onBlur={handleInputValue}
-                  {...(errors["password"] && {
-                    error: true,
-                    helperText: errors["password"],
-                  })}
-                />
-              </Grid>
-            </Grid>
-          ) : (
-            <Grid>
-              <Grid item xs={12}>
-                <h4>2. Cup Settings</h4>
-              </Grid>
-            </Grid>
-          )}
-        </FormControl>
+            )}
+          </FormControl>
+        </form>
         <Stack direction="row">
           <IconButton onClick={(e) => handleChange(e, 0)}>
             <CircleIcon color={page == 1 ? "primary" : "secondary"} />
