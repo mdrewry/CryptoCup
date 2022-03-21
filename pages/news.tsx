@@ -18,8 +18,12 @@ import { db } from "../config/firebase.config";
 import { useState, useEffect } from "react";
 import FadeDisplay from "../Components/FadeDisplay";
 
-import { List, Grid } from "@mui/material";
-import { style } from "@mui/system";
+
+
+import { List,Grid } from '@mui/material'
+import { style } from '@mui/system';
+import { ResultStorage } from 'firebase-functions/v1/testLab';
+
 
 const News: NextPage = () => {
   const router = useRouter();
@@ -53,13 +57,40 @@ const News: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>News</h1>
-        <p></p>
-        <h5 className={styles.newsTitle}>Trending</h5>
-        {loading ? (
-          <div>loading</div>
-        ) : (
+    const getNews=async()=>{
+      const data=await getDocs(newsRef);
+      const result: QueryDocumentSnapshot<DocumentData>[] = [];
+      data.forEach((c)=>{
+        result.push(c);
+      }
+      )
+      if(result.length>0){
+        setTrending(result[0]);
+        result.pop();
+      }
+      setNewsDocs(result);
+    };
+    useEffect(()=>{
+      getNews();
+      setTimeout( () => {
+        setLoading(false);
+      },2000)
+    },[]);
+    return (
+      <div className={styles.container}>
+        <Head>
+          <title>News</title>
+          <meta name="description" content="News page" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+  
+        <main className={styles.main}>
+          <h1 className={styles.title}>
+            News
+          </h1>
+          <p></p>
+          <h5 className={styles.newsTitle}>Trending</h5>
+          {loading ? (<div>loading</div>) :
           <div>
             <a href={trending.get("source")}>
               <div className={styles.trendCard}>

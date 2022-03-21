@@ -5,7 +5,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { email, password, month, day, year, wallet } = req.body;
+  const { fullname, email, password, birthday } = req.body;
   if (!email || !password) {
     res.status(500).json({ error: "Missing email or password." });
     return;
@@ -17,11 +17,19 @@ export default async function handler(
       emailVerified: false,
     });
     await db.collection("users").doc(user.uid).set({
+      fullname,
       email,
-      month,
-      day,
-      year,
-      wallet
+      birthday,
+      wallet: "",
+      cupWins: 0, 
+      cupsPlayed: 0, 
+      headsUpPlayed: 0, 
+      headsUpWins: 0, 
+      totalEarnings: 0, 
+      totalPercentGain: 0,
+      walletVerified: false,
+      newsPreferences: [],
+      imageURL: "",
     });
   } catch (error) {
     res.status(500).json({ error });
