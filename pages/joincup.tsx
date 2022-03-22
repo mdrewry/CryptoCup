@@ -50,14 +50,14 @@ const JoinCup: NextPage = () => {
         <h1>Join a Cup</h1>
         <h6>View Open Cups or search for a specific Cup.</h6>
       </div>
-      <p className={joinCupStyles.fieldName}>Cup ID: </p>
+      <p className={joinCupStyles.fieldName}>Cup Name: </p>
       <TextField
         className={classes.textField}
         name="cupName"
         onChange={handleSearch}
       />
       <div className={joinCupStyles.spacer} />
-      <ViewCup filter={2} />
+      <ViewCup filter={2} cupNameFilter={name} />
     </div>
   );
 };
