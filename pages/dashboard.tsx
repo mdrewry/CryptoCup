@@ -3,12 +3,15 @@ import Head from "next/head";
 import styles from '../styles/Dashboard.module.css'
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router"
+import { UserContext } from "../context/UserProvider";
 
 const Dashboard: NextPage = () => {
     const router = useRouter();
     const {
       query: { id },
     } = router;
+
+    const user = useContext(UserContext);
   
     return (
       <div className={styles.container}>
@@ -20,7 +23,7 @@ const Dashboard: NextPage = () => {
 
         <div className={styles.title}>
           <h2>Welcome,&nbsp;</h2>
-          <h2 className={styles.firstname}>Firstname</h2>
+          <h2 className={styles.firstname}>{user.firstName}</h2>
         </div>
         <h4 className={styles.invest}>Invest in an Upcoming Cup:</h4>
         <h4 className={styles.invest}>Make some trades:</h4>

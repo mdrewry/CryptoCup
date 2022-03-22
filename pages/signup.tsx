@@ -211,13 +211,14 @@ const Signup: NextPage = () => {
     e.preventDefault();
     if(formIsValid()){
       try {
-        const fullname = values.firstName+" "+values.lastName;
+        const firstName = values.firstName;
+        const lastName = values.lastName;
         const email = values.email;
         const password = values.password;
         const birthdayStr = values.month+"/"+values.day+"/"+values.year;
         const response = await fetch("/api/signup", {
           method: "POST",
-          body: JSON.stringify({ fullname, email, password, birthdayStr }),
+          body: JSON.stringify({ firstName, lastName, email, password, birthdayStr }),
           headers: {
             "Content-Type": "application/json",
           },
