@@ -1,0 +1,27 @@
+.placeholder {
+    display: inline-block;
+    width: 100%;
+    height: 263px;
+    border: 2px solid;
+    border-color: #ffffff;
+    border-radius: 15px;
+    border-style: 'solid';
+}
+
+.container {
+    margin-top: 27px;
+    margin-left: 30px;
+  }
+
+.title{
+    display: flex
+}
+
+.commis{
+    font-style: italic;
+    margin-top: 18px;
+}
+
+.detail{
+    margin-top: 12px;
+}
