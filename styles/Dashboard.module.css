@@ -1,0 +1,18 @@
+.container {
+    margin-top: 32px;
+    margin-left: 44px;
+  }
+
+.title{
+    display: flex
+}
+
+.firstname{
+    background-image: linear-gradient(90deg, #DA93D3 0%, #6B58B8 57.13%, #89E4DF 105.35%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.invest{
+    margin-top: 20px;
+}

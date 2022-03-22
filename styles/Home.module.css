@@ -25,11 +25,18 @@
   margin-top: 12px;
   margin-bottom: 15px;
   display: flex;
+  align-items: center;
+}
+
+.gradient{
+  background: linear-gradient(90deg, #DA93D3 0%, #6B58B8 57.13%, #89E4DF 105.35%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 'bold';
 }
 
 .diamond{
   margin-left: 20px;
-  margin-top: 10px;
 }
 
 .summary{

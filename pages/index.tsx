@@ -3,7 +3,6 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Logo from "../Icons/Logo.js";
 import LaunchButton from "../Components/LaunchButton.js";
-import CryptoCupGradient from "../Icons/CryptoCupGradient.js";
 import Diamond from "../Icons/Diamond.js";
 import Graph from "../Icons/Graph.js";
 import LaunchCupButton from "../Components/LaunchCupButton.js";
@@ -45,7 +44,7 @@ const Home: NextPage = () => {
         <Grid item xs>
           <h2>A New Age of Fantasy with</h2>
           <div className={styles.title1}>
-            <CryptoCupGradient/>
+            <h1 className={styles.gradient}>Cyrpto Cup</h1>
             <div className={styles.diamond}>
               <Diamond/>
             </div>
