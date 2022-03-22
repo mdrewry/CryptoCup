@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import Link from "next/link";
 import Button from "@mui/material/Button";
 import styles from "../styles/Footer.module.css";
 import Grid from "@mui/material/Grid";
@@ -7,8 +6,11 @@ import Logo from "../Icons/Logo.js";
 import { signOut } from "firebase/auth";
 import { auth } from "../config/firebase.config";
 import { UserContext } from "../context/UserProvider";
+import Router from "next/router";
+
 const Footer = () => {
   const user = useContext(UserContext);
+  
   async function logout() {
     try {
       await signOut(auth);
@@ -17,6 +19,11 @@ const Footer = () => {
       alert("Error signing out.");
     }
   }
+
+  async function login() {
+    Router.push("/login");
+  }
+
   return (
     <Grid className={styles.footer} container spacing={0}>
       <Grid item xs={8.9}>
@@ -41,13 +48,9 @@ const Footer = () => {
                 <a>SIGN OUT</a>
               </Button>
             ) : (
-              <Link
-                href={{
-                  pathname: "/login",
-                }}
-              >
+              <Button onClick={login}>
                 <a>LOG IN/SIGN UP</a>
-              </Link>
+              </Button>
             )}
           </Grid>
         </div>
