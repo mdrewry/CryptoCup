@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import type { NextPage } from "next";
+import Router from "next/router";
 import createCupStyles from "../styles/createcup.module.css";
 import { makeStyles } from "@material-ui/core/styles";
 import Stack from "@mui/material/Stack";
@@ -13,6 +14,7 @@ import AdapterMoment from "@mui/lab/AdapterMoment";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import moment from "moment";
+import { UserContext } from "../context/UserProvider";
 const initValues = {
   cupName: "",
   password: "",
@@ -75,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateCup: NextPage = () => {
+  const user = useContext(UserContext);
   const classes = useStyles();
   const [page, setPage] = useState(0);
   const [values, setValues] = useState(initValues);
@@ -145,6 +148,24 @@ const CreateCup: NextPage = () => {
     validate(values);
     if (formIsValid()) {
       try {
+        const response = await fetch("/api/createcup", {
+          method: "POST",
+          body: JSON.stringify({
+            director: user.uid,
+            ...values,
+            startDate: values.startDate.toDate(),
+            endDate: values.endDate.toDate(),
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        if (data.error) {
+          alert(data.error.message);
+        } else {
+          Router.push("/dashboard");
+        }
       } catch (error) {
         console.log(error);
       }
