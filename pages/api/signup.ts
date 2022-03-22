@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db, auth } from "../../config/firebaseAdmin.config";
+import moment from "moment";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { fullname, email, password, birthday } = req.body;
+  const { firstName, lastName, email, password, birthdayStr } = req.body;
+  const birthday = moment(birthdayStr, "M/D/YYYY");
   if (!email || !password) {
     res.status(500).json({ error: "Missing email or password." });
     return;
@@ -17,7 +19,8 @@ export default async function handler(
       emailVerified: false,
     });
     await db.collection("users").doc(user.uid).set({
-      fullname,
+      firstName,
+      lastName,
       email,
       birthday,
       wallet: "",

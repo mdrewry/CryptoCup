@@ -211,13 +211,14 @@ const Signup: NextPage = () => {
     e.preventDefault();
     if(formIsValid()){
       try {
-        const fullname = values.firstName+" "+values.lastName;
+        const firstName = values.firstName;
+        const lastName = values.lastName;
         const email = values.email;
         const password = values.password;
-        const birthday = values.month+"/"+values.day+"/"+values.year;
+        const birthdayStr = values.month+"/"+values.day+"/"+values.year;
         const response = await fetch("/api/signup", {
           method: "POST",
-          body: JSON.stringify({ fullname, email, password, birthday }),
+          body: JSON.stringify({ firstName, lastName, email, password, birthdayStr }),
           headers: {
             "Content-Type": "application/json",
           },
@@ -226,7 +227,6 @@ const Signup: NextPage = () => {
         if (data.error) {
           alert(data.error.message);
         } else {
-          // alert("User created.");
           await signInWithEmailAndPassword(auth, email, password);
         }
       } catch (error) {
