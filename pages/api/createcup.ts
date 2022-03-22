@@ -16,7 +16,7 @@ export default async function handler(
   } = req.body;
   try {
     await db.collection("cups").add({
-      buyIn,
+      buyIn: parseFloat(buyIn),
       cryptosAvailable: [
         "ETH",
         "BTC",
@@ -27,9 +27,9 @@ export default async function handler(
         "SHIB",
         "DOGE",
       ],
-      cupType: "standard",
+      cupType: "classic",
       currentState: "created",
-      director,
+      director: db.collection("users").doc(director),
       startDate: startDate,
       endDate: endDate,
       name: cupName,
