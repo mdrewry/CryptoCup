@@ -1,14 +1,14 @@
 import cupstyles from '../styles/Cups.module.css'
 import { useRouter } from "next/router"
 import {db} from "../config/firebase.config"
-import {collection,getDoc,DocumentSnapshot,DocumentData, doc,where,query,onSnapshot, DocumentReference} from "firebase/firestore";
+import {collection,getDoc,getDocs,DocumentSnapshot,DocumentData, doc,where,query,onSnapshot, DocumentReference} from "firebase/firestore";
 import {useState,useEffect,useContext} from "react";
 import Grid from '@mui/material/Grid';
 import moment from  'moment';
 import { UserContext } from "../context/UserProvider";
 
-type ContentProps = { path: string };
-const Cups = ({ path }: ContentProps) => {
+type ContentProps = { filter: Number };
+const Cups = ({ filter }: ContentProps) => {
     const user = useContext(UserContext);
     const [cups,setCups]=useState<DocumentSnapshot<DocumentData>[]>([]);
     const [loading,setLoading] = useState<boolean>(true);
@@ -17,19 +17,34 @@ const Cups = ({ path }: ContentProps) => {
     const getCups=async()=>{
         
         const userDocRef=doc(collection(db,"users"),user.uid);
-        const userQuery=await query(collection(db,"cupsInUser"), where("user","==",userDocRef));
+        const userQuery=query(collection(db,"cupsInUser"), where("user","==",userDocRef));
         const result: DocumentSnapshot<DocumentData>[] = [];
-        onSnapshot(userQuery,(snapshot)=>{
-            const userCups:DocumentReference[]=snapshot.docs.at(0)?.data().cups;
-            if(userCups!=null){
-                userCups.forEach((c)=>{
-                    getDoc(c).then((d)=>{
-                        result.push(d);
-                    });
-                })
-            }
-        })
-        
+        //filter==0 for ongoing cups(player), filter==1 for upcoming cups(player based), filter==2 for ALL upcoming cups
+        if(filter==2){
+            const data=await getDocs(cupsRef);
+            data.forEach((c)=>{
+                if(moment(c.get("startDate"))>moment()){
+                    result.push(c);
+                }
+            })
+        }else{
+            onSnapshot(userQuery,(snapshot)=>{
+                const userCups:DocumentReference[]=snapshot.docs.at(0)?.data().cups;
+                if(userCups!=null){
+                    userCups.forEach((c)=>{
+                        getDoc(c).then((d)=>{
+                            if(filter==0 && (moment(d.get("startDate"))<=moment() && moment(d.get("endDate"))>moment())){
+                                result.push(d);
+                            }else if(filter==1 && moment(d.get("startDate"))>moment()){
+                                result.push(d);
+                            }
+                            
+                            
+                        });
+                    })
+                }
+            })
+        }
         // setCups(data.docs.map((item)=>{
         //     return {...item.data(),id:item.id}
         // }));
