@@ -31,7 +31,6 @@ const routes: routeType[] = [
 const Content = ({ path }: ContentProps) => {
   const user = useContext(UserContext);
   const wallet = useContext(WalletContext);
-  const walletLinked = user.wallet !== "";
   async function linkWallet() {
     let web3 = new Web3(Web3.givenProvider);
     let acc = wallet.address;
@@ -78,14 +77,11 @@ const Content = ({ path }: ContentProps) => {
       <div className={styles.headerSection}>
         <Avatar
           sx={{ width: 80, height: 80 }}
-          // alt={user.firstName}
-          // src={user.img}
-          src={user.uid}
-          alt={user.uid}
+          alt={user.firstName}
+          src={user.imageURL}
         />
         <div className={styles.header}>
-          {/* <h4 className={styles.title}>{user.firstName} User</h4> */}
-          <h5 className={styles.subtitle}>{user.uid.substring(0, 10)}</h5>
+          <h4 className={styles.title}>{user.firstName}</h4>
         </div>
       </div>
       <Stack className={styles.spacer} spacing={2}>
