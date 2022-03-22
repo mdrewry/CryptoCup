@@ -3,7 +3,6 @@ import { useRouter } from "next/router"
 import {db} from "../config/firebase.config"
 import {collection,getDoc,DocumentSnapshot,DocumentData, doc,where,query,onSnapshot, DocumentReference} from "firebase/firestore";
 import {useState,useEffect,useContext} from "react";
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import moment from  'moment';
 import { UserContext } from "../context/UserProvider";
@@ -67,23 +66,15 @@ const Cups = ({ path }: ContentProps) => {
     //         user: "String"
     //     });
     // }
-    
-    const Img = styled('img')({
-        margin: 'auto',
-        display: 'block',
-        maxWidth: '316px',
-        maxHeight: '316px',
-      });
-
       
     return(
         <div>
-            
-            {loading ? (<div>loading</div>) :
+            {loading ? (<p>loading</p>) :
             <Grid container >
                 {cups.map((c)=>
                     <Grid item xs={12} md={6} lg={4} xl={3}>
-                        <h5>{c.get("name")}</h5>
+                        <div className={cupstyles.placeholder}></div>
+                        <h5 className={cupstyles.name}>{c.get("name")}</h5>
                         <div className={cupstyles.cuptype}>{c.get("cupType")}</div>
                         <p>{moment(c.get("startDate")).format("M/D/YYYY")}-{moment(c.get("endDate")).format("M/D/YYYY")}</p>
                     </Grid>

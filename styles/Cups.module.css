@@ -1,5 +1,6 @@
 .padding{
-    padding: 25px;
+    margin-top: 32px;
+    margin-left: 44px;
 }
 
 .cuptype{
@@ -8,4 +9,29 @@
     background: #DA93D3;
     width: 60px;
     text-align: center;
+    margin-bottom: 14px;
+}
+
+.ongoing{
+    margin-bottom: 24px;
+}
+
+.upcoming{
+    margin-top: 42px;
+    margin-bottom: 24px;
+}
+
+.placeholder {
+    display: inline-block;
+    width: 316px;
+    height: 316px;
+    border: 2px solid;
+    border-color: #ffffff;
+    border-radius: 15px;
+    border-style: 'solid';
+    margin-bottom: 27px;
+}
+
+.name {
+    margin-bottom: 21px;
 }

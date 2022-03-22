@@ -4,7 +4,6 @@ import { useRouter } from "next/router"
 import {db} from "../config/firebase.config"
 import {collection,getDocs,QueryDocumentSnapshot,DocumentData, Timestamp,addDoc} from "firebase/firestore";
 import {useState,useEffect} from "react";
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import moment from  'moment';
 import Cup from "../Components/ViewCup";
@@ -23,9 +22,9 @@ const Cups: NextPage = () => {
 
             <div className={cupstyles.padding}>
             <h1>My Cups</h1>
-            <h4>Current Cups </h4>
+            <h4 className={cupstyles.ongoing}>Ongoing Cups:</h4>
             <Cup path={path}/>
-            <h4>Upcoming Cups:</h4>
+            <h4 className={cupstyles.upcoming}>Upcoming Cups:</h4>
         </div>
             
             
