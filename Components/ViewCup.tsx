@@ -20,8 +20,8 @@ import moment from "moment";
 import { UserContext } from "../context/UserProvider";
 import Button from "@mui/material/Button";
 
-type ContentProps = { filter: Number };
-const Cups = ({ filter }: ContentProps) => {
+type ContentProps = { filter: Number; cupNameFilter: String };
+const Cups = ({ filter, cupNameFilter }: ContentProps) => {
   const user = useContext(UserContext);
   const [cups, setCups] = useState<DocumentSnapshot<DocumentData>[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -106,24 +106,29 @@ const Cups = ({ filter }: ContentProps) => {
         <p>loading</p>
       ) : (
         <Grid container spacing={3}>
-          {cups.map((c) => (
-            <Grid item xs={12} md={6} lg={4} xl={3}>
-              <Button onClick={(e) => handleRedirect(c.id)}>
-                <div style={{ textAlign: "left", textTransform: "none" }}>
-                  <img
-                    className={cupstyles.placeholder}
-                    src={c.get("imageURL")}
-                  ></img>
-                  <h5 className={cupstyles.name}>{c.get("name")}</h5>
-                  <div className={cupstyles.cuptype}>{c.get("cupType")}</div>
-                  <p>
-                    {moment(c.get("startDate").toDate()).format("M/D/YYYY")}-
-                    {moment(c.get("endDate").toDate()).format("M/D/YYYY")}
-                  </p>
-                </div>
-              </Button>
-            </Grid>
-          ))}
+          {cups
+            .filter((c) => {
+              if (cupNameFilter === "") return true;
+              else return c.get("name").indexOf(cupNameFilter) === 0;
+            })
+            .map((c) => (
+              <Grid item xs={12} md={6} lg={4} xl={3}>
+                <Button onClick={(e) => handleRedirect(c.id)}>
+                  <div style={{ textAlign: "left", textTransform: "none" }}>
+                    <img
+                      className={cupstyles.placeholder}
+                      src={c.get("imageURL")}
+                    ></img>
+                    <h5 className={cupstyles.name}>{c.get("name")}</h5>
+                    <div className={cupstyles.cuptype}>{c.get("cupType")}</div>
+                    <p>
+                      {moment(c.get("startDate").toDate()).format("M/D/YYYY")}-
+                      {moment(c.get("endDate").toDate()).format("M/D/YYYY")}
+                    </p>
+                  </div>
+                </Button>
+              </Grid>
+            ))}
         </Grid>
       )}
     </div>
