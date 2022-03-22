@@ -17,7 +17,16 @@ export default async function handler(
   try {
     await db.collection("cups").add({
       buyIn,
-      cryptosAvailable: [],
+      cryptosAvailable: [
+        "ETH",
+        "BTC",
+        "ADA",
+        "XRP",
+        "SOL",
+        "DOT",
+        "SHIB",
+        "DOGE",
+      ],
       cupType: "standard",
       currentState: "created",
       director,
@@ -27,7 +36,7 @@ export default async function handler(
       password,
       playerCuts: [3, 5, 10],
       ethAddress: "",
-      userBudgets: [],
+      userPortfolios: {},
       totalBudget: parseInt(inGameBudget),
     });
   } catch (error) {
