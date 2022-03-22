@@ -1,0 +1,28 @@
+.page {
+  padding: 32px;
+  min-height: 75vh;
+}
+.container {
+  padding: 32px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.fieldName {
+  margin-top: 20px;
+}
+.header {
+  width: 500px;
+}
+
+@media (max-width: 900px) {
+  .header {
+    width: 300px;
+  }
+}

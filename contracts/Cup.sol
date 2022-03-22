@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.7.0 <0.9.0;
-
 contract Cup {
     address public owner;
     uint256 public buyIn;
@@ -12,7 +11,7 @@ contract Cup {
 
     //modifier ensuring only owner can call functions
     modifier onlyowner {
-        require(owner == msg.sender);
+        assert(owner == msg.sender);
         _;
     }
 
@@ -57,7 +56,7 @@ contract Cup {
         cupActive = true;
     }
 
-    function endCup(address[] calldata ranks) public onlyowner{
+    function endCup(address[] memory ranks) public onlyowner{
         //verifies cup has begun and has not ended
         require(cupActive);
         require(!cupEnded);
@@ -77,11 +76,17 @@ contract Cup {
     }
 
     function distributePrizes(address[] memory ranks) private{
-        for(uint256 i = 0; i < split.length; i++){
-            if(i < ranks.length){
-                uint256 prize = pool/split[i];
-                payable(ranks[i]).transfer(prize);
-            }
+        if(ranks.length > 0){
+            uint256 prize = pool/split[0];
+            payable(ranks[0]).transfer(prize);
+        }
+        if(ranks.length > 1){
+            uint256 prize = pool/split[1];
+            payable(ranks[1]).transfer(prize);
+        }
+        if(ranks.length > 2){
+            uint256 prize = pool/split[2];
+            payable(ranks[2]).transfer(prize);
         }
     }
 }
