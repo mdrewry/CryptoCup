@@ -27,9 +27,15 @@ const AuthRouteManagement = ({
     const parsedPath = pathname.substring(1).split("/")[0];
     if (
       user.uid === "" &&
-      ["dashboard", "mycups", "leaderboard", "cryptoinfo", "news"].some(
-        (r) => r === parsedPath
-      )
+      [
+        "dashboard",
+        "mycups",
+        "leaderboard",
+        "cryptoinfo",
+        "news",
+        "createcup",
+        "joincup",
+      ].some((r) => r === parsedPath)
     ) {
       Router.push("/");
     } else if (
