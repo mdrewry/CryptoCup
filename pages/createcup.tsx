@@ -138,16 +138,12 @@ const CreateCup: NextPage = () => {
     setErrors({
       ...temp,
     });
+    return Object.values(temp).every((x) => x === "");
   };
 
-  const formIsValid = (fieldValues = values) => {
-    const isValid = Object.values(errors).every((x) => x === "");
-    return isValid;
-  };
-
-  const createCup = async () => {
-    validate(values);
-    if (formIsValid()) {
+  const createCup = async (e: any) => {
+    e.preventDefault();
+    if (validate(values)) {
       try {
         const response = await fetch("/api/createcup", {
           method: "POST",
