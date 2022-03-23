@@ -1,14 +1,17 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import styles from '../styles/CupDetails.module.css'
+import styles from '../../styles/CupDetails.module.css'
 import React, { useState, useEffect, useContext } from "react";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/router"
-import { UserContext } from "../context/UserProvider";
+import { UserContext } from "../../context/UserProvider";
 import Router from "next/router";
 
 const CupDetails: NextPage = () => {
     const router = useRouter();
+    //const { pathname } = useRouter();
+    //const [path, setPath] = useState(pathname.substring(1).split("/")[0]);
+    //console.log(cupid)
     const {
       query: { id },
     } = router;

@@ -16,7 +16,7 @@ const Dashboard: NextPage = () => {
     const user = useContext(UserContext);
 
     async function clicky() {
-      Router.push("/cupdetails");
+      Router.push("/cups");
     }
   
     return (
