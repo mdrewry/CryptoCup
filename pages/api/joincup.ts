@@ -1,16 +1,18 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../config/firebaseAdmin.config";
+import { db } from "../../config/firebase.config";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { cupID, userID } = req.body;
   try {
-    const cupRef = db.collection("cups").doc(cupID);
-    const cupData: any = (await cupRef.get()).data();
-    let { userPortfolios, inGameBudget } = cupData;
+    const cupDocRef = doc(db, "cups", cupID);
+    const cupDocSnap = await getDoc(cupDocRef);
+    const data: any = cupDocSnap.data();
+    let { userPortfolios, inGameBudget } = data;
     userPortfolios[userID] = { usd: inGameBudget };
-    await db.collection("cups").doc(cupID).update({
+    await updateDoc(cupDocRef, {
       userPortfolios,
     });
   } catch (error) {
