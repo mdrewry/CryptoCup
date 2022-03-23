@@ -106,7 +106,13 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
           {cups
             .filter((c) => {
               if (cupNameFilter === "") return true;
-              else return c.get("name").indexOf(cupNameFilter) === 0;
+              else
+                return (
+                  c
+                    .get("name")
+                    .toLowerCase()
+                    .indexOf(cupNameFilter.toLowerCase()) === 0
+                );
             })
             .map((c) => (
               <Grid item xs={12} md={6} lg={4} xl={3}>
