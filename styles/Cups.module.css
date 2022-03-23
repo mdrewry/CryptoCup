@@ -35,3 +35,22 @@
 .name {
     margin-bottom: 21px;
 }
+
+.leaderboardProfile{
+    display: inline-grid;
+    width: 79px;
+    height: 79px;
+    border: 2px solid;
+    border-color: #ffffff;
+    border-radius: 50%;
+    border-style: 'solid';
+    margin-bottom: 27px;
+    counter-set: rank 1;
+}
+
+
+
+.content-img{
+    counter-increment: rank;
+    content: counter(rank);
+}

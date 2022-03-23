@@ -6,14 +6,14 @@ import {collection,getDocs,QueryDocumentSnapshot,DocumentData, Timestamp,addDoc}
 import {useState,useEffect} from "react";
 import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import Cup from "../Components/ViewCup";
+import Board from "../Components/Leaderboards";
 import Head from "next/head";
 
 const Leaderboard: NextPage = () => {
     const [leaderboard,setLeaderboard]=useState<QueryDocumentSnapshot<DocumentData>[]>([]);
     const [loading,setLoading] = useState<boolean>(true);
     const usersRef=collection(db,"users");
-    const getCups=async()=>{
+    const getLeaderboard=async()=>{
         const data=await getDocs(usersRef);
         const result: QueryDocumentSnapshot<DocumentData>[] = [];
         data.forEach((c)=>{
@@ -29,7 +29,7 @@ const Leaderboard: NextPage = () => {
     };
     
     useEffect(()=>{
-        getCups();
+        getLeaderboard();
         setTimeout( () => {
             setLoading(false);
           },2000)
@@ -42,13 +42,6 @@ const Leaderboard: NextPage = () => {
       query: { id },
     } = router
 
-    const Img = styled('img')({
-        margin: 'auto',
-        display: 'block',
-        maxWidth: '316px',
-        maxHeight: '316px',
-      });
-
       
     return(
         <div className={cupstyles.padding}>
@@ -60,9 +53,7 @@ const Leaderboard: NextPage = () => {
 
             <h1>Leaderboards</h1>
             <h4>Global Leaderboards: Total Wins</h4>
-            {/* {loading ? (<div>loading</div>) :
-            
-            } */}
+            <Board />
             
         </div>
         )
