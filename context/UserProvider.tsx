@@ -1,15 +1,27 @@
 import React, { Component, createContext } from "react";
 import { auth, db } from "../config/firebase.config";
-import { doc, getDoc, DocumentData, Timestamp } from "firebase/firestore";
+import { doc, getDoc, Timestamp } from "firebase/firestore";
 
 type User = {
   uid: string;
   email: string;
   wallet: string;
-  data: DocumentData;
+  firstName: string;
+  lastName: string;
+  birthday: Timestamp;
+  cupWins: Number;
+  cupsPlayed: Number;
+  headsUpPlayed: Number;
+  headsUpWins: Number;
+  totalEarnings: Number;
+  totalPercentGain: Number;
+  walletVerified: boolean;
+  newsPreferences: Array<String>;
+  imageURL: string;
 };
 
-const USER: User = { uid: "", email: "", wallet: "", data: []};
+const USER: User = { uid: "", email: "", wallet: "", firstName: "", lastName: "", birthday: Timestamp.now(), cupWins: 0, cupsPlayed: 0, 
+headsUpPlayed: 0, headsUpWins: 0, totalEarnings: 0, totalPercentGain: 0, walletVerified: false, newsPreferences: [], imageURL: "" };
 
 export const UserContext = createContext({ ...USER });
 
@@ -38,7 +50,18 @@ class UserProvider extends Component<{}, { user: User }> {
           user.uid = userAuth.uid;
           user.email = data.email;
           user.wallet = data.wallet;
-          user.data = data;
+          user.firstName = data.firstName;
+          user.lastName = data.lastName;
+          user.birthday = data.birthday;
+          user.cupWins = data.cupWins;
+          user.cupsPlayed = data.cupsPlayed;
+          user.headsUpPlayed = data.headsUpPlayed;
+          user.headsUpWins = data.headsUpWins;
+          user.totalEarnings = data.totalEarnings;
+          user.totalPercentGain = data.totalPercentGain;
+          user.walletVerified = data.walletVerified;
+          user.newsPreferences = data.newsPreferences;
+          user.imageURL = data.imageURL;
         }
       }
       localStorage.setItem("user", user ? JSON.stringify(user) : "");

@@ -1,0 +1,50 @@
+.placeholder {
+    display: inline-block;
+    width: 100%;
+    height: 263px;
+    border: 2px solid;
+    border-color: #ffffff;
+    border-radius: 15px;
+    border-style: 'solid';
+}
+
+.container {
+    margin-top: 27px;
+    margin-left: 30px;
+  }
+
+.title{
+    display: flex;
+}
+
+.name{
+    font-size: 35px;
+}
+
+.cuptype{
+    color: #ffffff;
+    border-radius: 25px;
+    background: #DA93D3;
+    width: 60px;
+    text-align: center;
+    margin-top: 14px;
+    margin-bottom: 18px;
+}
+
+.commis{
+    font-style: italic;
+    margin-top: 18px;
+}
+
+.buyin{
+    margin-top: 12px;
+}
+
+.date{
+    margin-top: 12px;
+    margin-bottom: 54px;
+}
+
+.center{
+    text-align: center;
+}

@@ -77,8 +77,8 @@ const Profile: NextPage = () => {
     const [cups,setCups]=useState<QueryDocumentSnapshot<DocumentData>[]>([]);
     const [loading,setLoading] = useState<boolean>(true);
     const [editMode,setEditMode] = useState<boolean>(false);
-    const [fname, setFname] = React.useState(user.data.firstName);
-    const [lname, setLname] = React.useState(user.data.lastName);
+    const [fname, setFname] = React.useState(user.firstName);
+    const [lname, setLname] = React.useState(user.lastName);
     const [email, setEmail] = React.useState(user.email);
     const cupsRef=collection(db,"cups");
     const editForm = () => {
@@ -205,12 +205,12 @@ const Profile: NextPage = () => {
           <h1 className={styles.info}>
             <Avatar
               sx={{ width: 100, height: 100 }}
-              src={user.data.imageURL}
+              src={user.imageURL}
               alt={user.uid}
               />
           </h1>
           <h2 className={styles.info}>
-            {user.data.firstName + " " + user.data.lastName}
+            {user.firstName + " " + user.lastName}
           </h2>
           <h6 className={styles.subtitle}>
             {user.uid}
@@ -227,20 +227,20 @@ const Profile: NextPage = () => {
             Birthday
           </h5>
           <h6 className={styles.subtitle}>
-            {/* {!user.data.birthday? <div>02/02/2022</div>:moment(user.data.birthday.toDate()).format("M/D/YYYY")} */}
-            02/02/2002
+            {/* {moment(user.birthday.toDate()).format("M/D/YYYY")} */}
+            05/17/1999
           </h6>
 
           <h5 className={styles.info}>
             News Preferences
           </h5>
           <h6 className={styles.subtitle}>
-            {!user.data.newsPreferences ? <div></div>: (user.data.newsPreferences.map((tag) => (
+            {user.newsPreferences.map((tag) => (
               <h6 className={styles.subtitle}>
                 * {tag.toUpperCase()}
               </h6>
             )
-            ))}
+            )}
           </h6>
 
           <h2 className={styles.info}>

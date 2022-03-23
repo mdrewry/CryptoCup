@@ -2,14 +2,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import homestyles from "../styles/Home.module.css";
 import styles from "../styles/Signup.module.css";
-import { styled } from "@mui/material/styles";
 import { makeStyles } from "@material-ui/core/styles";
-import { useRouter } from "next/router";
 import Logo from "../Icons/Logo.js";
 import LaunchButton from "../Components/LaunchButton.js";
 import Graph from "../Icons/Graph.js";
 import Grid from "@mui/material/Grid";
-import InputBase from "@mui/material/InputBase";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import CircleIcon from "@mui/icons-material/Circle";
@@ -17,13 +14,18 @@ import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import Link from "next/link";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import React, { useState, useEffect, useContext, useRef } from "react";
+import TextField from "@mui/material/TextField";
+import FormHelperText from "@mui/material/FormHelperText";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebase.config";
 
 const Signup: NextPage = () => {
   const useStyles = makeStyles((theme) => ({
     textField: {
+      [`& fieldset`]: {
+        borderRadius: 25,
+      },
       "&": {
         marginTop: "9px",
       },
@@ -36,11 +38,11 @@ const Signup: NextPage = () => {
         width: 500,
         padding: "15px 15px",
       },
-      "&:focus": {
-        borderRadius: 25,
-      },
     },
     birthday: {
+      [`& fieldset`]: {
+        borderRadius: 25,
+      },
       "&": {
         marginTop: "6px",
       },
@@ -53,18 +55,22 @@ const Signup: NextPage = () => {
         width: 140,
         padding: "15px 15px",
       },
-      "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
+    },
+    month: {
+      [`& fieldset`]: {
         borderRadius: 25,
       },
-      "&:focus": {
+      "&": {
+        marginTop: "6px",
+      },
+      "& .MuiInputBase-input": {
         borderRadius: 25,
+        fontFamily: "Space Mono",
+        fontSize: 20,
+        color: "rgb(127,131,142)",
+        backgroundColor: "rgba(47, 56, 105, 0.6)",
+        width: 140,
         padding: "15px 15px",
-      },
-      "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
-        color: "#ffffff",
-      },
-      "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
-        color: "#ffffff",
       },
     },
     tos: {
@@ -78,79 +84,154 @@ const Signup: NextPage = () => {
     },
   }));
   const classes = useStyles();
-  // const user = useContext(UserContext);
 
-  // const inputRef = useRef<any>();
+  const months = [1,2,3,4,5,6,7,8,9,10,11,12];
 
-  const [month, setMonth] = React.useState("");
-  const [day, setDay] = React.useState("");
-  const [year, setYear] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [confirmPass, setConfirmPass] = React.useState("");
-  const [wallet, setWallet] = React.useState("");
-  // console.log(month);
-  //console.log(email);
-  //console.log(password);
-  //console.log(confirmPass);
+  const initialFormValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirm: "",
+    month: 0,
+    day: "",
+    year: "",
+    tos: false,
+  }
+  const [values, setValues] = useState(initialFormValues);
+  const [tosError, setTosError] = useState(false);
+  const [errors, setErrors] = useState({} as any);
 
-  // useEffect(() => {
-  //   inputRef.current.focus();
-  // }, []);
+  const validate: any = (fieldValues = values) => {
+    let temp: any = { ...errors }
 
-  const changeEmail = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setEmail(event.target.value);
+    if ("firstName" in fieldValues) {
+      temp.firstName = fieldValues.firstName ? "" : "This field is required."
+      if (fieldValues.firstName)
+        temp.firstName = /^[a-z ,.'-]+$/i.test(fieldValues.firstName)
+          ? ""
+          : "First name is not valid."
+    }
+
+    if ("lastName" in fieldValues) {
+      temp.lastName = fieldValues.lastName ? "" : "This field is required."
+      if (fieldValues.lastName)
+        temp.lastName = /^[a-z ,.'-]+$/i.test(fieldValues.lastName)
+          ? ""
+          : "Last name is not valid."
+    }
+
+    if ("email" in fieldValues) {
+      temp.email = fieldValues.email ? "" : "This field is required."
+      if (fieldValues.email)
+        temp.email = /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(fieldValues.email)
+          ? ""
+          : "Email is not valid."
+    }
+
+    if ("password" in fieldValues) {
+      temp.password =
+        fieldValues.password ? "" : "This field is required."
+        if (fieldValues.password)
+        temp.password = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(fieldValues.password)
+          ? ""
+          : "Password must be at least 6 characters long containing numbers and letters."
+    }
+
+    if ("confirm" in fieldValues) {
+      temp.confirm =
+        fieldValues.confirm ? "" : "This field is required."
+        if (fieldValues.confirm)
+        temp.confirm = (fieldValues.confirm == values.password)
+          ? ""
+          : "Password and confirm password does not match."
+    }
+    
+    if ("month" in fieldValues)
+      temp.month =
+      values.month != 0 && !isNaN(fieldValues.month)
+        ? "" : "This field is required."
+
+    if ("day" in fieldValues) {
+      temp.day =
+        fieldValues.day ? "" : "This field is required."
+        if (fieldValues.day)
+        temp.day = /\b([1-9]|[12]\d|3[01])\b/.test(fieldValues.day)
+          ? ""
+          : "Day is not valid."
+    }
+
+    if ("year" in fieldValues) {
+      temp.year =
+        fieldValues.year ? "" : "This field is required."
+        if (fieldValues.year)
+        temp.year = /^19\d{2}|20[0-2]\d$/.test(fieldValues.year)
+          ? ""
+          : "Year is not valid."
+    }
+    
+    if ("tos" in fieldValues)
+      fieldValues.tos ? setTosError(false) : setTosError(true)
+
+    setErrors({
+      ...temp
+    });
+  }
+
+  const handleTos = (e: any) => {
+    setValues({
+      ...values,
+      ["tos"]: e.target.checked
+    });
+  }
+
+  const handleInputValue = (e: any) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value
+    });
+    validate({ [name]: value });
   };
 
-  const changePassword = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setPassword(event.target.value);
+  const formIsValid = (fieldValues = values) => {
+    const isValid =
+      fieldValues.firstName && fieldValues.lastName &&
+      fieldValues.email && fieldValues.password &&
+      fieldValues.confirm && fieldValues.day &&
+      fieldValues.month && fieldValues.year &&
+      fieldValues.tos &&
+      Object.values(errors).every((x) => x === "");
+
+    return isValid;
   };
 
-  const changeConfirm = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setConfirmPass(event.target.value);
-  };
-
-  const changeMonth = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setMonth(event.target.value);
-  };
-
-  const changeDay = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setDay(event.target.value);
-  };
-
-  const changeYear = (event: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setYear(event.target.value);
-  };
-
-  async function signUp() {
-    try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        body: JSON.stringify({ email, password, month, day, year, wallet }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const data = await response.json();
-      if (data.error) {
-        alert(data.error.message);
-      } else {
-        alert("User created.");
+  async function signUp(e: any) {
+    validate(values);
+    e.preventDefault();
+    if(formIsValid()){
+      try {
+        const firstName = values.firstName;
+        const lastName = values.lastName;
+        const email = values.email;
+        const password = values.password;
+        const birthdayStr = values.month+"/"+values.day+"/"+values.year;
+        const response = await fetch("/api/signup", {
+          method: "POST",
+          body: JSON.stringify({ firstName, lastName, email, password, birthdayStr }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        if (data.error) {
+          alert(data.error.message);
+        } else {
+          await signInWithEmailAndPassword(auth, email, password);
+        }
+      } catch (error) {
+        alert(error);
       }
-    } catch (error) {
-      alert(error);
     }
   }
 
@@ -212,137 +293,223 @@ const Signup: NextPage = () => {
               </Button>
             </Link>
           </Grid>
-
-          <FormControl>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Email</p>
-            </Grid>
-            <Grid item xs>
-              <InputBase
-                className={classes.textField}
-                onChange={changeEmail}
-                value={email}
-                type="email"
-              />
-            </Grid>
-          </FormControl>
-          <FormControl>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Password</p>
-            </Grid>
-            <Grid item xs>
-              <InputBase
-                className={classes.textField}
-                onChange={changePassword}
-                value={password}
-                type="password"
-              />
-            </Grid>
-          </FormControl>
-          <FormControl>
-            <Grid className={styles.labelSpacing} item xs>
-              <p>Confirm Password</p>
-            </Grid>
-            <Grid item xs>
-              <InputBase
-                className={classes.textField}
-                onChange={changeConfirm}
-                value={confirmPass}
-                type="password"
-              />
-            </Grid>
-          </FormControl>
-          <Grid className={styles.labelSpacing} item xs>
-            <p>Birthday</p>
-          </Grid>
-
-          <Grid container>
-            <Grid item xs={3}>
-              <Select
-                onChange={changeMonth}
-                displayEmpty
-                input={<InputBase className={classes.birthday} />}
-                IconComponent={KeyboardArrowDownIcon}
-                type="number"
-              >
-                <MenuItem disabled value="">
-                  {" "}
-                  Month{" "}
-                </MenuItem>
-                <MenuItem value={1}>1</MenuItem>
-                <MenuItem value={2}>2</MenuItem>
-                <MenuItem value={3}>3</MenuItem>
-                <MenuItem value={4}>4</MenuItem>
-                <MenuItem value={5}>5</MenuItem>
-                <MenuItem value={6}>6</MenuItem>
-                <MenuItem value={7}>7</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-                <MenuItem value={9}>9</MenuItem>
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={11}>11</MenuItem>
-                <MenuItem value={12}>12</MenuItem>
-              </Select>
-            </Grid>
-            <Grid item xs={2.8}>
-              <InputBase
-                className={classes.birthday}
-                placeholder="Day"
-                type="number"
-                onChange={changeDay}
-              />
-            </Grid>
-            <Grid item xs>
-              <InputBase
-                className={classes.birthday}
-                placeholder="Year"
-                type="number"
-                onChange={changeYear}
-              />
-            </Grid>
-          </Grid>
-
-          <Grid container item xs>
-            <FormControlLabel
-              className={classes.tos}
-              control={
-                <Checkbox
-                  className={styles.checkboxPos}
-                  sx={{
-                    color: "rgba(47, 56, 105, 0.6)",
-                    "&.Mui-checked": {
-                      color: "#6B58B8",
-                    },
-                  }}
-                  icon={<CircleIcon />}
-                  checkedIcon={<CircleIcon />}
+          <form autoComplete="off" onSubmit={signUp}>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>First Name</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"firstName"}
+                  {...(errors["firstName"] && {
+                    error: true,
+                    helperText: errors["firstName"]
+                  })}
                 />
-              }
-              label="I agree to the Terms of Service and Privacy Policy."
-              labelPlacement="end"
-            />
-          </Grid>
+              </Grid>
+            </FormControl>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Last Name</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"lastName"}
+                  {...(errors["lastName"] && {
+                    error: true,
+                    helperText: errors["lastName"]
+                  })}
+                />
+              </Grid>
+            </FormControl>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Email</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"email"}
+                  {...(errors["email"] && {
+                    error: true,
+                    helperText: errors["email"]
+                  })}
+                />
+              </Grid>
+            </FormControl>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Password</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"password"}
+                  type="password"
+                  {...(errors["password"] && {
+                    error: true,
+                    helperText: errors["password"]
+                  })}
+                />
+              </Grid>
+            </FormControl>
+            <FormControl>
+              <Grid className={styles.labelSpacing} item xs>
+                <p>Confirm Password</p>
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.textField}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  name={"confirm"}
+                  type="password"
+                  {...(errors["confirm"] && {
+                    error: true,
+                    helperText: errors["confirm"]
+                  })}
+                />
+              </Grid>
+            </FormControl>
+            <Grid className={styles.labelSpacing} item xs>
+              <p>Birthday</p>
+            </Grid>
 
-          <Grid item xs>
-            <div className={styles.signupButton}>
-              <Button
-                style={{
-                  background: "rgba(47, 56, 105, 0.6)",
-                  fontFamily: "Space Mono",
-                  fontSize: 20,
-                  borderRadius: 25,
-                  fontWeight: 700,
-                  height: 50,
-                  padding: 10,
-                  width: 214,
-                  color: "white",
-                  textTransform: "none",
-                }}
-                onClick={signUp}
-              >
-                Sign Up
-              </Button>
-            </div>
-          </Grid>
+            <Grid container>
+              <Grid item xs={3}>
+                {
+                  values.month == 0 || isNaN(values.month)
+                  ?
+                  <TextField
+                  className={classes.month}
+                  select
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  type="number"
+                  name={"month"}
+                  defaultValue='none'
+                  {...(errors["month"] && {
+                    error: true,
+                    helperText: errors["month"]
+                  })}
+                >
+                  <MenuItem key={0} value="none" disabled>Month</MenuItem>
+                  {months.map((index) => (
+                    <MenuItem key={index} value={index}>{index}</MenuItem>
+                  ))}
+                </TextField>
+                :
+                <TextField
+                  className={classes.birthday}
+                  select
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  type="number"
+                  name={"month"}
+                  defaultValue='none'
+                  {...(errors["month"] && {
+                    error: true,
+                    helperText: errors["month"]
+                  })}
+                >
+                  <MenuItem value="none" disabled>Month</MenuItem>
+                  {months.map((index) => (
+                    <MenuItem value={index}>{index}</MenuItem>
+                  ))}
+                </TextField>
+                }
+
+              </Grid>
+              <Grid item xs={2.8}>
+                <TextField
+                  className={classes.birthday}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  placeholder="Day"
+                  type="number"
+                  name={"day"}
+                  InputProps={{ inputProps: { min: 1, max: 31 } }}
+                  {...(errors["day"] && {
+                    error: true,
+                    helperText: errors["day"]
+                  })}
+                />
+              </Grid>
+              <Grid item xs>
+                <TextField
+                  className={classes.birthday}
+                  onChange={handleInputValue}
+                  onBlur={handleInputValue}
+                  placeholder="Year"
+                  type="number"
+                  name={"year"}
+                  InputProps={{ inputProps: { min: 1900, max: 2022 } }}
+                  {...(errors["year"] && {
+                    error: true,
+                    helperText: errors["year"]
+                  })}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item xs>
+              <FormControl error={true}>
+                <FormControlLabel
+                  className={classes.tos}
+                  control={
+                    <Checkbox
+                      className={styles.checkboxPos}
+                      onChange={handleTos}
+                      sx={{
+                        color: "rgba(47, 56, 105, 0.6)",
+                        "&.Mui-checked": {
+                          color: "#6B58B8",
+                        },
+                      }}
+                      icon={<CircleIcon />}
+                      checkedIcon={<CircleIcon />}
+                      name={"tos"}
+                    />
+                  }
+                  label="I agree to the Terms of Service and Privacy Policy."
+                  labelPlacement="end"
+                />
+                {tosError ? <FormHelperText>This field is required.</FormHelperText> : <div></div>}
+              </FormControl>
+            </Grid>
+            
+            <Grid item xs>
+              <div className={styles.signupButton}>
+                <Button
+                  style={{
+                    background: "rgba(47, 56, 105, 0.6)",
+                    fontFamily: "Space Mono",
+                    fontSize: 20,
+                    borderRadius: 25,
+                    fontWeight: 700,
+                    height: 50,
+                    padding: 10,
+                    width: 214,
+                    color: "white",
+                    textTransform: "none",
+                  }}
+                  type="submit"
+                >
+                  Sign Up
+                </Button>
+              </div>
+            </Grid>
+          </form>
         </Grid>
 
         <Grid item xs>
