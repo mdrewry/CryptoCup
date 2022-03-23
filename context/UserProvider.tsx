@@ -1,14 +1,15 @@
 import React, { Component, createContext } from "react";
 import { auth, db } from "../config/firebase.config";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, DocumentData, Timestamp } from "firebase/firestore";
 
 type User = {
   uid: string;
   email: string;
   wallet: string;
+  data: DocumentData;
 };
 
-const USER: User = { uid: "", email: "", wallet: "" };
+const USER: User = { uid: "", email: "", wallet: "", data: []};
 
 export const UserContext = createContext({ ...USER });
 
@@ -37,6 +38,7 @@ class UserProvider extends Component<{}, { user: User }> {
           user.uid = userAuth.uid;
           user.email = data.email;
           user.wallet = data.wallet;
+          user.data = data;
         }
       }
       localStorage.setItem("user", user ? JSON.stringify(user) : "");

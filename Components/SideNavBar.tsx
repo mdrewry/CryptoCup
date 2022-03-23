@@ -27,6 +27,7 @@ const routes: routeType[] = [
   { name: "Leaderboards", path: "leaderboard" },
   { name: "Crypto Info", path: "cryptoinfo" },
   { name: "News", path: "news" },
+  { name: "Profile", path: "profile"}
 ];
 const Content = ({ path }: ContentProps) => {
   const user = useContext(UserContext);
@@ -78,13 +79,11 @@ const Content = ({ path }: ContentProps) => {
       <div className={styles.headerSection}>
         <Avatar
           sx={{ width: 80, height: 80 }}
-          // alt={user.firstName}
-          // src={user.img}
-          src={user.uid}
-          alt={user.uid}
+          alt={user.data.firstName}
+          src={user.data.imageURL}
         />
         <div className={styles.header}>
-          {/* <h4 className={styles.title}>{user.firstName} User</h4> */}
+          <h4 className={styles.title}>{user.data.firstName}</h4>
           <h5 className={styles.subtitle}>{user.uid.substring(0, 10)}</h5>
         </div>
       </div>
