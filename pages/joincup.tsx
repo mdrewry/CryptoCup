@@ -1,13 +1,8 @@
 import React, { useState, useContext } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Router from "next/router";
 import joinCupStyles from "../styles/joincup.module.css";
 import { makeStyles } from "@material-ui/core/styles";
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import { UserContext } from "../context/UserProvider";
 import ViewCup from "../Components/ViewCup";
@@ -39,6 +34,7 @@ const JoinCup: NextPage = () => {
   const handleSearch = (e: any) => {
     setName(e.target.value);
   };
+
   return (
     <div className={joinCupStyles.page}>
       <Head>
