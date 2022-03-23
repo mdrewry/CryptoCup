@@ -2,8 +2,10 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from '../styles/Dashboard.module.css'
 import React, { useState, useEffect, useContext } from "react";
+import Button from "@mui/material/Button";
 import { useRouter } from "next/router"
 import { UserContext } from "../context/UserProvider";
+import Router from "next/router";
 
 const Dashboard: NextPage = () => {
     const router = useRouter();
@@ -12,6 +14,10 @@ const Dashboard: NextPage = () => {
     } = router;
 
     const user = useContext(UserContext);
+
+    // async function clicky() {
+    //   Router.push("/cups");
+    // }
   
     return (
       <div className={styles.container}>
@@ -26,6 +32,9 @@ const Dashboard: NextPage = () => {
           <h2 className={styles.firstname}>{user.firstName}</h2>
         </div>
         <h4 className={styles.invest}>Invest in an Upcoming Cup:</h4>
+        {/* <Button onClick={clicky}>
+          <a>Cup Details</a>
+        </Button> */}
         <h4 className={styles.invest}>Make some trades:</h4>
         
       </div>
