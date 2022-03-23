@@ -5,18 +5,54 @@ import React, { useState, useEffect, useContext } from "react";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/router"
 import { UserContext } from "../../context/UserProvider";
-import Router from "next/router";
+import moment from "moment";
+import { db } from "../../config/firebase.config";
+import {
+  getDoc,
+  doc,
+  Timestamp
+} from "firebase/firestore";
 
 const CupDetails: NextPage = () => {
     const router = useRouter();
-    //const { pathname } = useRouter();
-    //const [path, setPath] = useState(pathname.substring(1).split("/")[0]);
-    //console.log(cupid)
+    const [cupid] = useState(router.asPath.substring(1).split("/")[1]);
+    const [imageURL, setImageURL] = useState("");
+    const [name, setName] = useState("");
+    const [cupType, setCupType] = useState("");
+    const [director, setDirector] = useState("");
+    const [buyIn, setBuyIn] = useState(0);
+    const [startDate, setStartDate] = useState(Timestamp.now());
+    const [endDate, setEndDate] = useState(Timestamp.now());
+    console.log(startDate)
     const {
       query: { id },
     } = router;
 
-    const user = useContext(UserContext);
+    const getCups=async()=>{
+      const cupDocRef = doc(db, "cups", cupid);
+      const cupDocSnap = await getDoc(cupDocRef);
+      
+      if (cupDocSnap.exists()) {
+        const data = cupDocSnap.data();
+        setImageURL(data.imageURL);
+        setName(data.name);
+        setCupType(data.cupType);
+        //setDirector(data.director);
+        setBuyIn(data.buyIn);
+        setStartDate(data.startDate);
+        setEndDate(data.endDate);
+        //setStartDate(moment(data.startDate).toDate()).format("M/D/YYYY"));
+        //setEndDate(moment(data.endDate.toDate()).format("M/D/YYYY"));
+        //console.log(data.cupType)
+      }
+    };
+
+    useEffect(()=>{
+      getCups();
+      // setTimeout( () => {
+      //     setLoading(false);
+      //   },2000)
+    },[]);
   
     return (
       <div>
@@ -26,30 +62,40 @@ const CupDetails: NextPage = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        <div className={styles.placeholder}></div>
+        <img
+          className={styles.placeholder}
+          src={imageURL}
+        ></img>
         <div className={styles.container}>
-            <h4>This Cup is currently accepting players. Join now!</h4>
-            <Button
-                style={{
-                    background: "#2F3869",
-                    fontFamily: "Space Mono",
-                    fontSize: 20,
-                    borderRadius: 60,
-                    fontWeight: 700,
-                    height: 50,
-                    padding: 10,
-                    width: 251,
-                    color: "white",
-                    marginTop: 21,
-                    marginBottom: 34,
-                }}
-            >
-            Request to Join
-            </Button>
-            <h5>Cup Name</h5>
+            <h5 className={styles.name}>{name}</h5>
+            <div className={styles.cuptype}>{cupType}</div>
+            {/* <h6 className={styles.commis}>Cup Commissioner: {director}</h6> */}
             <h6 className={styles.commis}>Cup Commissioner:</h6>
-            <h6 className={styles.detail}>Buy-In:</h6>
-            <h6 className={styles.detail}>START DATE - END DATE</h6>
+            <h6 className={styles.buyin}>Buy-In: {buyIn} ETH</h6>
+            <h6 className={styles.date}>
+              {moment(startDate.toDate()).format("M/D/YYYY")}-
+              {moment(endDate.toDate()).format("M/D/YYYY")}
+            </h6>
+            <h4 className={styles.center}>This Cup is currently accepting players. Join now!</h4>
+            <div className={styles.center}>
+              <Button
+                  style={{
+                      background: "#2F3869",
+                      fontFamily: "Space Mono",
+                      fontSize: 20,
+                      borderRadius: 60,
+                      fontWeight: 700,
+                      height: 50,
+                      padding: 10,
+                      width: 242,
+                      color: "white",
+                      marginTop: 49,
+                      marginBottom: 307,
+                  }}
+              >
+              Join Now
+              </Button>
+            </div>
         </div>
       </div>
     )
