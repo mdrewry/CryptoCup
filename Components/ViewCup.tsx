@@ -68,14 +68,11 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
     // }));
 
     setCups(result);
-    // setLoading(false);
+    setLoading(false);
   };
 
   useEffect(() => {
     getCups();
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
   }, []);
 
   const router = useRouter();

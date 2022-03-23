@@ -12,31 +12,24 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
   const [errorText, setErrorText] = useState("");
   const toggleDialog = () => {
     setOpen(!open);
+    setErrorText("ㅤ");
   };
   const handleSignup = async () => {
     if (!user.wallet) {
       setErrorText("Connect your wallet before joining a cup.");
     } else {
-      try {
-        const response = await fetch("/api/joincup", {
-          method: "POST",
-          body: JSON.stringify({
-            userID: user.uid,
-            cupID: cup.id,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await response.json();
-        if (data.error) {
-          setErrorText(data.error);
-        } else {
-          toggleDialog();
-        }
-      } catch (error: any) {
-        console.log(error);
-      }
+      const response = await fetch("/api/joincup", {
+        method: "POST",
+        body: JSON.stringify({
+          userID: user.uid,
+          cupID: cup.id,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setErrorText(data.error);
     }
   };
   return (
@@ -111,8 +104,18 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
           >
             The Buy-In for this Cup is {cup.buyIn} ETH.
           </DialogContentText>
-          <DialogContentText id="join-cup-error">
-            {errorText ? errorText : " "}
+          <DialogContentText
+            style={{
+              marginTop: "10px",
+              fontFamily: "Space Mono",
+              fontStyle: "italic",
+              fontWeight: "400",
+              fontSize: "20px",
+              color: "red",
+            }}
+            id="join-cup-error"
+          >
+            {errorText ? errorText : "ㅤ"}
           </DialogContentText>
           <div
             style={{

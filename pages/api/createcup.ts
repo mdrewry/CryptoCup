@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../config/firebaseAdmin.config";
+import { addDoc, collection, doc } from "firebase/firestore";
+import { db } from "../../config/firebase.config";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,7 +21,7 @@ export default async function handler(
       "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FethProfilePhoto.png?alt=media&token=f32de942-3e76-4c26-9aa9-dc5b3cef7de1",
       "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FrocketProfilePhoto.png?alt=media&token=67fd1033-8a16-42dd-b75e-99811ff932b7",
     ];
-    await db.collection("cups").add({
+    await addDoc(collection(db, "cups"), {
       buyIn: parseFloat(buyIn),
       cryptosAvailable: [
         "ETH",
@@ -34,7 +35,7 @@ export default async function handler(
       ],
       cupType: "classic",
       currentState: "created",
-      director: db.collection("users").doc(director),
+      director: doc(db, "users", director),
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       name: cupName,
@@ -44,6 +45,8 @@ export default async function handler(
       userPortfolios: {},
       totalBudget: parseInt(inGameBudget),
       imageURL: images[Math.floor(Math.random() * 3)],
+    }).then(async (ref) => {
+      await addDoc(collection(db, "usersInCup"), { users: [], cupID: ref });
     });
   } catch (error) {
     res.status(500).json({ error });
