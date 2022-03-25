@@ -111,7 +111,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
                   c
                     .get("name")
                     .toLowerCase()
-                    .indexOf(cupNameFilter.toLowerCase()) === 0
+                    .includes(cupNameFilter.toLowerCase())
                 );
             })
             .map((c) => (

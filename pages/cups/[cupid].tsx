@@ -12,6 +12,7 @@ import { getDoc, doc, Timestamp } from "firebase/firestore";
 
 const CupDetails: NextPage = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(true);
   const [cupid] = useState(router.asPath.substring(1).split("/")[1]);
   const [imageURL, setImageURL] = useState("");
   const [name, setName] = useState("");
@@ -20,28 +21,30 @@ const CupDetails: NextPage = () => {
   const [buyIn, setBuyIn] = useState(0);
   const [startDate, setStartDate] = useState(Timestamp.now());
   const [endDate, setEndDate] = useState(Timestamp.now());
-  console.log(startDate);
   const {
     query: { id },
   } = router;
+  const user = useContext(UserContext);
 
   const getCups = async () => {
     const cupDocRef = doc(db, "cups", cupid);
     const cupDocSnap = await getDoc(cupDocRef);
-
     if (cupDocSnap.exists()) {
       const data = cupDocSnap.data();
       setImageURL(data.imageURL);
       setName(data.name);
       setCupType(data.cupType);
-      //setDirector(data.director);
+      const userDocRef = doc(db, "users", data.director);
+      const userDocSnap = await getDoc(userDocRef);
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        setDirector(userData.firstName+" "+userData.lastName);
+      }
       setBuyIn(data.buyIn);
       setStartDate(data.startDate);
       setEndDate(data.endDate);
-      //setStartDate(moment(data.startDate).toDate()).format("M/D/YYYY"));
-      //setEndDate(moment(data.endDate.toDate()).format("M/D/YYYY"));
-      //console.log(data.cupType)
     }
+    setLoading(false);      
   };
 
   useEffect(() => {
@@ -61,15 +64,20 @@ const CupDetails: NextPage = () => {
 
       <img className={styles.placeholder} src={imageURL}></img>
       <div className={styles.container}>
-        <h5 className={styles.name}>{name}</h5>
-        <div className={styles.cuptype}>{cupType}</div>
-        {/* <h6 className={styles.commis}>Cup Commissioner: {director}</h6> */}
-        <h6 className={styles.commis}>Cup Commissioner:</h6>
-        <h6 className={styles.buyin}>Buy-In: {buyIn} ETH</h6>
-        <h6 className={styles.date}>
-          {moment(startDate.toDate()).format("M/D/YYYY")}-
-          {moment(endDate.toDate()).format("M/D/YYYY")}
-        </h6>
+      {loading ? (
+        <p>loading</p>
+      ) : (
+          <div>
+            <h5 className={styles.name}>{name}</h5>
+            <div className={styles.cuptype}>{cupType}</div>
+            <h6 className={styles.commis}>Cup Commissioner: {director}</h6>
+            <h6 className={styles.buyin}>Buy-In: {buyIn} ETH</h6>
+            <h6 className={styles.date}>
+              {moment(startDate.toDate()).format("M/D/YYYY")}-
+              {moment(endDate.toDate()).format("M/D/YYYY")}
+            </h6>
+          </div>
+        )}
         <h4 className={styles.center}>
           This Cup is currently accepting players. Join now!
         </h4>

@@ -35,7 +35,7 @@ export default async function handler(
       ],
       cupType: "classic",
       currentState: "created",
-      director: doc(db, "users", director),
+      director,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       name: cupName,
