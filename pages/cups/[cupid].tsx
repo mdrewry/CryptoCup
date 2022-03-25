@@ -73,7 +73,7 @@ const CupDetails: NextPage = () => {
             <h6 className={styles.commis}>Cup Commissioner: {director}</h6>
             <h6 className={styles.buyin}>Buy-In: {buyIn} ETH</h6>
             <h6 className={styles.date}>
-              {moment(startDate.toDate()).format("M/D/YYYY")}-
+              {moment(startDate.toDate()).format("M/D/YYYY")}&nbsp;-&nbsp;
               {moment(endDate.toDate()).format("M/D/YYYY")}
             </h6>
           </div>
