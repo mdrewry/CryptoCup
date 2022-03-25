@@ -14,10 +14,6 @@ const Dashboard: NextPage = () => {
     } = router;
 
     const user = useContext(UserContext);
-
-    // async function clicky() {
-    //   Router.push("/cups");
-    // }
   
     return (
       <div className={styles.container}>
@@ -32,9 +28,6 @@ const Dashboard: NextPage = () => {
           <h2 className={styles.firstname}>{user.firstName}</h2>
         </div>
         <h4 className={styles.invest}>Invest in an Upcoming Cup:</h4>
-        {/* <Button onClick={clicky}>
-          <a>Cup Details</a>
-        </Button> */}
         <h4 className={styles.invest}>Make some trades:</h4>
         
       </div>
