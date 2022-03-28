@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Router from "next/router";
+import { ethers } from "ethers";
 import createCupStyles from "../styles/createcup.module.css";
 import { makeStyles } from "@material-ui/core/styles";
 import Stack from "@mui/material/Stack";
@@ -16,6 +17,8 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import moment from "moment";
 import { UserContext } from "../context/UserProvider";
+import cupFactoryABI from "../contracts/abi/CupFactory.json";
+declare let window: any;
 const initValues = {
   cupName: "",
   password: "",
@@ -141,8 +144,31 @@ const CreateCup: NextPage = () => {
     return Object.values(temp).every((x) => x === "");
   };
 
-  const createCup = async (e: any) => {
+  const createCupContract = async (e: any) => {
     e.preventDefault();
+    try {
+      const ethereum: any = window.ethereum;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const factoryAddress = process.env.CUPFACTORY_ADDRESS
+          ? process.env.CUPFACTORY_ADDRESS
+          : "";
+        const factoryContract = new ethers.Contract(
+          factoryAddress,
+          cupFactoryABI,
+          signer
+        );
+        const txn = await factoryContract.newCup([3, 5, 6], values.buyIn);
+        await txn.wait();
+        createCup();
+      } else {
+        console.log("Not Connected to Metamask");
+      }
+    } catch (err) {}
+  };
+
+  const createCup = async () => {
     if (validate(values)) {
       try {
         const response = await fetch("/api/createcup", {
@@ -184,7 +210,7 @@ const CreateCup: NextPage = () => {
         </h6>
       </div>
       <div className={createCupStyles.container}>
-        <form autoComplete="off" onSubmit={createCup}>
+        <form autoComplete="off" onSubmit={createCupContract}>
           <FormControl>
             {page == 0 ? (
               <Grid>

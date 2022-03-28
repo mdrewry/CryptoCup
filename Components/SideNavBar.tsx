@@ -63,11 +63,8 @@ const Content = ({ path }: ContentProps) => {
       const data = await response.json();
       if (data.error) {
         alert(data.error);
-      } else {
-        alert("it worked");
       }
     } catch (error) {
-      console.log(error);
       alert("Error during signing. Please refresh and try again.");
     }
   }
