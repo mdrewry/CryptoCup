@@ -111,7 +111,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
                   c
                     .get("name")
                     .toLowerCase()
-                    .indexOf(cupNameFilter.toLowerCase()) === 0
+                    .includes(cupNameFilter.toLowerCase())
                 );
             })
             .map((c) => (
@@ -125,7 +125,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
                     <h5 className={cupstyles.name}>{c.get("name")}</h5>
                     <div className={cupstyles.cuptype}>{c.get("cupType")}</div>
                     <p>
-                      {moment(c.get("startDate").toDate()).format("M/D/YYYY")}-
+                      {moment(c.get("startDate").toDate()).format("M/D/YYYY")}&nbsp;-&nbsp;
                       {moment(c.get("endDate").toDate()).format("M/D/YYYY")}
                     </p>
                   </div>

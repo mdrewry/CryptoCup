@@ -56,7 +56,7 @@ const Leaderboard: NextPage = () => {
   return (
     <div className={cupstyles.padding}>
       {loading ? (
-        <div>loading</div>
+        <p>loading</p>
       ) : (
         <div>
           {leaderboard.map((c) => (
