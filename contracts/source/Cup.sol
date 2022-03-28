@@ -16,8 +16,8 @@ contract Cup {
     }
 
     //Constructor of smart contract
-    constructor(uint256 _buyIn, uint16[] memory _split){
-        owner = msg.sender;
+    constructor(uint256 _buyIn, uint16[] memory _split, address _owner){
+        owner = _owner;
         buyIn = _buyIn;
         split = _split;
         cupActive = false;
@@ -63,30 +63,28 @@ contract Cup {
 
         distributePrizes(ranks);
 
-        //clear variables
-        pool = 0;
-        buyIn = 0;
-        delete split;
-        delete players;
+        //ends cup
         cupEnded = true;
         cupActive = false;
-
-        //deletes smart contract & sends remaining balance to owner
-        selfdestruct(payable(owner));
     }
 
     function distributePrizes(address[] memory ranks) private{
+        uint256 ethRemaining = pool;
         if(ranks.length > 0){
             uint256 prize = pool/split[0];
+            ethRemaining = ethRemaining - prize;
             payable(ranks[0]).transfer(prize);
         }
         if(ranks.length > 1){
             uint256 prize = pool/split[1];
+            ethRemaining = ethRemaining - prize;
             payable(ranks[1]).transfer(prize);
         }
         if(ranks.length > 2){
             uint256 prize = pool/split[2];
+            ethRemaining = ethRemaining - prize;
             payable(ranks[2]).transfer(prize);
         }
+        payable(owner).transfer(ethRemaining);
     }
 }
