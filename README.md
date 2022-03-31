@@ -2,6 +2,12 @@
 
 ## Getting Started
 
+Steps to Connect Wallet:
+
+1. Download MetaMask Chrome Extension
+2. Make an account on MetaMask
+3. Link Wallet and complete Signature Request
+
 Running the application:
 
 ```bash
