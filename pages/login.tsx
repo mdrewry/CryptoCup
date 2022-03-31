@@ -129,10 +129,14 @@ const Login: NextPage = () => {
           </div>
         </Grid>
         <Grid item xs>
-          <h6>ABOUT</h6>
+          <Button onClick={() => window.location.replace("/#about")}>
+            <a>ABOUT</a>
+          </Button>
         </Grid>
-        <Grid item xs={0.8}>
-          <h6>FAQ</h6>
+        <Grid item xs={0.9}>
+          <Button onClick={() => window.location.replace("/#faq")}>
+            <a>FAQ</a>
+          </Button>
         </Grid>
         <Grid item xs>
           <LaunchButton variant="contained">LAUNCH</LaunchButton>

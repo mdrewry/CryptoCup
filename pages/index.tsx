@@ -11,6 +11,7 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import LocalAtmRoundedIcon from "@mui/icons-material/LocalAtmRounded";
 import FaqDiamond from "../Icons/FaqDiamond.js";
 import Grid from '@mui/material/Grid';
+import Button from "@mui/material/Button";
 
 const Home: NextPage = () => {
   return (
@@ -30,10 +31,14 @@ const Home: NextPage = () => {
           </div>
         </Grid>
         <Grid item xs>
-          <h6>ABOUT</h6>
+          <Button onClick={() => window.location.replace("/#about")}>
+            <a>ABOUT</a>
+          </Button>
         </Grid>
-        <Grid item xs={0.8}>
-          <h6>FAQ</h6>
+        <Grid item xs={0.9}>
+          <Button onClick={() => window.location.replace("/#faq")}>
+            <a>FAQ</a>
+          </Button>
         </Grid>
         <Grid item xs>
           <LaunchButton variant="contained">LAUNCH</LaunchButton>
@@ -89,7 +94,7 @@ const Home: NextPage = () => {
       </Grid>
 
       <div className={styles.container3}>
-        <h4 className={styles.italicSpacing}>About Us</h4>
+        <h4 id="about" className={styles.italicSpacing}>About Us</h4>
         <div className={styles.aboutus}>
           <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2> 
           <h2 className={styles.fantasy}>Fantasy</h2>
@@ -105,7 +110,7 @@ const Home: NextPage = () => {
           University of Florida Computer Science Senior Project. Go Gators!
         </p>
         <h4 className={styles.italicSpacing}>FAQ</h4>
-        <h2 className={styles.headerSpacing}>Frequently Asked Questions</h2>
+        <h2 id="faq" className={styles.headerSpacing}>Frequently Asked Questions</h2>
         <div className={styles.questionContainer}>
           <FaqDiamond/>
           <h5 className={styles.question}>What is Crypto Cup?</h5>
