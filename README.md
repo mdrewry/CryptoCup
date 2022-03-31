@@ -4,7 +4,7 @@
 
 Steps to Connect Wallet:
 
-1. Download [https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en] (MetaMask Chrome Extension)
+1. Download [MetaMask Chrome Extension] (https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en)
 2. Make an account on MetaMask
 3. Link Wallet and complete Signature Request
 
