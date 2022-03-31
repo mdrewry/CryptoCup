@@ -1,10 +1,12 @@
 import React, { useContext, useState } from "react";
+import { ethers } from "ethers";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import { UserContext } from "../context/UserProvider";
 import { Cup } from "../lib.d";
+
 type JoinCupProps = { cup: { name: String; id: String; buyIn: Number } };
 const JoinCupDialog = ({ cup }: JoinCupProps) => {
   const user = useContext(UserContext);

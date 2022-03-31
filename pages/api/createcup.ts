@@ -14,6 +14,8 @@ export default async function handler(
     buyIn,
     inGameBudget,
     director,
+    playerCuts,
+    ethAddress,
   } = req.body;
   try {
     const images = [
@@ -40,8 +42,8 @@ export default async function handler(
       endDate: new Date(endDate),
       name: cupName,
       password,
-      playerCuts: [3, 5, 10],
-      ethAddress: "",
+      playerCuts: playerCuts,
+      ethAddress: ethAddress,
       userPortfolios: {},
       totalBudget: parseInt(inGameBudget),
       imageURL: images[Math.floor(Math.random() * 3)],
