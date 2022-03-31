@@ -133,7 +133,7 @@ const Login: NextPage = () => {
             <a>ABOUT</a>
           </Button>
         </Grid>
-        <Grid item xs={0.8}>
+        <Grid item xs={0.9}>
           <Button onClick={() => window.location.replace("/#faq")}>
             <a>FAQ</a>
           </Button>
