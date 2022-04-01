@@ -1,25 +1,40 @@
 import React, { useContext, useState } from "react";
-import { ethers } from "ethers";
+import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import { UserContext } from "../context/UserProvider";
+import { getSmartContract } from "../functions/smartContract";
 import { Cup } from "../lib.d";
 
-type JoinCupProps = { cup: { name: String; id: String; buyIn: Number } };
+type JoinCupProps = {
+  cup: { name: String; id: String; buyIn: Number; ethAddress: string };
+};
 const JoinCupDialog = ({ cup }: JoinCupProps) => {
   const user = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [loading, setLoading] = useState(false);
   const toggleDialog = () => {
     setOpen(!open);
     setErrorText("ㅤ");
   };
+  const handlePayment = async () => {
+    const cupContract = await getSmartContract(user.wallet, cup.ethAddress);
+    await cupContract.joinCup({
+      gasLimit: 9000000,
+      value: cup.buyIn,
+    });
+  };
   const handleSignup = async () => {
-    if (!user.wallet) {
-      setErrorText("Connect your wallet before joining a cup.");
-    } else {
+    setLoading(true);
+    try {
+      if (!user.wallet) {
+        setErrorText("Connect your wallet before joining a cup.");
+        throw "Connect your wallet before joining a cup.";
+      }
+      await handlePayment();
       const response = await fetch("/api/joincup", {
         method: "POST",
         body: JSON.stringify({
@@ -31,8 +46,15 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
         },
       });
       const data = await response.json();
+      if (data.error) {
+        setErrorText(data.error);
+        throw data.error;
+      }
       setErrorText(data.error);
+    } catch (err: any) {
+      console.log(err);
     }
+    setLoading(false);
   };
   return (
     <div>
@@ -128,40 +150,46 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
               justifyContent: "center",
             }}
           >
-            <Button
-              style={{
-                background: "#1C2730",
-                fontFamily: "Space Mono",
-                fontSize: 20,
-                borderRadius: 60,
-                fontWeight: 700,
-                height: 50,
-                padding: 10,
-                width: 242,
-                color: "white",
-              }}
-              onClick={toggleDialog}
-            >
-              cancel
-            </Button>
-            <div style={{ width: "20px" }} />
-            <Button
-              style={{
-                background: "#2F3869",
-                fontFamily: "Space Mono",
-                fontSize: 20,
-                borderRadius: 60,
-                fontWeight: 700,
-                height: 50,
-                padding: 10,
-                width: 242,
-                color: "white",
-              }}
-              onClick={handleSignup}
-              autoFocus
-            >
-              Sign Up
-            </Button>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <>
+                <Button
+                  style={{
+                    background: "#1C2730",
+                    fontFamily: "Space Mono",
+                    fontSize: 20,
+                    borderRadius: 60,
+                    fontWeight: 700,
+                    height: 50,
+                    padding: 10,
+                    width: 242,
+                    color: "white",
+                  }}
+                  onClick={toggleDialog}
+                >
+                  cancel
+                </Button>
+                <div style={{ width: "20px" }} />
+                <Button
+                  style={{
+                    background: "#2F3869",
+                    fontFamily: "Space Mono",
+                    fontSize: 20,
+                    borderRadius: 60,
+                    fontWeight: 700,
+                    height: 50,
+                    padding: 10,
+                    width: 242,
+                    color: "white",
+                  }}
+                  onClick={handleSignup}
+                  autoFocus
+                >
+                  Sign Up
+                </Button>
+              </>
+            )}
           </div>
         </DialogContent>
       </Dialog>

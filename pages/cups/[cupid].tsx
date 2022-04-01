@@ -21,6 +21,7 @@ const CupDetails: NextPage = () => {
   const [buyIn, setBuyIn] = useState(0);
   const [startDate, setStartDate] = useState(Timestamp.now());
   const [endDate, setEndDate] = useState(Timestamp.now());
+  const [ethAddress, setEthAddress] = useState("");
   const {
     query: { id },
   } = router;
@@ -38,13 +39,14 @@ const CupDetails: NextPage = () => {
       const userDocSnap = await getDoc(userDocRef);
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data();
-        setDirector(userData.firstName+" "+userData.lastName);
+        setDirector(userData.firstName + " " + userData.lastName);
       }
       setBuyIn(data.buyIn);
       setStartDate(data.startDate);
       setEndDate(data.endDate);
+      setEthAddress(data.ethAddress);
     }
-    setLoading(false);      
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -64,9 +66,9 @@ const CupDetails: NextPage = () => {
 
       <img className={styles.placeholder} src={imageURL}></img>
       <div className={styles.container}>
-      {loading ? (
-        <p>loading</p>
-      ) : (
+        {loading ? (
+          <p>loading</p>
+        ) : (
           <div>
             <h5 className={styles.name}>{name}</h5>
             <div className={styles.cuptype}>{cupType}</div>
@@ -82,7 +84,7 @@ const CupDetails: NextPage = () => {
           This Cup is currently accepting players. Join now!
         </h4>
         <div className={styles.center}>
-          <JoinCupDialog cup={{ name, id: cupid, buyIn }} />
+          <JoinCupDialog cup={{ name, id: cupid, buyIn, ethAddress }} />
         </div>
       </div>
     </div>

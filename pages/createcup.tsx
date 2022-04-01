@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import Router from "next/router";
-import { ethers } from "ethers";
 import createCupStyles from "../styles/createcup.module.css";
 import { makeStyles } from "@material-ui/core/styles";
 import Stack from "@mui/material/Stack";
@@ -18,8 +17,8 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import moment from "moment";
 import { UserContext } from "../context/UserProvider";
-import cupFactoryABI from "../contracts/abi/CupFactory.json";
-declare let window: any;
+import { getSmartContract } from "../functions/smartContract";
+
 const initValues = {
   cupName: "",
   password: "",
@@ -154,21 +153,7 @@ const CreateCup: NextPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const ethereum: any = window.ethereum;
-      if (!ethereum) throw "Not Connected to Metamask";
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      const signerAddress = await signer.getAddress();
-      if (signerAddress.toUpperCase() !== user.wallet.toUpperCase())
-        throw "This wallet is not connected to this account.";
-      const factoryAddress = process.env.NEXT_PUBLIC_CUPFACTORY_ADDRESS
-        ? process.env.NEXT_PUBLIC_CUPFACTORY_ADDRESS
-        : "";
-      const factoryContract = new ethers.Contract(
-        factoryAddress,
-        cupFactoryABI,
-        signer
-      );
+      const factoryContract = await getSmartContract(user.wallet, "");
       const txn = await factoryContract.newCup(values.buyIn, values.playerCuts);
       const receipt = await txn.wait();
       const event = receipt.events?.find(
