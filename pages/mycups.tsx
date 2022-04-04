@@ -30,9 +30,9 @@ const Cups: NextPage = () => {
       <div className={cupstyles.padding}>
         <h1>My Cups</h1>
         <h4 className={cupstyles.ongoing}>Ongoing Cups:</h4>
-        <Cup cupNameFilter="" filter={0} />
+        <Cup filter={0} cupNameFilter={""}  />
         <h4 className={cupstyles.upcoming}>Upcoming Cups:</h4>
-        <Cup cupNameFilter="" filter={1} />
+        <Cup filter={1} cupNameFilter={""}  />
       </div>
     </div>
   );
