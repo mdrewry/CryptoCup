@@ -163,7 +163,9 @@ const Profile: NextPage = () => {
                 </Grid>
             </Grid>
             <FormControl className={styles.title}>
-              <p>First Name</p>
+            <h5>
+                First Name
+              </h5>
               <InputBase
                 className={classes.textField}
                 onChange={changeFName}
@@ -172,7 +174,9 @@ const Profile: NextPage = () => {
               />
           </FormControl>
           <FormControl className={styles.title}>
-              <p>Last Name</p>
+              <h5>
+                Last Name
+              </h5>
               <InputBase
                 className={classes.textField}
                 onChange={changeLName}
@@ -181,7 +185,9 @@ const Profile: NextPage = () => {
               />
           </FormControl>
           <FormControl className={styles.title}>
-              <p>Email</p>
+              <h5>
+                Email
+              </h5>
               <InputBase
                 className={classes.textField}
                 onChange={changeEmail}
@@ -189,6 +195,18 @@ const Profile: NextPage = () => {
                 type="email"
               />
           </FormControl>
+          <h5 className={styles.info}>
+            Birthday
+          </h5>
+          <h6 className={styles.subtitle}>
+            {moment(user.birthday.toDate()).format("M/D/YYYY")}
+          </h6>
+          <h5 className={styles.info}>
+            News Preferences
+          </h5>
+          <p className={styles.subtitle}>
+            Select all that apply.
+          </p>
         </div>):<div>
             <Grid container>
                 <Grid item xs>
@@ -227,8 +245,7 @@ const Profile: NextPage = () => {
             Birthday
           </h5>
           <h6 className={styles.subtitle}>
-            {/* {moment(user.birthday.toDate()).format("M/D/YYYY")} */}
-            05/17/1999
+            {moment(user.birthday.toDate()).format("M/D/YYYY")}
           </h6>
 
           <h5 className={styles.info}>
