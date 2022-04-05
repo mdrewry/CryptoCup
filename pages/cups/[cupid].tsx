@@ -9,6 +9,7 @@ import JoinCupDialog from "../../Components/JoinCupDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
 import { getDoc, doc, Timestamp } from "firebase/firestore";
+import Leaderboard from "../../Components/Leaderboards";
 
 const CupDetails: NextPage = () => {
   const router = useRouter();
@@ -78,6 +79,7 @@ const CupDetails: NextPage = () => {
             </h6>
           </div>
         )}
+        <Leaderboard cupid={cupid}/>
         <h4 className={styles.center}>
           This Cup is currently accepting players. Join now!
         </h4>

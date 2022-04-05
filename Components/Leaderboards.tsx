@@ -14,28 +14,49 @@ import {
   onSnapshot,
   QueryDocumentSnapshot,
   orderBy,
+  DocumentReference,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
+import { ResultStorage } from "firebase-functions/v1/testLab";
 
-const Leaderboard: NextPage = () => {
-  const [leaderboard, setLeaderboard] = useState<
-    DocumentSnapshot<DocumentData>[]
-  >([]);
+type ContentProps = { cupid: string };
+const Leaderboard = ({cupid}: ContentProps) => {
+  const [leaderboard, setLeaderboard] = useState<DocumentSnapshot<DocumentData>[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const getLeaderboard = async () => {
-    const rankQuery = query(
-      collection(db, "users"),
-      orderBy("cupWins", "desc")
-    );
-    const result: QueryDocumentSnapshot<DocumentData>[] = [];
-    const data = await getDocs(rankQuery);
-    data.forEach((c) => {
-      result.push(c);
-    });
-    console.log(result);
+    //cupDocRef and cupQuery for leaderboard per cup
+    
+    //rankQuery used for getting global rankings
+    const result: DocumentSnapshot<DocumentData>[] = [];
+    if(cupid===""){
+      const rankQuery = query(
+        collection(db, "users"),
+        orderBy("cupWins", "desc")
+      );
+      const data = await getDocs(rankQuery);
+      data.forEach((c) => {
+        result.push(c);
+      });
+    }else{
+      const cupDocRef = doc(collection(db, "cups"),cupid);
+      const cupQuery = query(
+        collection(db, "usersInCup"),
+        where("cupID", "==", cupDocRef),
+      );
+      
+      const cupUsers: DocumentReference[]=(await getDocs(cupQuery)).docs.at(0)?.data().users;
+      console.log(cupUsers);
+      cupUsers.forEach((u)=>{
+        getDoc(u).then((d)=>{
+          result.push(d);
+        });
+      });
+      
+    }
+    //console.log(result);
     // setCups(data.docs.map((item)=>{
     //     return {...item.data(),id:item.id}
     // }));

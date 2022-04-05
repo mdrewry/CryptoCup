@@ -45,8 +45,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
         //result.push(c);
       });
     } else {
-      onSnapshot(userQuery, (snapshot) => {
-        const userCups: DocumentReference[] = snapshot.docs.at(0)?.data().cups;
+      const userCups: DocumentReference[] = (await getDocs(userQuery)).docs.at(0)?.data().cups;
         console.log(userCups);
         if (userCups != null) { 
           userCups.forEach((c) => {
@@ -63,7 +62,6 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
             });
           });
         }
-      });
     }
     // setCups(data.docs.map((item)=>{
     //     return {...item.data(),id:item.id}
