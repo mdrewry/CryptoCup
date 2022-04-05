@@ -1,6 +1,7 @@
 .padding{
     margin-top: 32px;
     margin-left: 44px;
+    min-height: 100vh;
 }
 
 .cuptype{

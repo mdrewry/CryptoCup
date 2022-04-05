@@ -11,6 +11,7 @@
 .container {
     margin-top: 27px;
     margin-left: 30px;
+    min-height: 100vh;
   }
 
 .title{

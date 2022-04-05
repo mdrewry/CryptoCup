@@ -1,7 +1,7 @@
-.footer {
-    height:  220px;
-    background: rgba(47, 56, 105, 1);
-  }
+  .footer {
+      height:  220px;
+      background: rgba(47, 56, 105, 1);
+    }
 
   .containerLogo {
     display: flex;

@@ -11,6 +11,7 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import LocalAtmRoundedIcon from "@mui/icons-material/LocalAtmRounded";
 import FaqDiamond from "../Icons/FaqDiamond.js";
 import Grid from '@mui/material/Grid';
+import Button from "@mui/material/Button";
 
 const Home: NextPage = () => {
   return (
@@ -19,7 +20,7 @@ const Home: NextPage = () => {
         <title>Crypto Cup</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      
+
       <Grid container spacing={0} alignItems="center">
         <Grid item xs={9}>
           <div className={styles.containerLogo}>
@@ -30,10 +31,14 @@ const Home: NextPage = () => {
           </div>
         </Grid>
         <Grid item xs>
-          <h6>ABOUT</h6>
+          <Button onClick={() => window.location.replace("/#about")}>
+            <a>ABOUT</a>
+          </Button>
         </Grid>
-        <Grid item xs={0.8}>
-          <h6>FAQ</h6>
+        <Grid item xs={0.9}>
+          <Button onClick={() => window.location.replace("/#faq")}>
+            <a>FAQ</a>
+          </Button>
         </Grid>
         <Grid item xs>
           <LaunchButton variant="contained">LAUNCH</LaunchButton>
@@ -44,7 +49,7 @@ const Home: NextPage = () => {
         <Grid item xs>
           <h2>A New Age of Fantasy with</h2>
           <div className={styles.title1}>
-            <h1 className={styles.gradient}>Cyrpto Cup</h1>
+            <h1 className={styles.gradient}>Crypto Cup</h1>
             <div className={styles.diamond}>
               <Diamond/>
             </div>
@@ -89,9 +94,9 @@ const Home: NextPage = () => {
       </Grid>
 
       <div className={styles.container3}>
-        <h4 className={styles.italicSpacing}>About Us</h4>
+        <h4 id="about" className={styles.italicSpacing}>About Us</h4>
         <div className={styles.aboutus}>
-          <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2> 
+          <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2>
           <h2 className={styles.fantasy}>Fantasy</h2>
         </div>
         <p className={styles.aboutSpacing}>
@@ -105,7 +110,7 @@ const Home: NextPage = () => {
           University of Florida Computer Science Senior Project. Go Gators!
         </p>
         <h4 className={styles.italicSpacing}>FAQ</h4>
-        <h2 className={styles.headerSpacing}>Frequently Asked Questions</h2>
+        <h2 id="faq" className={styles.headerSpacing}>Frequently Asked Questions</h2>
         <div className={styles.questionContainer}>
           <FaqDiamond/>
           <h5 className={styles.question}>What is Crypto Cup?</h5>
@@ -129,7 +134,7 @@ const Home: NextPage = () => {
         <p className={styles.answer3}>
           Right now, ___ are available to bet on in cups.
         </p>
-      </div>      
+      </div>
     </div>
   );
 };
