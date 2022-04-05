@@ -7,7 +7,7 @@ import { UserContext } from "../../context/UserProvider";
 import JoinCupDialog from "../../Components/JoinCupDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
-import { getDoc, doc, Timestamp } from "firebase/firestore";
+import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
 import { Icon } from '@iconify/react';
 
 const CupDetails: NextPage = () => {
@@ -45,12 +45,15 @@ const CupDetails: NextPage = () => {
       setBuyIn(data.buyIn);
       setStartDate(data.startDate);
       setEndDate(data.endDate);
-      if (user.uid in data.userPortfolios){
-        setJoinedUser(true);
-        setUsd(data.userPortfolios[user.uid]["usd"]);
-      }
     }
-    setLoading(false);      
+    onSnapshot(cupDocRef, (snapshot) => {
+      const cupPortfolios = snapshot.data()?.userPortfolios;
+      if (user.uid in cupPortfolios){
+        setJoinedUser(true);
+        setUsd(cupPortfolios[user.uid]["usd"]);
+      }
+    });
+    setLoading(false);
   };
 
   useEffect(() => {

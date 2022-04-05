@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import { UserContext } from "../context/UserProvider";
 import { WalletContext } from "../context/WalletProvider";
-import { useRouter } from "next/router";
-import Router from "next/router";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../config/firebase.config";
 import styles from "../styles/SideNavBar.module.css";
 import Web3 from "web3";
 import Drawer from "@mui/material/Drawer";
@@ -31,7 +31,6 @@ const routes: routeType[] = [
   { name: "News", path: "news" },
 ];
 const Content = ({ path }: ContentProps) => {
-  const router = useRouter();
   const user = useContext(UserContext);
   const wallet = useContext(WalletContext);
   const [userwallet, setUserwallet] = useState("");
@@ -68,18 +67,23 @@ const Content = ({ path }: ContentProps) => {
       const data = await response.json();
       if (data.error) {
         alert(data.error);
-      } else {
-        //router.replace(router.asPath);
-        setUserwallet(data.address);
-        Router.reload();
       }
     } catch (error) {
       alert("Error during signing. Please refresh and try again.");
     }
   }
 
-  // useEffect(() => {
-  // }, [user]);
+  const checkWallet = async () => {
+    const userDocRef = doc(db, "users", user.uid);
+    onSnapshot(userDocRef, (snapshot) => {
+      const userWallet = snapshot.data()?.wallet;
+      setUserwallet(userWallet);
+    });
+  };
+
+  useEffect(() => {
+    checkWallet();
+  }, []);
 
   return (
     <>
@@ -177,12 +181,12 @@ const Content = ({ path }: ContentProps) => {
 
       <h6>Wallet Status:</h6>
       <h6 className={styles.walletStatus}>
-        {userwallet || user.wallet ? "Connected" : "Disconnected"}
+        {userwallet ? "Connected" : "Disconnected"}
       </h6>
       <p className={styles.walletStatusSubheader}>
         You must be connected to join a cup.
       </p>
-      {userwallet || user.wallet ? (
+      {userwallet ? (
         <FadeButton variant="contained">Connected</FadeButton>
       ) : (
         <>
