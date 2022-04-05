@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import { UserContext } from "../../context/UserProvider";
 import JoinCupDialog from "../../Components/JoinCupDialog";
+import EndRegistrationDialog from "../../Components/EndRegistrationDialog";
+import DistributePrizesDialog from "../../Components/DistributePrizesDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
 import { getDoc, doc, Timestamp } from "firebase/firestore";
@@ -19,9 +21,13 @@ const CupDetails: NextPage = () => {
   const [name, setName] = useState("");
   const [cupType, setCupType] = useState("");
   const [director, setDirector] = useState("");
+  const [directorID, setDirectorID] = useState("");
+  const [cupState, setCupState] = useState("");
   const [buyIn, setBuyIn] = useState(0);
   const [startDate, setStartDate] = useState(Timestamp.now());
   const [endDate, setEndDate] = useState(Timestamp.now());
+  const [ethAddress, setEthAddress] = useState("");
+  const [userPortfolios, setUserPortfolios] = useState({});
   const {
     query: { id },
   } = router;
@@ -35,17 +41,21 @@ const CupDetails: NextPage = () => {
       setImageURL(data.imageURL);
       setName(data.name);
       setCupType(data.cupType);
+      setDirectorID(data.director);
+      setUserPortfolios(data.userPortfolios);
+      setCupState(data.currentState);
       const userDocRef = doc(db, "users", data.director);
       const userDocSnap = await getDoc(userDocRef);
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data();
-        setDirector(userData.firstName+" "+userData.lastName);
+        setDirector(userData.firstName + " " + userData.lastName);
       }
       setBuyIn(data.buyIn);
       setStartDate(data.startDate);
       setEndDate(data.endDate);
+      setEthAddress(data.ethAddress);
     }
-    setLoading(false);      
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -65,10 +75,26 @@ const CupDetails: NextPage = () => {
 
       <img className={styles.placeholder} src={imageURL}></img>
       <div className={styles.container}>
-      {loading ? (
-        <p>loading</p>
-      ) : (
+        {loading ? (
+          <p>loading</p>
+        ) : (
           <div>
+            {user.uid === directorID &&
+              moment(startDate.toDate()).isBefore(moment()) &&
+              cupState === "created" && (
+                <EndRegistrationDialog cup={{ id: cupid, ethAddress }} />
+              )}
+            {user.uid === directorID &&
+              moment(endDate.toDate()).isBefore(moment()) &&
+              cupState === "active" && (
+                <DistributePrizesDialog
+                  cup={{
+                    id: cupid,
+                    ethAddress,
+                    rankings: Object.keys(userPortfolios),
+                  }}
+                />
+              )}
             <h5 className={styles.name}>{name}</h5>
             <div className={styles.cuptype}>{cupType}</div>
             <h6 className={styles.commis}>Cup Commissioner: {director}</h6>
@@ -84,7 +110,7 @@ const CupDetails: NextPage = () => {
           This Cup is currently accepting players. Join now!
         </h4>
         <div className={styles.center}>
-          <JoinCupDialog cup={{ name, id: cupid, buyIn }} />
+          <JoinCupDialog cup={{ name, id: cupid, buyIn, ethAddress }} />
         </div>
       </div>
     </div>

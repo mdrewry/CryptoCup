@@ -1,15 +1,13 @@
 import React, { useContext, useState } from "react";
-import Web3 from "web3";
 import Button from "@mui/material/Button";
-import DialogContentText from "@mui/material/DialogContentText";
 import ActionDialog from "./ActionDialog";
 import { UserContext } from "../context/UserProvider";
 import { getSmartContract } from "../functions/smartContract";
 
-type JoinCupProps = {
-  cup: { name: String; id: String; buyIn: Number; ethAddress: string };
+type EndRegistrationDialogProps = {
+  cup: { id: String; ethAddress: string };
 };
-const JoinCupDialog = ({ cup }: JoinCupProps) => {
+const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
   const user = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -19,29 +17,22 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
     setErrorText("ㅤ");
   };
 
-  const handlePayment = async () => {
+  const handleSubmit = async () => {
     setLoading(true);
     try {
       const cupContract = await getSmartContract(user.wallet, cup.ethAddress);
-      const txn = await cupContract.joinCup({
-        gasLimit: 9000000,
-        value: Web3.utils.toWei(cup.buyIn.toString(), "ether"),
-      });
+      const txn = await cupContract.startCup();
       const receipt = await txn.wait();
-      await handleSignup();
+      await handleCupUpdate();
     } catch (error) {
       console.log(error);
       setErrorText("Transaction Failed");
       setLoading(false);
     }
   };
-  const handleSignup = async () => {
+  const handleCupUpdate = async () => {
     try {
-      if (!user.wallet) {
-        setErrorText("Connect your wallet before joining a cup.");
-        throw "Connect your wallet before joining a cup.";
-      }
-      const response = await fetch("/api/joincup", {
+      const response = await fetch("/api/startcup", {
         method: "POST",
         body: JSON.stringify({
           userID: user.uid,
@@ -65,6 +56,9 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
   };
   return (
     <div>
+      <h4>
+        As the director, you must close Cup Registration by the start date.
+      </h4>
       <Button
         style={{
           background: "#2F3869",
@@ -76,38 +70,23 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
           padding: 10,
           width: 242,
           color: "white",
-          marginTop: 49,
-          marginBottom: 307,
+          marginBottom: 30,
         }}
         onClick={toggleDialog}
       >
-        Join Now
+        End Registration
       </Button>
       <ActionDialog
-        name="Join Cup"
-        prompt={`Are you sure you would like to join ${cup.name}? This request cannot be undone.`}
-        submitButtonText="Sign Up"
+        name="End Registration"
+        prompt="Are you sure you would like to close registration? This action cannot be undone."
+        submitButtonText="Submit"
         errorText={errorText}
         open={open}
         loading={loading}
-        handleSubmit={handlePayment}
+        handleSubmit={handleSubmit}
         toggleDialog={toggleDialog}
-      >
-        <DialogContentText
-          style={{
-            marginTop: "10px",
-            fontFamily: "Space Mono",
-            fontStyle: "italic",
-            fontWeight: "400",
-            fontSize: "20px",
-            color: "#FFFFFF",
-          }}
-          id="join-cup-buyIn"
-        >
-          The Buy-In for this Cup is {cup.buyIn} ETH.
-        </DialogContentText>
-      </ActionDialog>
+      />
     </div>
   );
 };
-export default JoinCupDialog;
+export default EndRegistrationDialog;
