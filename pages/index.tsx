@@ -20,7 +20,7 @@ const Home: NextPage = () => {
         <title>Crypto Cup</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      
+
       <Grid container spacing={0} alignItems="center">
         <Grid item xs={9}>
           <div className={styles.containerLogo}>
@@ -49,7 +49,7 @@ const Home: NextPage = () => {
         <Grid item xs>
           <h2>A New Age of Fantasy with</h2>
           <div className={styles.title1}>
-            <h1 className={styles.gradient}>Cyrpto Cup</h1>
+            <h1 className={styles.gradient}>Crypto Cup</h1>
             <div className={styles.diamond}>
               <Diamond/>
             </div>
@@ -96,7 +96,7 @@ const Home: NextPage = () => {
       <div className={styles.container3}>
         <h4 id="about" className={styles.italicSpacing}>About Us</h4>
         <div className={styles.aboutus}>
-          <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2> 
+          <h2 className={styles.headerSpacing}>Every Crypto-Lover’s&nbsp;</h2>
           <h2 className={styles.fantasy}>Fantasy</h2>
         </div>
         <p className={styles.aboutSpacing}>
@@ -134,7 +134,7 @@ const Home: NextPage = () => {
         <p className={styles.answer3}>
           Right now, ___ are available to bet on in cups.
         </p>
-      </div>      
+      </div>
     </div>
   );
 };

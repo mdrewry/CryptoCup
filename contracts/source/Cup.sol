@@ -5,10 +5,8 @@ contract Cup {
     uint256 public buyIn;
     uint256 public pool;
     uint16[] public split;
-    bool public cupActive;
-    bool public cupEnded;
+    string public state;
     address[] public players;
-
     //modifier ensuring only owner can call functions
     modifier onlyowner {
         assert(owner == msg.sender);
@@ -20,8 +18,12 @@ contract Cup {
         owner = _owner;
         buyIn = _buyIn;
         split = _split;
-        cupActive = false;
-        cupEnded = false;
+        state = "registration";
+    }
+
+    //helper string compare function
+    function strcmp(string memory a, string memory b) internal pure returns(bool){
+        return keccak256(bytes(a)) == keccak256(bytes(b));
     }
 
     //returns whether player exists in players array or not
@@ -34,11 +36,8 @@ contract Cup {
 
     //allows user to join the cup and add bet to pool
     function joinCup() public payable{
-
-        //verifies cup has not started and has not ended
-        require(!cupActive);
-        require(!cupEnded);
-
+        //verifies correct state
+        require(strcmp(state, "registration"));
         //verifies user is not already in cup and has bet enough
         require(!checkPlayerExists(msg.sender));
         require(msg.value >= buyIn);
@@ -50,22 +49,17 @@ contract Cup {
     //starts cup when owner is ready
     function startCup() public onlyowner{
         //verifies cup has not started and has not ended
-        require(!cupActive);
-        require(!cupEnded);
-
-        cupActive = true;
+        require(strcmp(state, "registration"));
+        state = "active";
     }
 
     function endCup(address[] memory ranks) public onlyowner{
         //verifies cup has begun and has not ended
-        require(cupActive);
-        require(!cupEnded);
-
+        require(strcmp(state, "active"));
         distributePrizes(ranks);
 
         //ends cup
-        cupEnded = true;
-        cupActive = false;
+        state = "complete";
     }
 
     function distributePrizes(address[] memory ranks) private{

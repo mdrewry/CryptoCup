@@ -27,7 +27,6 @@ const routes: routeType[] = [
   { name: "Dashboard", path: "dashboard" },
   { name: "My Cups", path: "mycups" },
   { name: "Leaderboards", path: "leaderboard" },
-  { name: "Crypto Info", path: "cryptoinfo" },
   { name: "News", path: "news" },
 ];
 const Content = ({ path }: ContentProps) => {
