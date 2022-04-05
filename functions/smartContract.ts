@@ -14,10 +14,9 @@ export const getSmartContract = async (
   const signerAddress = await signer.getAddress();
   if (signerAddress.toUpperCase() !== userWallet.toUpperCase())
     throw "This wallet is not connected to this account.";
-  if (contractAddress) {
-    console.log(contractAddress);
+  if (contractAddress)
     return new ethers.Contract(contractAddress, cupABI, signer);
-  } else {
+  else {
     const factoryAddress = process.env.NEXT_PUBLIC_CUPFACTORY_ADDRESS
       ? process.env.NEXT_PUBLIC_CUPFACTORY_ADDRESS
       : "";

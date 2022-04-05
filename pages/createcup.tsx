@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import type { NextPage } from "next";
+import Web3 from "web3";
 import Head from "next/head";
 import Router from "next/router";
 import createCupStyles from "../styles/createcup.module.css";
@@ -24,7 +25,7 @@ const initValues = {
   password: "",
   startDate: moment(new Date()).add(1, "days"),
   endDate: moment(new Date()).add(2, "days"),
-  buyIn: 0,
+  buyIn: "0.05",
   inGameBudget: 1000,
   playerCuts: [3, 5, 10],
 };
@@ -131,8 +132,9 @@ const CreateCup: NextPage = () => {
       else temp.endDate = "";
     }
     if ("buyIn" in fieldValues) {
-      temp.buyIn =
-        fieldValues.buyIn <= 0 ? "Buy In must be greater than 0." : "";
+      temp.buyIn = /^[0-9]{1,2}(?:\.[0-9]{1,5})?$/.test(fieldValues.buyIn)
+        ? ""
+        : "Buy In must be a valid eth value";
     }
     if ("inGameBudget" in fieldValues) {
       temp.inGameBudget =
@@ -154,7 +156,8 @@ const CreateCup: NextPage = () => {
     setLoading(true);
     try {
       const factoryContract = await getSmartContract(user.wallet, "");
-      const txn = await factoryContract.newCup(values.buyIn, values.playerCuts);
+      const weiValue = Web3.utils.toWei(values.buyIn, "ether");
+      const txn = await factoryContract.newCup(weiValue, values.playerCuts);
       const receipt = await txn.wait();
       const event = receipt.events?.find(
         (event: any) => event.event === "CupCreated"
@@ -176,6 +179,7 @@ const CreateCup: NextPage = () => {
             director: user.uid,
             ethAddress,
             ...values,
+            buyIn: parseFloat(values.buyIn),
             startDate: values.startDate.toDate(),
             endDate: values.endDate.toDate(),
           }),
@@ -298,12 +302,10 @@ const CreateCup: NextPage = () => {
                     </LocalizationProvider>
                   </Grid>
                   <Grid item xs={12}>
-                    <p className={createCupStyles.fieldName}>Buy-In: </p>
+                    <p className={createCupStyles.fieldName}>Buy-In(ETH): </p>
                     <TextField
                       className={classes.textField}
                       name="buyIn"
-                      type="number"
-                      step={0.01}
                       onChange={handleInputValue}
                       onBlur={handleInputValue}
                       {...(errors["buyIn"] && {
