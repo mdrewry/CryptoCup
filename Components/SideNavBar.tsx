@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import { UserContext } from "../context/UserProvider";
 import { WalletContext } from "../context/WalletProvider";
+import { useRouter } from "next/router";
+import Router from "next/router";
 import styles from "../styles/SideNavBar.module.css";
 import Web3 from "web3";
 import Drawer from "@mui/material/Drawer";
@@ -29,8 +31,11 @@ const routes: routeType[] = [
   { name: "News", path: "news" },
 ];
 const Content = ({ path }: ContentProps) => {
+  const router = useRouter();
   const user = useContext(UserContext);
   const wallet = useContext(WalletContext);
+  const [userwallet, setUserwallet] = useState("");
+
   async function linkWallet() {
     let web3 = new Web3(Web3.givenProvider);
     let acc = wallet.address;
@@ -63,11 +68,19 @@ const Content = ({ path }: ContentProps) => {
       const data = await response.json();
       if (data.error) {
         alert(data.error);
+      } else {
+        //router.replace(router.asPath);
+        setUserwallet(data.address);
+        Router.reload();
       }
     } catch (error) {
       alert("Error during signing. Please refresh and try again.");
     }
   }
+
+  // useEffect(() => {
+  // }, [user]);
+
   return (
     <>
       <div className={styles.headerSection}>
@@ -164,12 +177,12 @@ const Content = ({ path }: ContentProps) => {
 
       <h6>Wallet Status:</h6>
       <h6 className={styles.walletStatus}>
-        {user.wallet ? "Connected" : "Disconnected"}
+        {userwallet || user.wallet ? "Connected" : "Disconnected"}
       </h6>
       <p className={styles.walletStatusSubheader}>
         You must be connected to join a cup.
       </p>
-      {user.wallet ? (
+      {userwallet || user.wallet ? (
         <FadeButton variant="contained">Connected</FadeButton>
       ) : (
         <>
