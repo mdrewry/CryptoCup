@@ -1,15 +1,14 @@
 import React, { useContext, useState } from "react";
-import Web3 from "web3";
 import Button from "@mui/material/Button";
-import DialogContentText from "@mui/material/DialogContentText";
 import ActionDialog from "./ActionDialog";
 import { UserContext } from "../context/UserProvider";
 import { getSmartContract } from "../functions/smartContract";
-
-type JoinCupProps = {
-  cup: { name: String; id: String; buyIn: Number; ethAddress: string };
+import { getDoc, doc } from "firebase/firestore";
+import { db } from "../config/firebase.config";
+type DistributePrizesDialogProps = {
+  cup: { id: String; ethAddress: string; rankings: string[] };
 };
-const JoinCupDialog = ({ cup }: JoinCupProps) => {
+const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
   const user = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -19,29 +18,28 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
     setErrorText("ㅤ");
   };
 
-  const handlePayment = async () => {
+  const handleSubmit = async () => {
     setLoading(true);
     try {
+      const wallets = await Promise.all(
+        cup.rankings.map(async (id) => {
+          const userDocSnap = await getDoc(doc(db, "users", id));
+          const data: any = userDocSnap.data();
+          return data.wallet;
+        })
+      );
       const cupContract = await getSmartContract(user.wallet, cup.ethAddress);
-      const txn = await cupContract.joinCup({
-        gasLimit: 9000000,
-        value: Web3.utils.toWei(cup.buyIn.toString(), "ether"),
-      });
+      const txn = await cupContract.endCup(wallets);
       const receipt = await txn.wait();
-      await handleSignup();
+      await handleCupUpdate();
     } catch (error) {
-      console.log(error);
       setErrorText("Transaction Failed");
       setLoading(false);
     }
   };
-  const handleSignup = async () => {
+  const handleCupUpdate = async () => {
     try {
-      if (!user.wallet) {
-        setErrorText("Connect your wallet before joining a cup.");
-        throw "Connect your wallet before joining a cup.";
-      }
-      const response = await fetch("/api/joincup", {
+      const response = await fetch("/api/endcup", {
         method: "POST",
         body: JSON.stringify({
           userID: user.uid,
@@ -65,6 +63,9 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
   };
   return (
     <div>
+      <h4>
+        This Cup is finished. Click here to distribute prizes to the winners!
+      </h4>
       <Button
         style={{
           background: "#2F3869",
@@ -74,40 +75,25 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
           fontWeight: 700,
           height: 50,
           padding: 10,
-          width: 242,
+          width: 260,
           color: "white",
-          marginTop: 49,
-          marginBottom: 307,
+          marginBottom: 30,
         }}
         onClick={toggleDialog}
       >
-        Join Now
+        Distribute Prizes
       </Button>
       <ActionDialog
-        name="Join Cup"
-        prompt={`Are you sure you would like to join ${cup.name}? This request cannot be undone.`}
-        submitButtonText="Sign Up"
+        name="Distribute Prizes"
+        prompt="Are you sure you would like to distribute prizes? This action cannot be undone."
+        submitButtonText="Submit"
         errorText={errorText}
         open={open}
         loading={loading}
-        handleSubmit={handlePayment}
+        handleSubmit={handleSubmit}
         toggleDialog={toggleDialog}
-      >
-        <DialogContentText
-          style={{
-            marginTop: "10px",
-            fontFamily: "Space Mono",
-            fontStyle: "italic",
-            fontWeight: "400",
-            fontSize: "20px",
-            color: "#FFFFFF",
-          }}
-          id="join-cup-buyIn"
-        >
-          The Buy-In for this Cup is {cup.buyIn} ETH.
-        </DialogContentText>
-      </ActionDialog>
+      />
     </div>
   );
 };
-export default JoinCupDialog;
+export default DistributePrizesDialog;

@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import type { NextPage } from "next";
+import Web3 from "web3";
 import Head from "next/head";
 import Router from "next/router";
-import { ethers } from "ethers";
 import createCupStyles from "../styles/createcup.module.css";
 import { makeStyles } from "@material-ui/core/styles";
 import Stack from "@mui/material/Stack";
@@ -18,14 +18,14 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import moment from "moment";
 import { UserContext } from "../context/UserProvider";
-import cupFactoryABI from "../contracts/abi/CupFactory.json";
-declare let window: any;
+import { getSmartContract } from "../functions/smartContract";
+
 const initValues = {
   cupName: "",
   password: "",
   startDate: moment(new Date()).add(1, "days"),
   endDate: moment(new Date()).add(2, "days"),
-  buyIn: 0,
+  buyIn: "0.05",
   inGameBudget: 1000,
   playerCuts: [3, 5, 10],
 };
@@ -132,8 +132,9 @@ const CreateCup: NextPage = () => {
       else temp.endDate = "";
     }
     if ("buyIn" in fieldValues) {
-      temp.buyIn =
-        fieldValues.buyIn <= 0 ? "Buy In must be greater than 0." : "";
+      temp.buyIn = /^[0-9]{1,2}(?:\.[0-9]{1,5})?$/.test(fieldValues.buyIn)
+        ? ""
+        : "Buy In must be a valid eth value";
     }
     if ("inGameBudget" in fieldValues) {
       temp.inGameBudget =
@@ -154,22 +155,9 @@ const CreateCup: NextPage = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      const ethereum: any = window.ethereum;
-      if (!ethereum) throw "Not Connected to Metamask";
-      const provider = new ethers.providers.Web3Provider(ethereum);
-      const signer = provider.getSigner();
-      const signerAddress = await signer.getAddress();
-      if (signerAddress.toUpperCase() !== user.wallet.toUpperCase())
-        throw "This wallet is not connected to this account.";
-      const factoryAddress = process.env.NEXT_PUBLIC_CUPFACTORY_ADDRESS
-        ? process.env.NEXT_PUBLIC_CUPFACTORY_ADDRESS
-        : "";
-      const factoryContract = new ethers.Contract(
-        factoryAddress,
-        cupFactoryABI,
-        signer
-      );
-      const txn = await factoryContract.newCup(values.buyIn, values.playerCuts);
+      const factoryContract = await getSmartContract(user.wallet, "");
+      const weiValue = Web3.utils.toWei(values.buyIn, "ether");
+      const txn = await factoryContract.newCup(weiValue, values.playerCuts);
       const receipt = await txn.wait();
       const event = receipt.events?.find(
         (event: any) => event.event === "CupCreated"
@@ -191,6 +179,7 @@ const CreateCup: NextPage = () => {
             director: user.uid,
             ethAddress,
             ...values,
+            buyIn: parseFloat(values.buyIn),
             startDate: values.startDate.toDate(),
             endDate: values.endDate.toDate(),
           }),
@@ -313,12 +302,10 @@ const CreateCup: NextPage = () => {
                     </LocalizationProvider>
                   </Grid>
                   <Grid item xs={12}>
-                    <p className={createCupStyles.fieldName}>Buy-In: </p>
+                    <p className={createCupStyles.fieldName}>Buy-In(ETH): </p>
                     <TextField
                       className={classes.textField}
                       name="buyIn"
-                      type="number"
-                      step={0.01}
                       onChange={handleInputValue}
                       onBlur={handleInputValue}
                       {...(errors["buyIn"] && {
