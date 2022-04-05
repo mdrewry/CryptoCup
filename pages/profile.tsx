@@ -159,27 +159,66 @@ const Profile: NextPage = () => {
                 <h1 className={styles.title}>Profile</h1>
               </Grid>
               <Grid item xs className={styles.edit}>
-                <Button onClick={editCancel}>Cancel</Button>
+                <Button
+                  onClick={editCancel}
+                  style={{
+                    background: "#1C273099",
+                    fontFamily: "Space Mono",
+                    fontSize: 20,
+                    borderRadius: 60,
+                    fontWeight: 700,
+                    height: 55,
+                    padding: 10,
+                    width: "100%",
+                    color: "white",
+                  }}
+                >
+                  Cancel
+                </Button>
               </Grid>
               <Grid item xs className={styles.edit}>
-                <Button onClick={editConfirm}>Confirm</Button>
+                <Button
+                  onClick={editConfirm}
+                  style={{
+                    background: "#2F386999",
+                    fontFamily: "Space Mono",
+                    fontSize: 20,
+                    borderRadius: 60,
+                    fontWeight: 700,
+                    height: 55,
+                    padding: 10,
+                    width: "100%",
+                    color: "white",
+                  }}
+                >
+                  Confirm
+                </Button>
               </Grid>
             </Grid>
-            <FormControl className={styles.info}>
-              <Avatar
-                sx={{ width: 100, height: 100 }}
-                src={user.imageURL}
-                alt={user.uid}
-              />
-              <InputBase
-                onChange={changeFName}
-                value={user.imageURL}
-                type="file"
-              />
-            </FormControl>
+            <div>
+              <FormControl className={styles.info}>
+                <Avatar
+                  sx={{ width: 200, height: 200 }}
+                  src={user.imageURL}
+                  alt={user.uid}
+                />
+                <input
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={changeFName}
+                  id="imageUpload"
+                />
+                <label htmlFor="imageUpload" className={styles.info}>
+                  <Button component="span" variant="text">
+                    edit
+                  </Button>
+                </label>
+              </FormControl>
+            </div>
             <div>
               <FormControl className={styles.title}>
-                <h5>First Name</h5>
+                <h4>First Name</h4>
                 <InputBase
                   className={classes.textField}
                   onChange={changeFName}
@@ -190,7 +229,7 @@ const Profile: NextPage = () => {
             </div>
             <div>
               <FormControl className={styles.title}>
-                <h5>Last Name</h5>
+                <h4>Last Name</h4>
                 <InputBase
                   className={classes.textField}
                   onChange={changeLName}
@@ -201,7 +240,7 @@ const Profile: NextPage = () => {
             </div>
             <div>
               <FormControl className={styles.title}>
-                <h5>Email</h5>
+                <h4>Email</h4>
                 <InputBase
                   className={classes.textField}
                   onChange={changeEmail}
@@ -210,11 +249,12 @@ const Profile: NextPage = () => {
                 />
               </FormControl>
             </div>
-            <h5 className={styles.info}>Birthday</h5>
+            <h6 className={styles.title}>{user.uid}</h6>
+            <h4 className={styles.title}>Birthday</h4>
             <h6 className={styles.subtitle}>
               {moment(user.birthday.toDate()).format("M/D/YYYY")}
             </h6>
-            <h5 className={styles.info}>News Preferences</h5>
+            <h4 className={styles.info}>News Preferences</h4>
             <p className={styles.subtitle}>Select all that apply.</p>
           </div>
         ) : (
@@ -231,7 +271,7 @@ const Profile: NextPage = () => {
             </Grid>
             <h1 className={styles.info}>
               <Avatar
-                sx={{ width: 100, height: 100 }}
+                sx={{ width: 200, height: 200 }}
                 src={user.imageURL}
                 alt={user.uid}
               />
@@ -241,20 +281,21 @@ const Profile: NextPage = () => {
             </h2>
             <h6 className={styles.subtitle}>{user.uid}</h6>
 
-            <h5 className={styles.title}>Email</h5>
+            <h4 className={styles.title}>Email</h4>
             <h6 className={styles.subtitle}>{user.email}</h6>
 
-            <h5 className={styles.info}>Birthday</h5>
+            <h4 className={styles.info}>Birthday</h4>
             <h6 className={styles.subtitle}>
               {moment(user.birthday.toDate()).format("M/D/YYYY")}
             </h6>
 
-            <h5 className={styles.info}>News Preferences</h5>
+            <h4 className={styles.info}>News Preferences</h4>
             <h6 className={styles.subtitle}>
               {user.newsPreferences.map((tag) => (
                 <h6 className={styles.subtitle}>* {tag.toUpperCase()}</h6>
               ))}
             </h6>
+            {user.newsPreferences.length!=0 ? <div></div>:<h6 className={styles.subtitle}>* None</h6>}
 
             <h2 className={styles.info}>Cup History</h2>
             <h6 className={styles.info}>
