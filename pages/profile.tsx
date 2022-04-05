@@ -1,285 +1,287 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import cupstyles from '../styles/Cups.module.css'
+import cupstyles from "../styles/Cups.module.css";
 import React, { useState, useEffect, useContext } from "react";
-import {doc,updateDoc , collection,getDocs,QueryDocumentSnapshot,DocumentData, Timestamp,addDoc} from "firebase/firestore";
-import styles from '../styles/Profile.module.css'
+import {
+  doc,
+  updateDoc,
+  collection,
+  getDocs,
+  QueryDocumentSnapshot,
+  DocumentData,
+  Timestamp,
+  addDoc,
+} from "firebase/firestore";
+import styles from "../styles/Profile.module.css";
 import { makeStyles } from "@material-ui/core/styles";
-import {db} from "../config/firebase.config"
-import { useRouter } from "next/router"
+import { db } from "../config/firebase.config";
+import { useRouter } from "next/router";
 import { UserContext } from "../context/UserProvider";
 import Avatar from "@mui/material/Avatar";
-import Grid from '@mui/material/Grid';
-import Button from "@mui/material/Button"
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputBase from "@mui/material/InputBase";
-import EditIcon from '@mui/icons-material/Edit';
-import moment from 'moment';
+import EditIcon from "@mui/icons-material/Edit";
+
+import moment from "moment";
 
 const Profile: NextPage = () => {
-    const user = useContext(UserContext);
-    const useStyles = makeStyles((theme) => ({
-        textField: {
-          "&": {
-            marginTop: "9px",
-          },
-          "& .MuiInputBase-input": {
-            borderRadius: 25,
-            fontFamily: "Space Mono",
-            fontSize: 20,
-            color: "#ffffff",
-            backgroundColor: "rgba(47, 56, 105, 0.6)",
-            width: 500,
-            padding: "15px 15px",
-          },
-          "&:focus": {
-            borderRadius: 25,
-          },
-        },
-        birthday: {
-          "&": {
-            marginTop: "6px",
-          },
-          "& .MuiInputBase-input": {
-            borderRadius: 25,
-            fontFamily: "Space Mono",
-            fontSize: 20,
-            color: "#ffffff",
-            backgroundColor: "rgba(47, 56, 105, 0.6)",
-            width: 140,
-            padding: "15px 15px",
-          },
-          "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
-            borderRadius: 25,
-          },
-          "&:focus": {
-            borderRadius: 25,
-            padding: "15px 15px",
-          },
-          "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
-            color: "#ffffff",
-          },
-          "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
-            color: "#ffffff",
-          },
-        },
-        tos: {
-          "& .css-ahj2mt-MuiTypography-root": {
-            color: "#ffffff",
-            fontSize: "20px",
-            fontFamily: "Space Mono",
-            width: "500px",
-            marginTop: "30px",
-          },
-        },
-      }));
-    const classes = useStyles();
-    const [cups,setCups]=useState<QueryDocumentSnapshot<DocumentData>[]>([]);
-    const [loading,setLoading] = useState<boolean>(true);
-    const [editMode,setEditMode] = useState<boolean>(false);
-    const [fname, setFname] = React.useState(user.firstName);
-    const [lname, setLname] = React.useState(user.lastName);
-    const [email, setEmail] = React.useState(user.email);
-    const cupsRef=collection(db,"cups");
-    const editForm = () => {
-        setEditMode(true);
-    };
-    const editCancel = () => {
-        setEditMode(false);
-        console.log(editMode);
-    };
-    const editConfirm = () => {
-        const userDocRef = doc(db, "users", user.uid);
-        updateDoc(userDocRef, {email:email,firstName:fname,lastName:lname});
-        setEditMode(false);
-    };
-    const changeFName = (event: {
-        target: { value: React.SetStateAction<string> };
-      }) => {
-        setFname(event.target.value);
-      };
-    const changeLName = (event: {
-        target: { value: React.SetStateAction<string> };
-      }) => {
-        setLname(event.target.value);
-      };
-    const changeEmail = (event: {
-        target: { value: React.SetStateAction<string> };
-      }) => {
-        setEmail(event.target.value);
-      };
-    const getCups=async()=>{
-        const data=await getDocs(cupsRef);
-        const result: QueryDocumentSnapshot<DocumentData>[] = [];
-        data.forEach((c)=>{
-            result.push(c);
-        }
-        )
-        // setCups(data.docs.map((item)=>{
-        //     return {...item.data(),id:item.id}
-        // }));
-        
-        setCups(result);
-        // setLoading(false);
-    };
+  const user = useContext(UserContext);
+  const useStyles = makeStyles((theme) => ({
+    textField: {
+      "&": {
+        marginTop: "9px",
+      },
+      "& .MuiInputBase-input": {
+        borderRadius: 25,
+        fontFamily: "Space Mono",
+        fontSize: 20,
+        color: "#ffffff",
+        backgroundColor: "rgba(47, 56, 105, 0.6)",
+        width: 500,
+        padding: "15px 15px",
+      },
+      "&:focus": {
+        borderRadius: 25,
+      },
+    },
+    birthday: {
+      "&": {
+        marginTop: "6px",
+      },
+      "& .MuiInputBase-input": {
+        borderRadius: 25,
+        fontFamily: "Space Mono",
+        fontSize: 20,
+        color: "#ffffff",
+        backgroundColor: "rgba(47, 56, 105, 0.6)",
+        width: 140,
+        padding: "15px 15px",
+      },
+      "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
+        borderRadius: 25,
+      },
+      "&:focus": {
+        borderRadius: 25,
+        padding: "15px 15px",
+      },
+      "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
+        color: "#ffffff",
+      },
+      "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
+        color: "#ffffff",
+      },
+    },
+    tos: {
+      "& .css-ahj2mt-MuiTypography-root": {
+        color: "#ffffff",
+        fontSize: "20px",
+        fontFamily: "Space Mono",
+        width: "500px",
+        marginTop: "30px",
+      },
+    },
+  }));
+  const classes = useStyles();
+  const [cups, setCups] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [editMode, setEditMode] = useState<boolean>(false);
+  const [fname, setFname] = React.useState(user.firstName);
+  const [lname, setLname] = React.useState(user.lastName);
+  const [email, setEmail] = React.useState(user.email);
+  const cupsRef = collection(db, "cups");
+  const editForm = () => {
+    setEditMode(true);
+  };
+  const editCancel = () => {
+    setEditMode(false);
+    console.log(editMode);
+  };
+  const editConfirm = () => {
+    const userDocRef = doc(db, "users", user.uid);
+    updateDoc(userDocRef, { email: email, firstName: fname, lastName: lname });
+    setEditMode(false);
+  };
+  const changeFName = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setFname(event.target.value);
+  };
+  const changeLName = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setLname(event.target.value);
+  };
+  const changeEmail = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
+    setEmail(event.target.value);
+  };
+  const getCups = async () => {
+    const data = await getDocs(cupsRef);
+    const result: QueryDocumentSnapshot<DocumentData>[] = [];
+    data.forEach((c) => {
+      result.push(c);
+    });
+    // setCups(data.docs.map((item)=>{
+    //     return {...item.data(),id:item.id}
+    // }));
 
-    useEffect(()=>{
-        getCups();
-        setTimeout( () => {
-            setLoading(false);
-          },2000)
-    },[]);
-    const router = useRouter();
-    const {
-      query: { id },
-    } = router;
-    
-  
-    return (
-      <div className={styles.container}>
-        <Head>
-          <title>Profile</title>
-          <meta name="description" content="Generated by create next app" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        
-        <main className={styles.main}>
-        {editMode ? (<div>
+    setCups(result);
+    // setLoading(false);
+  };
+
+  useEffect(() => {
+    getCups();
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+  const router = useRouter();
+  const {
+    query: { id },
+  } = router;
+
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>Profile</title>
+        <meta name="description" content="Generated by create next app" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main className={styles.main}>
+        {editMode ? (
+          <div>
             <Grid container>
-                <Grid item xs>
-                    <h1 className={styles.title}>
-                        Profile
-                    </h1>
-                </Grid>
-                <Grid item xs className={styles.edit}>
-                    <Button onClick={editCancel}>
-                        Cancel
-                    </Button>
-                </Grid>
-                <Grid item xs className={styles.edit}>
-                    <Button onClick={editConfirm}>
-                        Confirm
-                    </Button>
-                </Grid>
+              <Grid item xs>
+                <h1 className={styles.title}>Profile</h1>
+              </Grid>
+              <Grid item xs className={styles.edit}>
+                <Button onClick={editCancel}>Cancel</Button>
+              </Grid>
+              <Grid item xs className={styles.edit}>
+                <Button onClick={editConfirm}>Confirm</Button>
+              </Grid>
             </Grid>
-            <FormControl className={styles.title}>
-            <h5>
-                First Name
-              </h5>
+            <FormControl className={styles.info}>
+              <Avatar
+                sx={{ width: 100, height: 100 }}
+                src={user.imageURL}
+                alt={user.uid}
+              />
               <InputBase
-                className={classes.textField}
                 onChange={changeFName}
-                value={fname}
-                type="string"
+                value={user.imageURL}
+                type="file"
               />
-          </FormControl>
-          <FormControl className={styles.title}>
-              <h5>
-                Last Name
-              </h5>
-              <InputBase
-                className={classes.textField}
-                onChange={changeLName}
-                value={lname}
-                type="string"
-              />
-          </FormControl>
-          <FormControl className={styles.title}>
-              <h5>
-                Email
-              </h5>
-              <InputBase
-                className={classes.textField}
-                onChange={changeEmail}
-                value={email}
-                type="email"
-              />
-          </FormControl>
-          <h5 className={styles.info}>
-            Birthday
-          </h5>
-          <h6 className={styles.subtitle}>
-            {moment(user.birthday.toDate()).format("M/D/YYYY")}
-          </h6>
-          <h5 className={styles.info}>
-            News Preferences
-          </h5>
-          <p className={styles.subtitle}>
-            Select all that apply.
-          </p>
-        </div>):<div>
-            <Grid container>
-                <Grid item xs>
-                    <h1 className={styles.title}>
-                        Profile
-                    </h1>
-                </Grid>
-                <Grid item xs className={styles.edit}>
-                    <Button onClick={editForm}>
-                        <EditIcon/>
-                    </Button>
-                </Grid>
-            </Grid>
-          <h1 className={styles.info}>
-            <Avatar
-              sx={{ width: 100, height: 100 }}
-              src={user.imageURL}
-              alt={user.uid}
-              />
-          </h1>
-          <h2 className={styles.info}>
-            {user.firstName + " " + user.lastName}
-          </h2>
-          <h6 className={styles.subtitle}>
-            {user.uid}
-          </h6>
-          
-          <h5 className={styles.title}>
-            Email
-          </h5>
-          <h6 className={styles.subtitle}>
-            {user.email}
-          </h6>
-
-          <h5 className={styles.info}>
-            Birthday
-          </h5>
-          <h6 className={styles.subtitle}>
-            {moment(user.birthday.toDate()).format("M/D/YYYY")}
-          </h6>
-
-          <h5 className={styles.info}>
-            News Preferences
-          </h5>
-          <h6 className={styles.subtitle}>
-            {user.newsPreferences.map((tag) => (
-              <h6 className={styles.subtitle}>
-                * {tag.toUpperCase()}
-              </h6>
-            )
-            )}
-          </h6>
-
-          <h2 className={styles.info}>
-            Cup History
-          </h2>
-          <h6 className={styles.info}>
-          {loading ? (<div>loading</div>) :
-            <Grid container >
-                {cups.map((c)=>
-                    <Grid item xs={4}>
-                        <h5>{c.get("name")}</h5>
-                        <div className={cupstyles.cuptype}>{c.get("cupType")}</div>
-                        <p>{moment(c.get("startDate")).format("M/D/YYYY")}-{moment(c.get("endDate")).format("M/D/YYYY")}</p>
-                    </Grid>
-                    )}
-            </Grid>  
-            }
+            </FormControl>
+            <div>
+              <FormControl className={styles.title}>
+                <h5>First Name</h5>
+                <InputBase
+                  className={classes.textField}
+                  onChange={changeFName}
+                  value={fname}
+                  type="string"
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={styles.title}>
+                <h5>Last Name</h5>
+                <InputBase
+                  className={classes.textField}
+                  onChange={changeLName}
+                  value={lname}
+                  type="string"
+                />
+              </FormControl>
+            </div>
+            <div>
+              <FormControl className={styles.title}>
+                <h5>Email</h5>
+                <InputBase
+                  className={classes.textField}
+                  onChange={changeEmail}
+                  value={email}
+                  type="email"
+                />
+              </FormControl>
+            </div>
+            <h5 className={styles.info}>Birthday</h5>
+            <h6 className={styles.subtitle}>
+              {moment(user.birthday.toDate()).format("M/D/YYYY")}
             </h6>
-        </div>}
-        </main>
-      </div>
-    )
-  }
-    
-    export default Profile
+            <h5 className={styles.info}>News Preferences</h5>
+            <p className={styles.subtitle}>Select all that apply.</p>
+          </div>
+        ) : (
+          <div>
+            <Grid container>
+              <Grid item xs>
+                <h1 className={styles.title}>Profile</h1>
+              </Grid>
+              <Grid item xs className={styles.edit}>
+                <Button onClick={editForm}>
+                  <EditIcon />
+                </Button>
+              </Grid>
+            </Grid>
+            <h1 className={styles.info}>
+              <Avatar
+                sx={{ width: 100, height: 100 }}
+                src={user.imageURL}
+                alt={user.uid}
+              />
+            </h1>
+            <h2 className={styles.info}>
+              {user.firstName + " " + user.lastName}
+            </h2>
+            <h6 className={styles.subtitle}>{user.uid}</h6>
+
+            <h5 className={styles.title}>Email</h5>
+            <h6 className={styles.subtitle}>{user.email}</h6>
+
+            <h5 className={styles.info}>Birthday</h5>
+            <h6 className={styles.subtitle}>
+              {moment(user.birthday.toDate()).format("M/D/YYYY")}
+            </h6>
+
+            <h5 className={styles.info}>News Preferences</h5>
+            <h6 className={styles.subtitle}>
+              {user.newsPreferences.map((tag) => (
+                <h6 className={styles.subtitle}>* {tag.toUpperCase()}</h6>
+              ))}
+            </h6>
+
+            <h2 className={styles.info}>Cup History</h2>
+            <h6 className={styles.info}>
+              {loading ? (
+                <div>loading</div>
+              ) : (
+                <Grid container>
+                  {cups.map((c) => (
+                    <Grid item xs={4}>
+                      <h5>{c.get("name")}</h5>
+                      <div className={cupstyles.cuptype}>
+                        {c.get("cupType")}
+                      </div>
+                      <p>
+                        {moment(c.get("startDate")).format("M/D/YYYY")}-
+                        {moment(c.get("endDate")).format("M/D/YYYY")}
+                      </p>
+                    </Grid>
+                  ))}
+                </Grid>
+              )}
+            </h6>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+};
+
+export default Profile;
