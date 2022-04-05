@@ -13,6 +13,7 @@ import {
   query,
   onSnapshot,
   DocumentReference,
+  Timestamp,
 } from "firebase/firestore";
 import { useState, useEffect, useContext } from "react";
 import Grid from "@mui/material/Grid";
@@ -31,31 +32,32 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
     const userDocRef = doc(collection(db, "users"), user.uid);
     const userQuery = query(
       collection(db, "cupsInUser"),
-      where("user", "==", userDocRef)
+      where("userID", "==", userDocRef)
     );
     const result: DocumentSnapshot<DocumentData>[] = [];
     //filter==0 for ongoing cups(player), filter==1 for upcoming cups(player based), filter==2 for ALL upcoming cups
     if (filter == 2) {
       const data = await getDocs(cupsRef);
       data.forEach((c) => {
-        if (moment(c.get("startDate")) > moment()) {
+        if (moment(c.get("startDate").toDate()) > moment()) {
           result.push(c);
         }
-        result.push(c);
+        //result.push(c);
       });
     } else {
       onSnapshot(userQuery, (snapshot) => {
         const userCups: DocumentReference[] = snapshot.docs.at(0)?.data().cups;
-        if (userCups != null) {
+        console.log(userCups);
+        if (userCups != null) { 
           userCups.forEach((c) => {
             getDoc(c).then((d) => {
               if (
                 filter == 0 &&
-                moment(d.get("startDate")) <= moment() &&
-                moment(d.get("endDate")) > moment()
+                (moment(d.get("startDate").toDate()) <= moment()) &&
+                (moment(d.get("endDate").toDate()) > moment())
               ) {
                 result.push(d);
-              } else if (filter == 1 && moment(d.get("startDate")) > moment()) {
+              } else if (filter == 1 && moment(d.get("startDate").toDate()) > moment()) {
                 result.push(d);
               }
             });
@@ -68,14 +70,11 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
     // }));
 
     setCups(result);
-    // setLoading(false);
+    setLoading(false);
   };
 
   useEffect(() => {
     getCups();
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
   }, []);
 
   const router = useRouter();
@@ -109,7 +108,13 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
           {cups
             .filter((c) => {
               if (cupNameFilter === "") return true;
-              else return c.get("name").indexOf(cupNameFilter) === 0;
+              else
+                return (
+                  c
+                    .get("name")
+                    .toLowerCase()
+                    .includes(cupNameFilter.toLowerCase())
+                );
             })
             .map((c) => (
               <Grid item xs={12} md={6} lg={4} xl={3}>
@@ -122,7 +127,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
                     <h5 className={cupstyles.name}>{c.get("name")}</h5>
                     <div className={cupstyles.cuptype}>{c.get("cupType")}</div>
                     <p>
-                      {moment(c.get("startDate").toDate()).format("M/D/YYYY")}-
+                      {moment(c.get("startDate").toDate()).format("M/D/YYYY")}&nbsp;-&nbsp;
                       {moment(c.get("endDate").toDate()).format("M/D/YYYY")}
                     </p>
                   </div>

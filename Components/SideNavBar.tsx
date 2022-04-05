@@ -25,7 +25,6 @@ const routes: routeType[] = [
   { name: "Dashboard", path: "dashboard" },
   { name: "My Cups", path: "mycups" },
   { name: "Leaderboards", path: "leaderboard" },
-  { name: "Crypto Info", path: "cryptoinfo" },
   { name: "News", path: "news" },
   { name: "Profile", path: "profile"}
 ];
@@ -35,7 +34,6 @@ const Content = ({ path }: ContentProps) => {
   async function linkWallet() {
     let web3 = new Web3(Web3.givenProvider);
     let acc = wallet.address;
-
     const message =
       "Sign this message to complete linking your wallet to your account. You will only have to do this once and it will cost you no eth.";
 
@@ -65,11 +63,8 @@ const Content = ({ path }: ContentProps) => {
       const data = await response.json();
       if (data.error) {
         alert(data.error);
-      } else {
-        alert("it worked");
       }
     } catch (error) {
-      console.log(error);
       alert("Error during signing. Please refresh and try again.");
     }
   }
@@ -179,12 +174,12 @@ const Content = ({ path }: ContentProps) => {
       ) : (
         <>
           {wallet.address ? (
-            <FadeButton variant="contained" onClick={wallet.connect}>
-              Connect Wallet
-            </FadeButton>
-          ) : (
             <FadeButton variant="contained" onClick={linkWallet}>
               Link Wallet
+            </FadeButton>
+          ) : (
+            <FadeButton variant="contained" onClick={wallet.connect}>
+              Connect Wallet
             </FadeButton>
           )}
         </>

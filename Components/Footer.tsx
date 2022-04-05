@@ -37,10 +37,14 @@ const Footer = () => {
       <Grid item xs>
         <div className={styles.footer1}>
           <Grid item xs={3.5}>
-            <h6>ABOUT</h6>
+            <Button onClick={() => window.location.replace("/#about")}>
+              <a>ABOUT</a>
+            </Button>
           </Grid>
           <Grid item xs={3}>
-            <h6>FAQ</h6>
+            <Button onClick={() => window.location.replace("/#faq")}>
+              <a>FAQ</a>
+            </Button>
           </Grid>
           <Grid item xs>
             {user.uid ? (
