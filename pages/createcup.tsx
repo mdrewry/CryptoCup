@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import type { NextPage } from "next";
+import { BigNumber } from "ethers";
 import Web3 from "web3";
 import Head from "next/head";
 import Router from "next/router";
@@ -156,8 +157,10 @@ const CreateCup: NextPage = () => {
     setLoading(true);
     try {
       const factoryContract = await getSmartContract(user.wallet, "");
-      const weiValue = Web3.utils.toWei(values.buyIn, "ether");
-      const txn = await factoryContract.newCup(weiValue, values.playerCuts);
+      const txn = await factoryContract.newCup(
+        BigNumber.from(Web3.utils.toWei(values.buyIn, "ether")),
+        values.playerCuts
+      );
       const receipt = await txn.wait();
       const event = receipt.events?.find(
         (event: any) => event.event === "CupCreated"
