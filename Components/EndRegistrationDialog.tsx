@@ -5,7 +5,7 @@ import { UserContext } from "../context/UserProvider";
 import { getSmartContract } from "../functions/smartContract";
 
 type EndRegistrationDialogProps = {
-  cup: { name: String; id: String; buyIn: Number; ethAddress: string };
+  cup: { id: String; ethAddress: string };
 };
 const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
   const user = useContext(UserContext);
@@ -32,7 +32,7 @@ const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
   };
   const handleCupUpdate = async () => {
     try {
-      const response = await fetch("/api/joincup", {
+      const response = await fetch("/api/startcup", {
         method: "POST",
         body: JSON.stringify({
           userID: user.uid,
@@ -56,6 +56,9 @@ const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
   };
   return (
     <div>
+      <h4>
+        As the director, you must close Cup Registration by the start date.
+      </h4>
       <Button
         style={{
           background: "#2F3869",
@@ -67,8 +70,7 @@ const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
           padding: 10,
           width: 242,
           color: "white",
-          marginTop: 49,
-          marginBottom: 307,
+          marginBottom: 30,
         }}
         onClick={toggleDialog}
       >
@@ -76,7 +78,7 @@ const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
       </Button>
       <ActionDialog
         name="End Registration"
-        prompt={`Are you sure you would like to join ${cup.name}? This request cannot be undone.`}
+        prompt="Are you sure you would like to close registration? This action cannot be undone."
         submitButtonText="Submit"
         errorText={errorText}
         open={open}
