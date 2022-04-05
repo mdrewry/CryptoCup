@@ -21,7 +21,11 @@ export default async function handler(
     const userRef = doc(db, "users", userID);
     const cupsInUserRef = query(
       collection(db, "cupsInUser"),
-      where("user", "==", userRef)
+      where("userID", "==", userRef)
+    );
+    const usersInCupRef = query(
+      collection(db, "usersInCup"),
+      where("cupID", "==", cupDocRef)
     );
     const cupDocSnap = await getDoc(cupDocRef);
     const data: any = cupDocSnap.data();
@@ -31,15 +35,21 @@ export default async function handler(
     await updateDoc(cupDocRef, {
       userPortfolios,
     });
-    const snap = await getDocs(cupsInUserRef);
-    if (!snap.empty) {
-      snap.forEach(async (doc) => {
+    const cupsInUserSnap = await getDocs(cupsInUserRef);
+    if (!cupsInUserSnap.empty) {
+      cupsInUserSnap.forEach(async (doc) => {
         await updateDoc(doc.ref, { cups: arrayUnion(cupDocRef) });
       });
     } else {
       await addDoc(collection(db, "cupsInUser"), {
         userID: userRef,
         cups: [cupDocRef],
+      });
+    }
+    const usersInCupSnap = await getDocs(usersInCupRef);
+    if (!usersInCupSnap.empty) {
+      usersInCupSnap.forEach(async (doc) => {
+        await updateDoc(doc.ref, { users: arrayUnion(userRef) });
       });
     }
   } catch (error) {
