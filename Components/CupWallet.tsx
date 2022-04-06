@@ -24,7 +24,7 @@ import {
 import { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
-
+  
 type ContentProps = {
   cupid: string;
   portfolios: any;
