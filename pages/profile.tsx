@@ -9,14 +9,12 @@ import {
   getDocs,
   QueryDocumentSnapshot,
   DocumentData,
-  Timestamp,
-  addDoc,
 } from "firebase/firestore";
 import styles from "../styles/Profile.module.css";
 import { makeStyles } from "@material-ui/core/styles";
 import { db } from "../config/firebase.config";
-import { useRouter } from "next/router";
-import { ButtonBase, IconButton } from "@material-ui/core";
+import Router from "next/router";
+import { IconButton } from "@material-ui/core";
 import { UserContext } from "../context/UserProvider";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
@@ -24,11 +22,13 @@ import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputBase from "@mui/material/InputBase";
 import EditIcon from "@mui/icons-material/Edit";
+import { getDownloadURL, getStorage, ref, StorageReference, uploadBytes } from "firebase/storage";
 
 import moment from "moment";
 
 const Profile: NextPage = () => {
   const user = useContext(UserContext);
+
   const useStyles = makeStyles((theme) => ({
     textField: {
       "&": {
@@ -47,47 +47,12 @@ const Profile: NextPage = () => {
         borderRadius: 25,
       },
     },
-    birthday: {
-      "&": {
-        marginTop: "6px",
-      },
-      "& .MuiInputBase-input": {
-        borderRadius: 25,
-        fontFamily: "Space Mono",
-        fontSize: 20,
-        color: "#ffffff",
-        backgroundColor: "rgba(47, 56, 105, 0.6)",
-        width: 140,
-        padding: "15px 15px",
-      },
-      "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
-        borderRadius: 25,
-      },
-      "&:focus": {
-        borderRadius: 25,
-        padding: "15px 15px",
-      },
-      "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
-        color: "#ffffff",
-      },
-      "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
-        color: "#ffffff",
-      },
-    },
-    tos: {
-      "& .css-ahj2mt-MuiTypography-root": {
-        color: "#ffffff",
-        fontSize: "20px",
-        fontFamily: "Space Mono",
-        width: "500px",
-        marginTop: "30px",
-      },
-    },
   }));
   const classes = useStyles();
   const [cups, setCups] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [tempImage, setTempImage] = React.useState(user.imageURL);
   const [fname, setFname] = React.useState(user.firstName);
   const [lname, setLname] = React.useState(user.lastName);
   const [email, setEmail] = React.useState(user.email);
@@ -98,9 +63,10 @@ const Profile: NextPage = () => {
   const editCancel = () => {
     setEditMode(false);
   };
+
   const editConfirm = () => {
     const userDocRef = doc(db, "users", user.uid);
-    updateDoc(userDocRef, { email: email, firstName: fname, lastName: lname });
+    updateDoc(userDocRef, { email: email, firstName: fname, lastName: lname, imageURL: tempImage });
     setEditMode(false);
   };
   const changeFName = (event: {
@@ -136,13 +102,11 @@ const Profile: NextPage = () => {
     getCups();
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1000);
   }, []);
-  const router = useRouter();
-  const {
-    query: { id },
-  } = router;
-
+  const handleRedirect = (route: string) => {
+    Router.push(`cups/${route}`);
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -197,22 +161,31 @@ const Profile: NextPage = () => {
             </Grid>
             <div>
               <FormControl className={styles.info}>
-                <label htmlFor="imageUpload" className={styles.info}>
-                  <IconButton >
-                    <Avatar
-                      sx={{ width: 200, height: 200 }}
-                      src={user.imageURL}
-                      alt={user.uid}
-                    />
-                  </IconButton>
-                </label>
-                <input
-                  type="file"
-                  hidden
-                  accept="image/*"
-                  onChange={changeFName}
-                  id="imageUpload"
-                />
+                <div>
+                  <Avatar
+                    sx={{ width: 200, height: 200 }}
+                    src={tempImage}
+                    alt={user.uid}
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const storage = getStorage();
+                      console.log("hello");
+                      if(e.target.files){
+                        const storageRef=ref(storage, "images/"+e.target.files[0].name);
+                        uploadBytes(storageRef, e.target.files[0]).then((snapshot) => {
+                          getDownloadURL(snapshot.ref).then((downloadURL) => {
+                            setTempImage(downloadURL);
+                          });
+                        });
+                        
+                      }
+                     }}
+                    id="imageUpload"
+                  />
+                </div>
               </FormControl>
             </div>
             <div>
@@ -264,7 +237,7 @@ const Profile: NextPage = () => {
               </Grid>
               <Grid item xs className={styles.edit}>
                 <Button onClick={editForm}>
-                  <EditIcon />
+                  <EditIcon color="secondary" fontSize="large" />
                 </Button>
               </Grid>
             </Grid>
@@ -303,19 +276,34 @@ const Profile: NextPage = () => {
             <h2 className={styles.info}>Cup History</h2>
             <h6 className={styles.info}>
               {loading ? (
-                <div>loading</div>
+                <p>loading</p>
               ) : (
                 <Grid container>
                   {cups.map((c) => (
                     <Grid item xs={4}>
-                      <h5>{c.get("name")}</h5>
-                      <div className={cupstyles.cuptype}>
-                        {c.get("cupType")}
-                      </div>
-                      <p>
-                        {moment(c.get("startDate")).format("M/D/YYYY")}-
-                        {moment(c.get("endDate")).format("M/D/YYYY")}
-                      </p>
+                      <Button onClick={(e) => handleRedirect(c.id)}>
+                        <div
+                          style={{ textAlign: "left", textTransform: "none" }}
+                        >
+                          <img
+                            className={cupstyles.placeholder}
+                            src={c.get("imageURL")}
+                          ></img>
+                          <h5 className={cupstyles.name}>{c.get("name")}</h5>
+                          <div className={cupstyles.cuptype}>
+                            {c.get("cupType")}
+                          </div>
+                          <p>
+                            {moment(c.get("startDate").toDate()).format(
+                              "M/D/YYYY"
+                            )}
+                            &nbsp;-&nbsp;
+                            {moment(c.get("endDate").toDate()).format(
+                              "M/D/YYYY"
+                            )}
+                          </p>
+                        </div>
+                      </Button>
                     </Grid>
                   ))}
                 </Grid>
