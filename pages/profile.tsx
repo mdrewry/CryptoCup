@@ -16,6 +16,7 @@ import styles from "../styles/Profile.module.css";
 import { makeStyles } from "@material-ui/core/styles";
 import { db } from "../config/firebase.config";
 import { useRouter } from "next/router";
+import { ButtonBase, IconButton } from "@material-ui/core";
 import { UserContext } from "../context/UserProvider";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
@@ -197,11 +198,15 @@ const Profile: NextPage = () => {
             </Grid>
             <div>
               <FormControl className={styles.info}>
-                <Avatar
-                  sx={{ width: 200, height: 200 }}
-                  src={user.imageURL}
-                  alt={user.uid}
-                />
+                <label htmlFor="imageUpload" className={styles.info}>
+                  <IconButton >
+                    <Avatar
+                      sx={{ width: 200, height: 200 }}
+                      src={user.imageURL}
+                      alt={user.uid}
+                    />
+                  </IconButton>
+                </label>
                 <input
                   type="file"
                   hidden
@@ -209,11 +214,6 @@ const Profile: NextPage = () => {
                   onChange={changeFName}
                   id="imageUpload"
                 />
-                <label htmlFor="imageUpload" className={styles.info}>
-                  <Button component="span" variant="text">
-                    edit
-                  </Button>
-                </label>
               </FormControl>
             </div>
             <div>
@@ -295,7 +295,11 @@ const Profile: NextPage = () => {
                 <h6 className={styles.subtitle}>* {tag.toUpperCase()}</h6>
               ))}
             </h6>
-            {user.newsPreferences.length!=0 ? <div></div>:<h6 className={styles.subtitle}>* None</h6>}
+            {user.newsPreferences.length != 0 ? (
+              <div></div>
+            ) : (
+              <h6 className={styles.subtitle}>* None</h6>
+            )}
 
             <h2 className={styles.info}>Cup History</h2>
             <h6 className={styles.info}>
