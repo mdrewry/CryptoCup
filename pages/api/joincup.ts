@@ -29,9 +29,12 @@ export default async function handler(
     );
     const cupDocSnap = await getDoc(cupDocRef);
     const data: any = cupDocSnap.data();
-    let { userPortfolios, totalBudget } = data;
+    let { userPortfolios, totalBudget, cryptosAvailable } = data;
     if (userID in userPortfolios) throw "User already joined cup.";
-    userPortfolios[userID] = { usd: totalBudget };
+    let portfolio: any = {};
+    portfolio["USD"] = totalBudget;
+    cryptosAvailable.forEach((crypto: string) => (portfolio[crypto] = 0));
+    userPortfolios[userID] = portfolio;
     await updateDoc(cupDocRef, {
       userPortfolios,
     });
