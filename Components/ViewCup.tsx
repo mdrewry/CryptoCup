@@ -44,7 +44,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
 
             const startDate = data.startDate.toDate();
             const endDate = data.endDate.toDate();
-            if (moment(startDate) > moment())
+            if (data.currentState == "created")
               cups.push({
                 ...data,
                 startDate,
@@ -69,11 +69,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
             const data: any = doc.data();
             const startDate = data.startDate.toDate();
             const endDate = data.endDate.toDate();
-            if (
-              filter == 0 &&
-              moment(startDate) <= moment() &&
-              moment(endDate) > moment()
-            )
+            if (filter == 0 && data.currentState === "active")
               results.push({
                 ...data,
                 startDate,
@@ -81,7 +77,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
                 id: doc.id,
                 ref: doc.ref,
               });
-            else if (filter == 1 && moment(startDate) > moment())
+            else if (filter == 1 && data.currentState === "created")
               results.push({
                 ...data,
                 startDate,
