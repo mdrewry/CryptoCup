@@ -36,28 +36,31 @@ const CupDetails: NextPage = () => {
   const user = useContext(UserContext);
 
   useEffect(() => {
-    const cupDocRef = doc(db, "cups", cupid);
-    onSnapshot(cupDocRef, async (snapshot) => {
-      const data: any = snapshot.data();
-      setImageURL(data.imageURL);
-      setName(data.name);
-      setCupType(data.cupType);
-      setDirectorID(data.director);
-      setCupState(data.currentState);
-      setBuyIn(data.buyIn);
-      setStartDate(data.startDate);
-      setEndDate(data.endDate);
-      setEthAddress(data.ethAddress);
-      setUserPortfolios(data.userPortfolios);
-      if (user.uid in data.userPortfolios) {
-        setJoinedUser(true);
-      }
-      const userDocRef = doc(db, "users", data.director);
-      const userDocSnap = await getDoc(userDocRef);
-      const userData: any = userDocSnap.data();
-      setDirector(userData.firstName + " " + userData.lastName);
-      setLoading(false);
-    });
+    if (cupid) {
+      const cupDocRef = doc(db, "cups", cupid);
+      const unsubscribe = onSnapshot(cupDocRef, async (snapshot) => {
+        const data: any = snapshot.data();
+        setImageURL(data.imageURL);
+        setName(data.name);
+        setCupType(data.cupType);
+        setDirectorID(data.director);
+        setCupState(data.currentState);
+        setBuyIn(data.buyIn);
+        setStartDate(data.startDate);
+        setEndDate(data.endDate);
+        setEthAddress(data.ethAddress);
+        setUserPortfolios(data.userPortfolios);
+        if (user.uid in data.userPortfolios) {
+          setJoinedUser(true);
+        }
+        const userDocRef = doc(db, "users", data.director);
+        const userDocSnap = await getDoc(userDocRef);
+        const userData: any = userDocSnap.data();
+        setDirector(userData.firstName + " " + userData.lastName);
+        setLoading(false);
+      });
+      return unsubscribe;
+    }
   }, []);
 
   return (

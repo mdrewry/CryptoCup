@@ -17,13 +17,23 @@ export default async function handler(
 ) {
   const { cupID, userID, trade } = req.body;
   try {
+    const { transferFrom, transferTo, transferAmount } = trade;
     const cupDocRef = doc(db, "cups", cupID);
     const cupDocSnap = await getDoc(cupDocRef);
     const data: any = cupDocSnap.data();
+    const cryptoFromRef = doc(db, "cryptoInfo", transferFrom);
+    const cryptoToRef = doc(db, "cryptoInfo", transferTo);
+    const cryptoFromSnap = await getDoc(cryptoFromRef);
+    const cryptoToSnap = await getDoc(cryptoToRef);
+    const cryptoFromData: any = cryptoFromSnap.data();
+    const cryptoToData: any = cryptoToSnap.data();
+    const cryptoFromPrice = cryptoFromData.price;
+    const cryptoToPrice = cryptoToData.price;
+    const tradeRatio: number = cryptoFromPrice / cryptoToPrice;
     let { userPortfolios } = data;
     let portfolio: any = userPortfolios[userID];
-    portfolio[trade.transferFrom] -= parseFloat(trade.transferAmount);
-    portfolio[trade.transferTo] += parseFloat(trade.transferAmount);
+    portfolio[transferFrom] -= parseFloat(transferAmount);
+    portfolio[transferTo] += tradeRatio * parseFloat(transferAmount);
     userPortfolios[userID] = portfolio;
     await updateDoc(cupDocRef, {
       userPortfolios,
