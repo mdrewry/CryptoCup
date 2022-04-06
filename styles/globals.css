@@ -93,6 +93,34 @@ p {
   margin-block-end: 0;
 }
 
+@media screen and (max-width: 1050px) {
+  h1 {
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  h2 {
+    font-size: 35px;
+  }
+
+  h3 {
+    font-size: 30px;
+  }
+
+  h4 {
+    font-size: 28px;
+  }
+
+  h5 {
+    font-size: 23px;
+  }
+
+  h6, p, a {
+    font-size: 16px;
+    line-height: 25pt;
+  }
+}
+
 label {
   color: #ffffff;
 }
