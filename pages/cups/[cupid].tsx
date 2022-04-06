@@ -7,6 +7,7 @@ import { UserContext } from "../../context/UserProvider";
 import JoinCupDialog from "../../Components/JoinCupDialog";
 import EndRegistrationDialog from "../../Components/EndRegistrationDialog";
 import DistributePrizesDialog from "../../Components/DistributePrizesDialog";
+import TradeCryptoDialog from "../../Components/TradeCryptoDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
 import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
@@ -27,51 +28,36 @@ const CupDetails: NextPage = () => {
   const [startDate, setStartDate] = useState(Timestamp.now());
   const [endDate, setEndDate] = useState(Timestamp.now());
   const [joinedUser, setJoinedUser] = useState(false);
-  const [usd, setUsd] = useState(0);
   const [ethAddress, setEthAddress] = useState("");
-  const [userPortfolios, setUserPortfolios] = useState({});
+  const [userPortfolios, setUserPortfolios] = useState<any>({});
   const {
     query: { id },
   } = router;
   const user = useContext(UserContext);
 
-  const getCups = async () => {
+  useEffect(() => {
     const cupDocRef = doc(db, "cups", cupid);
-    const cupDocSnap = await getDoc(cupDocRef);
-    if (cupDocSnap.exists()) {
-      const data = cupDocSnap.data();
+    onSnapshot(cupDocRef, async (snapshot) => {
+      const data: any = snapshot.data();
       setImageURL(data.imageURL);
       setName(data.name);
       setCupType(data.cupType);
       setDirectorID(data.director);
-      setUserPortfolios(data.userPortfolios);
       setCupState(data.currentState);
-      const userDocRef = doc(db, "users", data.director);
-      const userDocSnap = await getDoc(userDocRef);
-      if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-        setDirector(userData.firstName + " " + userData.lastName);
-      }
       setBuyIn(data.buyIn);
       setStartDate(data.startDate);
       setEndDate(data.endDate);
       setEthAddress(data.ethAddress);
-    }
-    onSnapshot(cupDocRef, (snapshot) => {
-      const cupPortfolios = snapshot.data()?.userPortfolios;
-      if (user.uid in cupPortfolios) {
+      setUserPortfolios(data.userPortfolios);
+      if (user.uid in data.userPortfolios) {
         setJoinedUser(true);
-        setUsd(cupPortfolios[user.uid]["usd"]);
       }
+      const userDocRef = doc(db, "users", data.director);
+      const userDocSnap = await getDoc(userDocRef);
+      const userData: any = userDocSnap.data();
+      setDirector(userData.firstName + " " + userData.lastName);
+      setLoading(false);
     });
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    getCups();
-    // setTimeout( () => {
-    //     setLoading(false);
-    //   },2000)
   }, []);
 
   return (
@@ -131,12 +117,15 @@ const CupDetails: NextPage = () => {
                     width="30"
                     height="30"
                   />
-                  <h6 className={styles.walletmoney}>{usd} USD</h6>
+                  <h6 className={styles.walletmoney}>XD USD</h6>
                 </div>
                 <h6 className={styles.asd}>Total: $123.12 USD</h6>
                 <h4 className={styles.ogbudget}>
                   (Original budget: $123.12 USD)
                 </h4>
+                <TradeCryptoDialog
+                  cup={{ id: cupid, userPortfolio: userPortfolios[user.uid] }}
+                />
               </div>
             )}
           </div>
