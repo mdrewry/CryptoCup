@@ -142,7 +142,7 @@ const CupDetails: NextPage = () => {
           </div>
         )}
         <h1>Leaderboard</h1>
-        <Leaderboard cupid={cupid} />
+        <Leaderboard cupid={cupid} portfolios={userPortfolios} />
       </div>
     </div>
   );
