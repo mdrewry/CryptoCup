@@ -11,6 +11,7 @@ import moment from "moment";
 import { db } from "../../config/firebase.config";
 import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
 import { Icon } from "@iconify/react";
+import Leaderboard from "../../Components/Leaderboards";
 
 const CupDetails: NextPage = () => {
   const router = useRouter();
@@ -140,6 +141,8 @@ const CupDetails: NextPage = () => {
             )}
           </div>
         )}
+        <h1>Leaderboard</h1>
+        <Leaderboard cupid={cupid} />
       </div>
     </div>
   );

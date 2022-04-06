@@ -20,6 +20,7 @@ import Grid from "@mui/material/Grid";
 import moment from "moment";
 import { UserContext } from "../context/UserProvider";
 import Button from "@mui/material/Button";
+import { async } from "@firebase/util";
 
 type ContentProps = { filter: Number; cupNameFilter: String };
 const Cups = ({ filter, cupNameFilter }: ContentProps) => {
@@ -45,28 +46,26 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
         //result.push(c);
       });
     } else {
-      const userCups: DocumentReference[] = (await getDocs(userQuery)).docs.at(0)?.data().cups;
-        console.log(userCups);
-        if (userCups != null) { 
+      let sD = null;
+      let eD = null;
+      onSnapshot(userQuery, async (snapshot) => {
+        const userCups: DocumentReference[] = snapshot.docs.at(0)?.data().cups;
+        if (userCups != null) {
           userCups.forEach((c) => {
             getDoc(c).then((d) => {
-              if (
-                filter == 0 &&
-                (moment(d.get("startDate").toDate()) <= moment()) &&
-                (moment(d.get("endDate").toDate()) > moment())
-              ) {
+              sD = moment(d.get("startDate").toDate());
+              eD = moment(d.get("endDate").toDate());
+              const n = moment();
+              if (filter == 0 && sD <= n && eD > n) {
                 result.push(d);
-              } else if (filter == 1 && moment(d.get("startDate").toDate()) > moment()) {
+              } else if (filter == 1 && sD > n) {
                 result.push(d);
               }
             });
           });
         }
+      });
     }
-    // setCups(data.docs.map((item)=>{
-    //     return {...item.data(),id:item.id}
-    // }));
-
     setCups(result);
     setLoading(false);
   };
@@ -107,12 +106,10 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
             .filter((c) => {
               if (cupNameFilter === "") return true;
               else
-                return (
-                  c
-                    .get("name")
-                    .toLowerCase()
-                    .includes(cupNameFilter.toLowerCase())
-                );
+                return c
+                  .get("name")
+                  .toLowerCase()
+                  .includes(cupNameFilter.toLowerCase());
             })
             .map((c) => (
               <Grid item xs={12} md={6} lg={4} xl={3}>
@@ -125,7 +122,8 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
                     <h5 className={cupstyles.name}>{c.get("name")}</h5>
                     <div className={cupstyles.cuptype}>{c.get("cupType")}</div>
                     <p>
-                      {moment(c.get("startDate").toDate()).format("M/D/YYYY")}&nbsp;-&nbsp;
+                      {moment(c.get("startDate").toDate()).format("M/D/YYYY")}
+                      &nbsp;-&nbsp;
                       {moment(c.get("endDate").toDate()).format("M/D/YYYY")}
                     </p>
                   </div>
