@@ -14,38 +14,66 @@ import {
   onSnapshot,
   QueryDocumentSnapshot,
   orderBy,
+  DocumentReference,
+  limit,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 
-const Leaderboard: NextPage = () => {
-  const [leaderboard, setLeaderboard] = useState<
-    DocumentSnapshot<DocumentData>[]
-  >([]);
+type ContentProps = {
+  cupid: string;
+  portfolios: {};
+};
+const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
+  const [leaderboard, setLeaderboard] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const getLeaderboard = async () => {
+  useEffect(() => {
+    //rankQuery used for getting global rankings
     const rankQuery = query(
       collection(db, "users"),
-      orderBy("cupWins", "desc")
+      orderBy("cupWins", "desc"),
+      limit(10)
     );
-    const result: QueryDocumentSnapshot<DocumentData>[] = [];
-    const data = await getDocs(rankQuery);
-    data.forEach((c) => {
-      result.push(c);
-    });
-    console.log(result);
-    // setCups(data.docs.map((item)=>{
-    //     return {...item.data(),id:item.id}
-    // }));
 
-    setLeaderboard(result);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    getLeaderboard();
+    if (cupid === "") {
+      const unsubscribeSnapshot = onSnapshot(rankQuery, async (snapshot) => {
+        let result: Array<any> = [];
+        snapshot.docs.forEach((doc: any) => {
+          if (doc != null) {
+            const data: any = doc.data();
+            result.push({ ...data });
+            setLeaderboard(result);
+            setLoading(false);
+          }
+        });
+      });
+      return unsubscribeSnapshot;
+    } else {
+      //cupDocRef and cupQuery for leaderboard per cup
+      const cupDocRef = doc(collection(db, "cups"), cupid);
+      const cupQuery = query(
+        collection(db, "usersInCup"),
+        where("cupID", "==", cupDocRef)
+      );
+      const unsubscribeSnapshot = onSnapshot(cupQuery, async (snapshot) => {
+        let results: Array<any> = [];
+        const cupUsers: Array<any> = snapshot.docs[0]?.data().users;
+        if (cupUsers != null) {
+          await Promise.all(
+            cupUsers.map(async (userRefs) => {
+              const doc = await getDoc(userRefs);
+              const data: any = doc.data();
+              results.push({ ...data });
+              return 0;
+            })
+          );
+        }
+        setLeaderboard(results);
+        setLoading(false);
+      });
+    }
   }, []);
 
   const router = useRouter();
@@ -59,20 +87,21 @@ const Leaderboard: NextPage = () => {
         <p>loading</p>
       ) : (
         <div>
-          {leaderboard.map((c) => (
+          {leaderboard.map((c, index) => (
             <Grid container>
+              <h5>{index + 1}</h5>
               <Grid item xs={1} md={1} lg={1} xl={1}>
                 <img
                   className={cupstyles.leaderboardProfile}
-                  src={c.get("imageURL")}
+                  src={c.imageURL}
                 />
               </Grid>
               <Grid item xs={12} md={6} lg={4} xl={3}>
                 <h6>
-                  {c.get("firstName")} {c.get("lastName")}
+                  {c.firstName} {c.lastName}
                 </h6>
                 <p>
-                  {c.get("cupWins")} Wins - ${c.get("totalEarnings")}
+                  {c.cupWins} Wins - ${c.totalEarnings}
                 </p>
               </Grid>
             </Grid>

@@ -15,6 +15,7 @@ import Grid from "@mui/material/Grid";
 import moment from "moment";
 import { UserContext } from "../context/UserProvider";
 import Button from "@mui/material/Button";
+
 type ContentProps = { filter: Number; cupNameFilter: String };
 const Cups = ({ filter, cupNameFilter }: ContentProps) => {
   const router = useRouter();
