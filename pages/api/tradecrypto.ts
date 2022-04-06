@@ -20,7 +20,7 @@ export default async function handler(
     const cupDocRef = doc(db, "cups", cupID);
     const cupDocSnap = await getDoc(cupDocRef);
     const data: any = cupDocSnap.data();
-    let { userPortfolios, totalBudget, cryptosAvailable } = data;
+    let { userPortfolios } = data;
     let portfolio: any = userPortfolios[userID];
     portfolio[trade.transferFrom] -= parseFloat(trade.transferAmount);
     portfolio[trade.transferTo] += parseFloat(trade.transferAmount);
