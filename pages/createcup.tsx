@@ -27,7 +27,7 @@ const initValues = {
   startDate: moment(new Date()).add(1, "days"),
   endDate: moment(new Date()).add(2, "days"),
   buyIn: "0.05",
-  inGameBudget: 1000,
+  inGameBudget: 10000,
   playerCuts: [3, 5, 10],
 };
 
@@ -229,6 +229,7 @@ const CreateCup: NextPage = () => {
                     <p className={createCupStyles.fieldName}>Cup Name: </p>
                     <TextField
                       className={classes.textField}
+                      value={values.cupName}
                       name="cupName"
                       onChange={handleInputValue}
                       onBlur={handleInputValue}
@@ -242,6 +243,7 @@ const CreateCup: NextPage = () => {
                     <p className={createCupStyles.fieldName}>Cup Password: </p>
                     <TextField
                       className={classes.textField}
+                      value={values.password}
                       name="password"
                       type="password"
                       onChange={handleInputValue}
@@ -309,6 +311,7 @@ const CreateCup: NextPage = () => {
                     <TextField
                       className={classes.textField}
                       name="buyIn"
+                      value={values.buyIn}
                       onChange={handleInputValue}
                       onBlur={handleInputValue}
                       {...(errors["buyIn"] && {
@@ -324,6 +327,7 @@ const CreateCup: NextPage = () => {
                     <TextField
                       className={classes.textField}
                       name="inGameBudget"
+                      value={values.inGameBudget}
                       type="number"
                       onChange={handleInputValue}
                       onBlur={handleInputValue}
