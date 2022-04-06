@@ -1,7 +1,8 @@
 import React from "react";
+import styles from "../styles/Graph.module.css";
 export default function Graph() {
   return (
-    <svg width="546" height="448" viewBox="0 0 546 448" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="546" height="448" viewBox="0 0 546 448" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.graph}>
         <line x1="28.0135" y1="1.02258" x2="347" y2="1.02258" stroke="url(#paint0_linear_27_73)" strokeWidth="2"/>
         <line x1="28.0135" y1="46.3493" x2="347" y2="46.3493" stroke="url(#paint1_linear_27_73)" strokeWidth="2"/>
         <line x1="28.0135" y1="91.6759" x2="347" y2="91.6759" stroke="url(#paint2_linear_27_73)" strokeWidth="2"/>
