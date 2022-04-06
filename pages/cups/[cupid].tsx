@@ -139,12 +139,12 @@ const CupDetails: NextPage = () => {
                 <h4 className={styles.ogbudget}>
                   (Original budget: $123.12 USD)
                 </h4>
+                <h1>Leaderboard</h1>
+                <Leaderboard cupid={cupid} portfolios={userPortfolios} />
               </div>
             )}
           </div>
         )}
-        <h1>Leaderboard</h1>
-        <Leaderboard cupid={cupid} portfolios={userPortfolios} />
       </div>
     </div>
   );

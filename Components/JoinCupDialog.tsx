@@ -31,7 +31,11 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
       await handleSignup();
     } catch (error) {
       console.log(error);
-      setErrorText("Transaction Failed");
+      if (!user.wallet) {
+        setErrorText("Connect your wallet before joining a cup.");
+      } else {
+        setErrorText("Transaction Failed");
+      }
       setLoading(false);
     }
   };
