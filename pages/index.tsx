@@ -21,7 +21,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Grid container spacing={0} alignItems="center">
+      <Grid container spacing={0} alignItems="center" className={styles.header}>
         <Grid item xs={9}>
           <div className={styles.containerLogo}>
             <div className={styles.logo}>
@@ -30,23 +30,25 @@ const Home: NextPage = () => {
             <h2 className={styles.title}>Crypto Cup</h2>
           </div>
         </Grid>
-        <Grid item xs>
-          <Button onClick={() => window.location.replace("/#about")}>
-            <a>ABOUT</a>
-          </Button>
-        </Grid>
-        <Grid item xs={0.9}>
-          <Button onClick={() => window.location.replace("/#faq")}>
-            <a>FAQ</a>
-          </Button>
-        </Grid>
-        <Grid item xs>
-          <LaunchButton variant="contained">LAUNCH</LaunchButton>
-        </Grid>
+        <div className={styles.mobileHeader}>
+          <Grid item xs>
+            <Button onClick={() => window.location.replace("/#about")}>
+              <a>ABOUT</a>
+            </Button>
+          </Grid>
+          <Grid item xs>
+            <Button onClick={() => window.location.replace("/#faq")}>
+              <a>FAQ</a>
+            </Button>
+          </Grid>
+          <Grid item xs>
+            <LaunchButton variant="contained">LAUNCH</LaunchButton>
+          </Grid>
+        </div>
       </Grid>
 
       <Grid className={styles.summaryContainer}>
-        <Grid item xs>
+        <Grid item xs className={styles.summaryContainerItem}>
           <h2>A New Age of Fantasy with</h2>
           <div className={styles.title1}>
             <h1 className={styles.gradient}>Crypto Cup</h1>
@@ -67,12 +69,12 @@ const Home: NextPage = () => {
               </LaunchCupButton>
           </div>
         </Grid>
-        <Grid item xs>
-          <Graph />
+        <Grid item xs className={styles.summaryContainerItem}>
+          <Graph/>
         </Grid>
       </Grid>
 
-      <Grid className={styles.container1} alignItems="baseline" container spacing={8}>
+      <Grid className={styles.container1} alignItems="baseline" container>
         <Grid className={styles.container2} item xs>
           <EmojiEventsIcon fontSize="large" sx={{ color: '#DA93D3' }}/>
           <h6 className={styles.iconSpacing}>
@@ -102,7 +104,7 @@ const Home: NextPage = () => {
         <p className={styles.aboutSpacing}>
           In Crypto Cup, users can create or register for cups to compete
           against their friends. Users bet on the upcoming performance of
-          various cryptocurrencies. It’s like Fantasy for crypto-lovers!
+          various cryptocurrencies. It’s like a Fantasy sports league but for crypto-lovers!
         </p>
         <p className={styles.aboutSpacing}>
           Crypto Cup is an application made by Mark Drewry, Andrew Gil, Amer
@@ -110,7 +112,7 @@ const Home: NextPage = () => {
           University of Florida Computer Science Senior Project. Go Gators!
         </p>
         <h4 className={styles.italicSpacing}>FAQ</h4>
-        <h2 id="faq" className={styles.headerSpacing}>Frequently Asked Questions</h2>
+        <h2 id="faq" className={styles.faq}>Frequently Asked Questions</h2>
         <div className={styles.questionContainer}>
           <FaqDiamond/>
           <h5 className={styles.question}>What is Crypto Cup?</h5>

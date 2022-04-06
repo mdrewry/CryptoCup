@@ -10,7 +10,7 @@ import Router from "next/router";
 
 const Footer = () => {
   const user = useContext(UserContext);
-  
+
   async function logout() {
     try {
       await signOut(auth);
@@ -36,17 +36,17 @@ const Footer = () => {
       </Grid>
       <Grid item xs>
         <div className={styles.footer1}>
-          <Grid item xs={3.5}>
+          <Grid item>
             <Button onClick={() => window.location.replace("/#about")}>
               <a>ABOUT</a>
             </Button>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item>
             <Button onClick={() => window.location.replace("/#faq")}>
               <a>FAQ</a>
             </Button>
           </Grid>
-          <Grid item xs>
+          <Grid item>
             {user.uid ? (
               <Button onClick={logout}>
                 <a>SIGN OUT</a>

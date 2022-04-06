@@ -8,7 +8,7 @@ const LaunchButton = styled(Button)(({ theme }) => ({
   borderRadius: 60,
   fontWeight: 700,
   width: 131,
-  height: 55,
+  maxHeight: 55,
 }));
 
 export default LaunchButton;
