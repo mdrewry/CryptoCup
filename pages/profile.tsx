@@ -97,7 +97,6 @@ const Profile: NextPage = () => {
   };
   const editCancel = () => {
     setEditMode(false);
-    console.log(editMode);
   };
   const editConfirm = () => {
     const userDocRef = doc(db, "users", user.uid);
