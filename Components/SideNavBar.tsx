@@ -28,7 +28,6 @@ const routes: routeType[] = [
   { name: "My Cups", path: "mycups" },
   { name: "Leaderboards", path: "leaderboard" },
   { name: "News", path: "news" },
-  { name: "Profile", path: "profile"}
 ];
 const Content = ({ path }: ContentProps) => {
   const user = useContext(UserContext);
@@ -88,15 +87,20 @@ const Content = ({ path }: ContentProps) => {
   return (
     <>
       <div className={styles.headerSection}>
-        <Avatar
-          sx={{ width: 80, height: 80 }}
-          alt={user.firstName}
-          src={user.imageURL}
-        />
+        <Link href={{ pathname: `/profile` }}>
+          <IconButton>
+            <Avatar
+              sx={{ width: 80, height: 80 }}
+              alt={user.firstName}
+              src={user.imageURL}
+            />
+          </IconButton>
+        </Link>
         <div className={styles.header}>
           <h4 className={styles.title}>{user.firstName}</h4>
         </div>
       </div>
+
       <Stack className={styles.spacer} spacing={2}>
         {routes.map((route, id) => (
           <Link
