@@ -73,6 +73,7 @@ const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
         setLeaderboard(results);
         setLoading(false);
       });
+      return unsubscribeSnapshot;
     }
   }, []);
 
