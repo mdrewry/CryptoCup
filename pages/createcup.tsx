@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import type { NextPage } from "next";
+import { BigNumber } from "ethers";
 import Web3 from "web3";
 import Head from "next/head";
 import Router from "next/router";
@@ -26,7 +27,7 @@ const initValues = {
   startDate: moment(new Date()).add(1, "days"),
   endDate: moment(new Date()).add(2, "days"),
   buyIn: "0.05",
-  inGameBudget: 1000,
+  inGameBudget: 10000,
   playerCuts: [3, 5, 10],
 };
 
@@ -156,8 +157,10 @@ const CreateCup: NextPage = () => {
     setLoading(true);
     try {
       const factoryContract = await getSmartContract(user.wallet, "");
-      const weiValue = Web3.utils.toWei(values.buyIn, "ether");
-      const txn = await factoryContract.newCup(weiValue, values.playerCuts);
+      const txn = await factoryContract.newCup(
+        BigNumber.from(Web3.utils.toWei(values.buyIn, "ether")),
+        values.playerCuts
+      );
       const receipt = await txn.wait();
       const event = receipt.events?.find(
         (event: any) => event.event === "CupCreated"
@@ -226,6 +229,7 @@ const CreateCup: NextPage = () => {
                     <p className={createCupStyles.fieldName}>Cup Name: </p>
                     <TextField
                       className={classes.textField}
+                      value={values.cupName}
                       name="cupName"
                       onChange={handleInputValue}
                       onBlur={handleInputValue}
@@ -239,6 +243,7 @@ const CreateCup: NextPage = () => {
                     <p className={createCupStyles.fieldName}>Cup Password: </p>
                     <TextField
                       className={classes.textField}
+                      value={values.password}
                       name="password"
                       type="password"
                       onChange={handleInputValue}
@@ -306,6 +311,7 @@ const CreateCup: NextPage = () => {
                     <TextField
                       className={classes.textField}
                       name="buyIn"
+                      value={values.buyIn}
                       onChange={handleInputValue}
                       onBlur={handleInputValue}
                       {...(errors["buyIn"] && {
@@ -321,6 +327,7 @@ const CreateCup: NextPage = () => {
                     <TextField
                       className={classes.textField}
                       name="inGameBudget"
+                      value={values.inGameBudget}
                       type="number"
                       onChange={handleInputValue}
                       onBlur={handleInputValue}
