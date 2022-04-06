@@ -1,6 +1,6 @@
 import React, { Component, createContext } from "react";
 import { auth, db } from "../config/firebase.config";
-import { doc, getDoc, Timestamp } from "firebase/firestore";
+import { doc, getDoc, Timestamp, onSnapshot } from "firebase/firestore";
 
 type User = {
   uid: string;
@@ -44,24 +44,26 @@ class UserProvider extends Component<{}, { user: User }> {
       const user: User = { ...USER };
       if (userAuth) {
         const userDocRef = doc(db, "users", userAuth.uid);
+        onSnapshot(userDocRef, (snapshot) => {
+          const data = snapshot.data();
+          user.email = data?.email;
+          user.wallet = data?.wallet;
+          user.firstName = data?.firstName;
+          user.lastName = data?.lastName;
+          user.birthday = data?.birthday;
+          user.cupWins = data?.cupWins;
+          user.cupsPlayed = data?.cupsPlayed;
+          user.headsUpPlayed = data?.headsUpPlayed;
+          user.headsUpWins = data?.headsUpWins;
+          user.totalEarnings = data?.totalEarnings;
+          user.totalPercentGain = data?.totalPercentGain;
+          user.walletVerified = data?.walletVerified;
+          user.newsPreferences = data?.newsPreferences;
+          user.imageURL = data?.imageURL;
+        });
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
-          const data = userDocSnap.data();
           user.uid = userAuth.uid;
-          user.email = data.email;
-          user.wallet = data.wallet;
-          user.firstName = data.firstName;
-          user.lastName = data.lastName;
-          user.birthday = data.birthday;
-          user.cupWins = data.cupWins;
-          user.cupsPlayed = data.cupsPlayed;
-          user.headsUpPlayed = data.headsUpPlayed;
-          user.headsUpWins = data.headsUpWins;
-          user.totalEarnings = data.totalEarnings;
-          user.totalPercentGain = data.totalPercentGain;
-          user.walletVerified = data.walletVerified;
-          user.newsPreferences = data.newsPreferences;
-          user.imageURL = data.imageURL;
         }
       }
       localStorage.setItem("user", user ? JSON.stringify(user) : "");
