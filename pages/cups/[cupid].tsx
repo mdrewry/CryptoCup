@@ -58,10 +58,12 @@ const CupDetails: NextPage = () => {
       setEthAddress(data.ethAddress);
     }
     onSnapshot(cupDocRef, (snapshot) => {
-      const cupPortfolios = snapshot.data()?.userPortfolios;
-      if (user.uid in cupPortfolios) {
-        setJoinedUser(true);
-        setUsd(cupPortfolios[user.uid]["usd"]);
+      if(snapshot.exists()){
+        const cupPortfolios = snapshot.data()?.userPortfolios;
+        if (user.uid in cupPortfolios) {
+          setJoinedUser(true);
+          setUsd(cupPortfolios[user.uid]["usd"]);
+        }
       }
     });
     setLoading(false);
