@@ -28,6 +28,7 @@ const routes: routeType[] = [
   { name: "My Cups", path: "mycups" },
   { name: "Leaderboards", path: "leaderboard" },
   { name: "News", path: "news" },
+  { name: "Profile", path: "profile"}
 ];
 const Content = ({ path }: ContentProps) => {
   const user = useContext(UserContext);

@@ -1,0 +1,24 @@
+.title {
+    margin-left: 21px;
+    margin-top: 52px;
+}
+.subtitle {
+    margin-left: 21px;
+}
+.edit {
+    margin-top: 52px;
+    margin-right: 21px;
+    text-align: end;
+}
+.info {
+    margin-left: 21px;
+    margin-top: 21px;
+}   
+.labelSpacing {
+    margin-top: 27px;
+}
+.loginContainer{
+    margin-top: 39px;
+    margin-left: 78px;
+    display: flex;
+  }
