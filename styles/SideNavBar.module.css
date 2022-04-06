@@ -15,7 +15,8 @@
   align-items: center;
 }
 .spacer {
-  margin-top: 50px;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
 .filler {
   flex-grow: 1;

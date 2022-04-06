@@ -90,9 +90,12 @@ const Content = ({ path }: ContentProps) => {
         <Link href={{ pathname: `/profile` }}>
           <IconButton>
             <Avatar
-              sx={{ width: 80, height: 80 }}
+              sx={{ width: 100, height: 100 }}
               alt={user.firstName}
               src={user.imageURL}
+              style={{
+                border: "5px solid lightgray",
+              }}
             />
           </IconButton>
         </Link>

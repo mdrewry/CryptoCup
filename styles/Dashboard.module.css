@@ -5,7 +5,7 @@
   }
 
 .title{
-    display: flex
+    display: flex;
 }
 
 .firstname{
@@ -15,5 +15,6 @@
 }
 
 .invest{
-    margin-top: 20px;
+    margin-top: 1%;
+    margin-bottom: 1%;
 }
