@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/CupDetails.module.css";
 import React, { useState, useEffect, useContext } from "react";
-import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import { UserContext } from "../../context/UserProvider";
 import JoinCupDialog from "../../Components/JoinCupDialog";
@@ -10,8 +9,8 @@ import EndRegistrationDialog from "../../Components/EndRegistrationDialog";
 import DistributePrizesDialog from "../../Components/DistributePrizesDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
-import { getDoc, doc, Timestamp } from "firebase/firestore";
-import Leaderboard from "../../Components/Leaderboards";
+import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
+import { Icon } from "@iconify/react";
 
 const CupDetails: NextPage = () => {
   const router = useRouter();
@@ -26,6 +25,8 @@ const CupDetails: NextPage = () => {
   const [buyIn, setBuyIn] = useState(0);
   const [startDate, setStartDate] = useState(Timestamp.now());
   const [endDate, setEndDate] = useState(Timestamp.now());
+  const [joinedUser, setJoinedUser] = useState(false);
+  const [usd, setUsd] = useState(0);
   const [ethAddress, setEthAddress] = useState("");
   const [userPortfolios, setUserPortfolios] = useState({});
   const {
@@ -55,6 +56,13 @@ const CupDetails: NextPage = () => {
       setEndDate(data.endDate);
       setEthAddress(data.ethAddress);
     }
+    onSnapshot(cupDocRef, (snapshot) => {
+      const cupPortfolios = snapshot.data()?.userPortfolios;
+      if (user.uid in cupPortfolios) {
+        setJoinedUser(true);
+        setUsd(cupPortfolios[user.uid]["usd"]);
+      }
+    });
     setLoading(false);
   };
 
@@ -103,15 +111,35 @@ const CupDetails: NextPage = () => {
               {moment(startDate.toDate()).format("M/D/YYYY")}&nbsp;-&nbsp;
               {moment(endDate.toDate()).format("M/D/YYYY")}
             </h6>
+            {!joinedUser ? (
+              <div className={styles.center}>
+                <h4 className={styles.joinnow}>
+                  This Cup is currently accepting players. Join now!
+                </h4>
+                <div>
+                  <JoinCupDialog cup={{ name, id: cupid, buyIn, ethAddress }} />
+                </div>
+              </div>
+            ) : (
+              <div>
+                <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
+                <div className={styles.walleticon}>
+                  <Icon
+                    icon="cryptocurrency:usd"
+                    color="#83bd67"
+                    width="30"
+                    height="30"
+                  />
+                  <h6 className={styles.walletmoney}>{usd} USD</h6>
+                </div>
+                <h6 className={styles.asd}>Total: $123.12 USD</h6>
+                <h4 className={styles.ogbudget}>
+                  (Original budget: $123.12 USD)
+                </h4>
+              </div>
+            )}
           </div>
         )}
-        <Leaderboard cupid={cupid}/>
-        <h4 className={styles.center}>
-          This Cup is currently accepting players. Join now!
-        </h4>
-        <div className={styles.center}>
-          <JoinCupDialog cup={{ name, id: cupid, buyIn, ethAddress }} />
-        </div>
       </div>
     </div>
   );

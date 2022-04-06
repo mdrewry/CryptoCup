@@ -26,7 +26,7 @@ export default async function handler(
       res.status(500).json({ error: "Address mismatch." });
       return;
     }
-
+    
     await db.collection("users").doc(uid).update({ wallet: address });
   } catch (error) {
     console.log(error);
@@ -34,5 +34,5 @@ export default async function handler(
     return;
   }
 
-  res.status(200).json({ message: "Wallet linked successfully." });
+  res.status(200).json({ message: "Wallet linked successfully.", address });
 }
