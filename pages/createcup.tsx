@@ -216,7 +216,9 @@ const CreateCup: NextPage = () => {
       </div>
       <div className={createCupStyles.container}>
         {loading ? (
-          <CircularProgress />
+          <div className={createCupStyles.loading}>
+            <CircularProgress />
+          </div>
         ) : (
           <form autoComplete="off" onSubmit={createCupContract}>
             <FormControl>

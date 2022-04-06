@@ -26,3 +26,7 @@
     width: 300px;
   }
 }
+
+.loading {
+  min-height: 50vh;
+}
