@@ -40,7 +40,6 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
 
   return (
     <div className={styles.walleticon}>
-      <Icon icon="cryptocurrency:usd" color="#83bd67" width="30" height="30" />
       <div>
         {Object.keys(portfolios[user.uid]).map((key) => (
           <div key={key}>
