@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import cupstyles from "../styles/Cups.module.css";
 import React, { useState, useEffect, useContext } from "react";
+import update from "immutability-helper";
 import {
   doc,
   updateDoc,
@@ -9,12 +10,13 @@ import {
   getDocs,
   QueryDocumentSnapshot,
   DocumentData,
+  query,
+  where,
 } from "firebase/firestore";
 import styles from "../styles/Profile.module.css";
 import { makeStyles } from "@material-ui/core/styles";
 import { db } from "../config/firebase.config";
 import Router from "next/router";
-import { IconButton } from "@material-ui/core";
 import { UserContext } from "../context/UserProvider";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
@@ -22,9 +24,16 @@ import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputBase from "@mui/material/InputBase";
 import EditIcon from "@mui/icons-material/Edit";
-import { getDownloadURL, getStorage, ref, StorageReference, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  StorageReference,
+  uploadBytes,
+} from "firebase/storage";
 
 import moment from "moment";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 const Profile: NextPage = () => {
   const user = useContext(UserContext);
@@ -56,6 +65,7 @@ const Profile: NextPage = () => {
   const [fname, setFname] = React.useState(user.firstName);
   const [lname, setLname] = React.useState(user.lastName);
   const [email, setEmail] = React.useState(user.email);
+  const [coins, setCoins] = React.useState(user.newsPreferences);
   const cupsRef = collection(db, "cups");
   const editForm = () => {
     setEditMode(true);
@@ -64,9 +74,15 @@ const Profile: NextPage = () => {
     setEditMode(false);
   };
 
-  const editConfirm = () => {
+  const editConfirm =async () => {
     const userDocRef = doc(db, "users", user.uid);
-    updateDoc(userDocRef, { email: email, firstName: fname, lastName: lname, imageURL: tempImage });
+    updateDoc(userDocRef, {
+      email: email,
+      firstName: fname,
+      lastName: lname,
+      imageURL: tempImage,
+      newsPreferences: coins,
+    });
     setEditMode(false);
   };
   const changeFName = (event: {
@@ -172,17 +188,20 @@ const Profile: NextPage = () => {
                     accept="image/*"
                     onChange={async (e) => {
                       const storage = getStorage();
-                      console.log("hello");
-                      if(e.target.files){
-                        const storageRef=ref(storage, "images/"+e.target.files[0].name);
-                        uploadBytes(storageRef, e.target.files[0]).then((snapshot) => {
-                          getDownloadURL(snapshot.ref).then((downloadURL) => {
-                            setTempImage(downloadURL);
-                          });
-                        });
-                        
+                      if (e.target.files) {
+                        const storageRef = ref(
+                          storage,
+                          "images/" + e.target.files[0].name
+                        );
+                        uploadBytes(storageRef, e.target.files[0]).then(
+                          (snapshot) => {
+                            getDownloadURL(snapshot.ref).then((downloadURL) => {
+                              setTempImage(downloadURL);
+                            });
+                          }
+                        );
                       }
-                     }}
+                    }}
                     id="imageUpload"
                   />
                 </div>
@@ -226,8 +245,35 @@ const Profile: NextPage = () => {
             <h6 className={styles.subtitle}>
               {moment(user.birthday.toDate()).format("M/D/YYYY")}
             </h6>
-            <h4 className={styles.info}>News Preferences</h4>
-            <p className={styles.subtitle}>Select all that apply.</p>
+
+            <div>
+              <FormControl className={styles.title}>
+                <h4>News Preferences</h4>
+                <p>Select all that apply.</p>
+                <div>
+                  {coins.map((tag, i) => (
+                    <div key={i}>
+                      <FormControlLabel
+                        label={tag.coin + "("+tag.code+")"}
+                        labelPlacement="end"
+                        control={
+                          <Checkbox
+                            checked={tag.check}
+                            color="secondary"
+                            onChange={(e) => {
+                              const temp = update(coins, {
+                                [i]: { check: { $set: !coins[i].check } },
+                              });
+                              setCoins(temp);
+                            }}
+                          />
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
+              </FormControl>
+            </div>
           </div>
         ) : (
           <div>
@@ -257,21 +303,23 @@ const Profile: NextPage = () => {
             <h6 className={styles.subtitle}>{user.email}</h6>
 
             <h4 className={styles.info}>Birthday</h4>
-            <h6 className={styles.subtitle}>
-              {moment(user.birthday.toDate()).format("M/D/YYYY")}
-            </h6>
+            {user.birthday && (
+              <h6 className={styles.subtitle}>
+                {moment(user.birthday.toDate()).format("M/D/YYYY")}
+              </h6>
+            )}
 
             <h4 className={styles.info}>News Preferences</h4>
             <h6 className={styles.subtitle}>
-              {user.newsPreferences.map((tag) => (
-                <h6 className={styles.subtitle}>* {tag.toUpperCase()}</h6>
-              ))}
+              {user.newsPreferences.map(
+                (tag) =>
+                  tag.check && (
+                    <h6 className={styles.subtitle}>
+                      * {tag.coin} ({tag.code})
+                    </h6>
+                  )
+              )}
             </h6>
-            {user.newsPreferences.length != 0 ? (
-              <div></div>
-            ) : (
-              <h6 className={styles.subtitle}>* None</h6>
-            )}
 
             <h2 className={styles.info}>Cup History</h2>
             <h6 className={styles.info}>
