@@ -10,9 +10,11 @@ import DistributePrizesDialog from "../../Components/DistributePrizesDialog";
 import TradeCryptoDialog from "../../Components/TradeCryptoDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
-import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
+import { getDoc, Timestamp, doc, onSnapshot, getDocs } from "firebase/firestore";
 import { Icon } from "@iconify/react";
 import Leaderboard from "../../Components/Leaderboards";
+import CupWallet from "../../Components/CupWallet";
+
 
 const CupDetails: NextPage = () => {
   const router = useRouter();
@@ -30,37 +32,55 @@ const CupDetails: NextPage = () => {
   const [joinedUser, setJoinedUser] = useState(false);
   const [ethAddress, setEthAddress] = useState("");
   const [userPortfolios, setUserPortfolios] = useState<any>({});
+  const [cryptoInfo, setCryptoInfo] = useState<Array<any>>([]);
   const {
     query: { id },
   } = router;
   const user = useContext(UserContext);
 
   useEffect(() => {
-    if (cupid) {
-      const cupDocRef = doc(db, "cups", cupid);
-      const unsubscribe = onSnapshot(cupDocRef, async (snapshot) => {
-        const data: any = snapshot.data();
-        setImageURL(data.imageURL);
-        setName(data.name);
-        setCupType(data.cupType);
-        setDirectorID(data.director);
-        setCupState(data.currentState);
-        setBuyIn(data.buyIn);
-        setStartDate(data.startDate);
-        setEndDate(data.endDate);
-        setEthAddress(data.ethAddress);
-        setUserPortfolios(data.userPortfolios);
-        if (user.uid in data.userPortfolios) {
-          setJoinedUser(true);
-        }
-        const userDocRef = doc(db, "users", data.director);
-        const userDocSnap = await getDoc(userDocRef);
-        const userData: any = userDocSnap.data();
-        setDirector(userData.firstName + " " + userData.lastName);
-        setLoading(false);
-      });
-      return unsubscribe;
-    }
+    const cupDocRef = doc(db, "cups", cupid);
+    onSnapshot(cupDocRef, async (snapshot) => {
+      const data: any = snapshot.data();
+      setImageURL(data.imageURL);
+      setName(data.name);
+      setCupType(data.cupType);
+      setDirectorID(data.director);
+      setCupState(data.currentState);
+      setBuyIn(data.buyIn);
+      setStartDate(data.startDate);
+      setEndDate(data.endDate);
+      setEthAddress(data.ethAddress);
+      setUserPortfolios(data.userPortfolios);
+      if (user.uid in data.userPortfolios) {
+        setJoinedUser(true);
+      }
+      const userDocRef = doc(db, "users", data.director);
+      const userDocSnap = await getDoc(userDocRef);
+      const userData: any = userDocSnap.data();
+      setDirector(userData.firstName + " " + userData.lastName);
+      setLoading(false);
+    });
+    setLoading(false);
+  },[]);
+
+  // const updateCryptoInfo = async () => {
+  //     try {
+  //       const response = await fetch("/api/cryptoinfo");
+  //       const data = await response.json();
+  //       if (data.error) throw data.error.message;
+  //       //Router.push("/dashboard");
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   setLoading(false);
+  // };
+
+  useEffect(() => {
+    //updateCryptoInfo();
+    // setTimeout( () => {
+    //     setLoading(false);
+    //   },2000)
   }, []);
 
   return (
@@ -113,23 +133,16 @@ const CupDetails: NextPage = () => {
             ) : (
               <div>
                 <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
-                <div className={styles.walleticon}>
-                  <Icon
-                    icon="cryptocurrency:usd"
-                    color="#83bd67"
-                    width="30"
-                    height="30"
-                  />
-                  <h6 className={styles.walletmoney}>XD USD</h6>
-                </div>
-                <h6 className={styles.asd}>Total: $123.12 USD</h6>
+                <CupWallet cupid={cupid} portfolios={userPortfolios} />
+                <h6 className={styles.asd}>Total: $CUSTOM USD</h6>
                 <h4 className={styles.ogbudget}>
-                  (Original budget: $123.12 USD)
+                  (Original budget: $CUSTOM USD)
                 </h4>
                 <TradeCryptoDialog
                   cup={{ id: cupid, userPortfolio: userPortfolios[user.uid] }}
                 />
               </div>
+              
             )}
           </div>
         )}
