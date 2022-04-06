@@ -356,6 +356,15 @@ const CreateCup: NextPage = () => {
                     >
                       Create Cup
                     </Button>
+                    <Grid className={createCupStyles.center} item xs={12}>
+                      {user.wallet ? (
+                        <></>
+                      ) : (
+                        <p style={{ color: "red" }}>
+                          There is no wallet connected to this account.
+                        </p>
+                      )}
+                    </Grid>
                   </Grid>
                 </Grid>
               )}
