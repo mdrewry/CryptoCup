@@ -10,11 +10,16 @@ import DistributePrizesDialog from "../../Components/DistributePrizesDialog";
 import TradeCryptoDialog from "../../Components/TradeCryptoDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
-import { getDoc, Timestamp, doc, onSnapshot, getDocs } from "firebase/firestore";
+import {
+  getDoc,
+  Timestamp,
+  doc,
+  onSnapshot,
+  getDocs,
+} from "firebase/firestore";
 import { Icon } from "@iconify/react";
 import Leaderboard from "../../Components/Leaderboards";
 import CupWallet from "../../Components/CupWallet";
-
 
 const CupDetails: NextPage = () => {
   const router = useRouter();
@@ -62,7 +67,7 @@ const CupDetails: NextPage = () => {
       setLoading(false);
     });
     setLoading(false);
-  },[]);
+  }, []);
 
   // const updateCryptoInfo = async () => {
   //     try {
@@ -138,11 +143,12 @@ const CupDetails: NextPage = () => {
                 <h4 className={styles.ogbudget}>
                   (Original budget: $CUSTOM USD)
                 </h4>
-                <TradeCryptoDialog
-                  cup={{ id: cupid, userPortfolio: userPortfolios[user.uid] }}
-                />
+                {cupState === "active" && (
+                  <TradeCryptoDialog
+                    cup={{ id: cupid, userPortfolio: userPortfolios[user.uid] }}
+                  />
+                )}
               </div>
-              
             )}
           </div>
         )}
