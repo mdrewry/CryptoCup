@@ -115,7 +115,17 @@ const CupDetails: NextPage = () => {
               />
             )}
             <h5 className={styles.name}>{name}</h5>
-            <div className={styles.cuptype}>{cupType}</div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <div className={styles.cuptype}>{cupType}</div>
+              <div style={{ width: 20 }} />
+              <div className={styles.cuptype}>{cupState}</div>
+            </div>
             <h6 className={styles.commis}>Cup Commissioner: {director}</h6>
             <h6 className={styles.buyin}>Buy-In: {buyIn} ETH</h6>
             <h6 className={styles.date}>
@@ -135,9 +145,11 @@ const CupDetails: NextPage = () => {
               <div>
                 <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
                 <CupWallet cupid={cupid} portfolios={userPortfolios} />
-                <h6 className={styles.asd}>Total: $CUSTOM USD</h6>
+                <h6 className={styles.asd}>
+                  Total: ${userPortfolios[user.uid]["USD"]}
+                </h6>
                 <h4 className={styles.ogbudget}>
-                  (Original budget: $CUSTOM USD)
+                  (Original budget: ${userPortfolios[user.uid]["USD"]})
                 </h4>
                 {cupState === "active" && (
                   <TradeCryptoDialog
