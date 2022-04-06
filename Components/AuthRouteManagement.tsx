@@ -35,6 +35,7 @@ const AuthRouteManagement = ({
         "news",
         "createcup",
         "joincup",
+        "profile",
       ].some((r) => r === parsedPath)
     ) {
       Router.push("/");
