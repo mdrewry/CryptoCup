@@ -102,22 +102,18 @@ const CupDetails: NextPage = () => {
           <p>loading</p>
         ) : (
           <div>
-            {user.uid === directorID &&
-              moment(startDate.toDate()).isBefore(moment()) &&
-              cupState === "created" && (
-                <EndRegistrationDialog cup={{ id: cupid, ethAddress }} />
-              )}
-            {user.uid === directorID &&
-              moment(endDate.toDate()).isBefore(moment()) &&
-              cupState === "active" && (
-                <DistributePrizesDialog
-                  cup={{
-                    id: cupid,
-                    ethAddress,
-                    rankings: Object.keys(userPortfolios),
-                  }}
-                />
-              )}
+            {user.uid === directorID && cupState === "created" && (
+              <EndRegistrationDialog cup={{ id: cupid, ethAddress }} />
+            )}
+            {user.uid === directorID && cupState === "active" && (
+              <DistributePrizesDialog
+                cup={{
+                  id: cupid,
+                  ethAddress,
+                  rankings: Object.keys(userPortfolios),
+                }}
+              />
+            )}
             <h5 className={styles.name}>{name}</h5>
             <div className={styles.cuptype}>{cupType}</div>
             <h6 className={styles.commis}>Cup Commissioner: {director}</h6>
