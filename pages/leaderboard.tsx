@@ -53,7 +53,7 @@ const Leaderboard: NextPage = () => {
 
             <h1>Leaderboards</h1>
             <h4>Global Leaderboards: Total Wins</h4>
-            <Board cupid={""}/>
+            <Board cupid={""} portfolios={[]}/>
             
         </div>
         )

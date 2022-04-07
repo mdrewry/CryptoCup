@@ -20,6 +20,7 @@ import {
 import { Icon } from "@iconify/react";
 import Leaderboard from "../../Components/Leaderboards";
 import CupWallet from "../../Components/CupWallet";
+import Grid from "@mui/material/Grid";
 
 const CupDetails: NextPage = () => {
   const router = useRouter();
@@ -133,35 +134,43 @@ const CupDetails: NextPage = () => {
               {moment(endDate.toDate()).format("M/D/YYYY")}
             </h6>
             {!joinedUser ? (
-              <div className={styles.center}>
-                <h4 className={styles.joinnow}>
-                  This Cup is currently accepting players. Join now!
-                </h4>
-                <div>
-                  <JoinCupDialog cup={{ name, id: cupid, buyIn, ethAddress }} />
+              <div>
+                <div className={styles.center}>
+                  <h4 className={styles.joinnow}>
+                    This Cup is currently accepting players. Join now!
+                  </h4>
+                  <div>
+                    <JoinCupDialog cup={{ name, id: cupid, buyIn, ethAddress }} />
+                  </div>
                 </div>
+                <h5>Standings:</h5>
+                <Leaderboard cupid={cupid} portfolios={userPortfolios} />
               </div>
             ) : (
-              <div>
-                <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
-                <CupWallet cupid={cupid} portfolios={userPortfolios} />
-                <h6 className={styles.asd}>
-                  Total: ${userPortfolios[user.uid]["USD"]}
-                </h6>
-                <h4 className={styles.ogbudget}>
-                  (Original budget: ${userPortfolios[user.uid]["USD"]})
-                </h4>
-                {cupState === "active" && (
-                  <TradeCryptoDialog
-                    cup={{ id: cupid, userPortfolio: userPortfolios[user.uid] }}
-                  />
-                )}
-              </div>
+              <Grid container>
+                <Grid item xs={6}>
+                  <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
+                  <CupWallet cupid={cupid} portfolios={userPortfolios} />
+                  <h6 className={styles.asd}>
+                    Total: ${userPortfolios[user.uid]["USD"]}
+                  </h6>
+                  <h4 className={styles.ogbudget}>
+                    (Original budget: ${userPortfolios[user.uid]["USD"]})
+                  </h4>
+                  {cupState === "active" && (
+                    <TradeCryptoDialog
+                      cup={{ id: cupid, userPortfolio: userPortfolios[user.uid] }}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={6}>
+                  <h5 className={styles.cupwallet}>Standings:</h5>
+                  <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                </Grid>
+              </Grid>
             )}
           </div>
         )}
-        <h1>Standing</h1>
-        <Leaderboard cupid={cupid} portfolios={userPortfolios} />
       </div>
     </div>
   );

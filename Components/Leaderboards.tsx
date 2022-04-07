@@ -89,15 +89,15 @@ const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
       ) : (
         <div>
           {leaderboard.map((c, index) => (
-            <Grid container>
-              <h5>{index + 1}</h5>
-              <Grid item xs={1} md={1} lg={1} xl={1}>
+            <Grid container className={cupstyles.center}>
+              <h5 className={cupstyles.rankNum}>{index + 1}</h5>
+              <Grid item xs={1} md={1} lg={1} xl={2}>
                 <img
                   className={cupstyles.leaderboardProfile}
                   src={c.imageURL}
                 />
               </Grid>
-              <Grid item xs={12} md={6} lg={4} xl={3}>
+              <Grid item xs={12} md={6} lg={4} xl={4}>
                 <h6>
                   {c.firstName} {c.lastName}
                 </h6>

@@ -77,7 +77,7 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
           width: 242,
           color: "white",
           marginTop: 49,
-          marginBottom: 307,
+          marginBottom: 49,
         }}
         onClick={toggleDialog}
       >
