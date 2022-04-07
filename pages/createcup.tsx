@@ -362,7 +362,7 @@ const CreateCup: NextPage = () => {
                       {user.wallet ? (
                         <></>
                       ) : (
-                        <p style={{ color: "red" }}>
+                        <p style={{ color: "red", fontStyle: "italic", marginTop: "15px", marginBottom: "5px" }}>
                           There is no wallet connected to this account.
                         </p>
                       )}

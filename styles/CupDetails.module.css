@@ -72,6 +72,18 @@
     margin-left: 27px;
 }
 
+.conversion{
+    font-size: 14px;
+    line-height: 30px;
+    margin-left: 57px;
+    margin-bottom: 11px;
+}
+
+.total{
+    text-align: right;
+    margin-top: 16px;
+}
+
 .ogbudget{
     font-size: 14px;
     line-height: 30px;
