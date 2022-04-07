@@ -1,7 +1,7 @@
 .padding{
     margin-top: 32px;
     margin-left: 44px;
-    min-height: 100vh;
+    /* min-height: 100vh; */
 }
 
 .cuptype{
@@ -43,6 +43,15 @@
     margin-bottom: 18px;
 }
 
+.center {
+    align-items: center;
+    margin-bottom: 27px;
+}
+
+.rankNum {
+    margin-right: 15px;
+}
+
 .leaderboardProfile{
     display: inline-grid;
     width: 79px;
@@ -51,7 +60,6 @@
     border-color: #ffffff;
     border-radius: 50%;
     border-style: 'solid';
-    margin-bottom: 27px;
     counter-set: rank 1;
 }
 

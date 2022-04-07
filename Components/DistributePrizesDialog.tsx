@@ -77,7 +77,8 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
           padding: 10,
           width: 260,
           color: "white",
-          marginBottom: 30,
+          marginTop: 21,
+          marginBottom: 31,
         }}
         onClick={toggleDialog}
       >

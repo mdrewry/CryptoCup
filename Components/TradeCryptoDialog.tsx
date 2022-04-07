@@ -173,6 +173,7 @@ const TradeCryptoDialog = ({ cup }: DistributePrizesDialogProps) => {
           padding: 10,
           width: 260,
           color: "white",
+          marginTop: 15,
           marginBottom: 30,
         }}
         onClick={toggleDialog}

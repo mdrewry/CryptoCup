@@ -70,7 +70,8 @@ const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
           padding: 10,
           width: 242,
           color: "white",
-          marginBottom: 30,
+          marginTop: 21,
+          marginBottom: 31,
         }}
         onClick={toggleDialog}
       >
