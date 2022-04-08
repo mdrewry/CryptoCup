@@ -27,6 +27,7 @@ const CupDetails: NextPage = () => {
   const [directorID, setDirectorID] = useState("");
   const [cupState, setCupState] = useState("");
   const [buyIn, setBuyIn] = useState(0);
+  const [totalBudget, setTotalBudget] = useState(0);
   const [startDate, setStartDate] = useState(Timestamp.now());
   const [endDate, setEndDate] = useState(Timestamp.now());
   const [joinedUser, setJoinedUser] = useState(false);
@@ -52,6 +53,7 @@ const CupDetails: NextPage = () => {
         setEndDate(data.endDate);
         setEthAddress(data.ethAddress);
         setUserPortfolios(data.userPortfolios);
+        setTotalBudget(data.totalBudget);
         if (user.uid in data.userPortfolios) {
           setJoinedUser(true);
         }
@@ -135,7 +137,7 @@ const CupDetails: NextPage = () => {
                   <div className={styles.total}>
                     <h6>Total: ${userPortfolios[user.uid]["USD"]} USD</h6>
                     <h4 className={styles.ogbudget}>
-                      (Original budget: ${userPortfolios[user.uid]["USD"]} USD)
+                      (Original budget: ${totalBudget} USD)
                     </h4>
                   </div>
                   {cupState === "active" && (
