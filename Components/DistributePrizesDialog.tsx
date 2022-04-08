@@ -89,7 +89,8 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
   return (
     <div>
       <h4>
-        This Cup is finished. Click here to distribute prizes to the winners!
+        When your cup is finished, click here to distribute prizes to the
+        winners!
       </h4>
       <Button
         style={{
