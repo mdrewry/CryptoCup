@@ -46,7 +46,7 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
               height="28"
             />
             <h6 className={styles.walletmoney}>
-              {key} {portfolios[user.uid][key]} 
+              {key} {(portfolios[user.uid][key]).toFixed(3)} 
             </h6>
           </div>
           <h4 className={styles.conversion}>${(portfolios[user.uid][key] * cryptos[key].price).toFixed(2)}</h4> 
