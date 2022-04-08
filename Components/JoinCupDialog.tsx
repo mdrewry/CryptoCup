@@ -14,6 +14,7 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
   const [open, setOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("");
   const toggleDialog = () => {
     setOpen(!open);
     setErrorText("ㅤ");
@@ -21,19 +22,25 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
 
   const handlePayment = async () => {
     setLoading(true);
+    setLoadingText("Opening Metamask");
     try {
       const cupContract = await getSmartContract(user.wallet, cup.ethAddress);
+      setLoadingText("Awaiting Transaction");
       const txn = await cupContract.joinCup({
         gasLimit: 9000000,
         value: Web3.utils.toWei(cup.buyIn.toString(), "ether"),
       });
+      setLoadingText("Verifying Transaction");
       const receipt = await txn.wait();
+      setLoadingText("Success");
       await handleSignup();
     } catch (error) {
       console.log(error);
       setErrorText("Transaction Failed");
-      setLoading(false);
     }
+    toggleDialog();
+    setLoading(false);
+    setLoadingText("");
   };
   const handleSignup = async () => {
     try {
@@ -60,8 +67,6 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
     } catch (err: any) {
       console.log(err);
     }
-    setLoading(false);
-    toggleDialog();
   };
   return (
     <div>
@@ -90,6 +95,7 @@ const JoinCupDialog = ({ cup }: JoinCupProps) => {
         errorText={errorText}
         open={open}
         loading={loading}
+        loadingText={loadingText}
         handleSubmit={handlePayment}
         toggleDialog={toggleDialog}
       >

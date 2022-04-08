@@ -15,6 +15,7 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
   const [open, setOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("");
   const toggleDialog = () => {
     setOpen(!open);
     setErrorText("ㅤ");
@@ -38,6 +39,7 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
 
   const handleSubmit = async () => {
     setLoading(true);
+    setLoadingText("Calculating Rankings");
     const playersSorted = calculateRankings();
     try {
       const wallets = await Promise.all(
@@ -47,14 +49,20 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
           return data.wallet;
         })
       );
+      setLoadingText("Opening Metamask");
       const cupContract = await getSmartContract(user.wallet, cup.ethAddress);
+      setLoadingText("Awaiting Transaction");
       const txn = await cupContract.endCup(wallets);
+      setLoadingText("Verifying Transaction");
       const receipt = await txn.wait();
+      setLoadingText("Success");
       await handleCupUpdate();
     } catch (error) {
       setErrorText("Transaction Failed");
-      setLoading(false);
     }
+    toggleDialog();
+    setLoading(false);
+    setLoadingText("");
   };
   const handleCupUpdate = async () => {
     try {
@@ -77,8 +85,6 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
     } catch (err: any) {
       console.log(err);
     }
-    setLoading(false);
-    toggleDialog();
   };
   return (
     <div>
@@ -110,6 +116,7 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
         errorText={errorText}
         open={open}
         loading={loading}
+        loadingText={loadingText}
         handleSubmit={handleSubmit}
         toggleDialog={toggleDialog}
       />

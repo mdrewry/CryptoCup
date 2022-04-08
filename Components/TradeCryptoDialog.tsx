@@ -69,7 +69,7 @@ type DistributePrizesDialogProps = {
 const TradeCryptoDialog = ({ cup }: DistributePrizesDialogProps) => {
   const initValues = {
     transferFrom: "USD",
-    transferAmount: "",
+    transferAmount: "1000",
     transferTo: "BTC",
   };
   const user = useContext(UserContext);
@@ -87,6 +87,7 @@ const TradeCryptoDialog = ({ cup }: DistributePrizesDialogProps) => {
   };
 
   const handleSubmit = async () => {
+    if (!validate(values)) return;
     setLoading(true);
     try {
       const response = await fetch("/api/tradecrypto", {
@@ -115,7 +116,6 @@ const TradeCryptoDialog = ({ cup }: DistributePrizesDialogProps) => {
   };
   const handleInputValue = (e: any) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setValues({
       ...values,
       [name]: value,
@@ -126,16 +126,28 @@ const TradeCryptoDialog = ({ cup }: DistributePrizesDialogProps) => {
   const validate: any = (fieldValues = values) => {
     let temp: any = { ...errors };
     if (fieldValues.transferFrom) {
-      if (cup.userPortfolio[fieldValues.transferFrom] > 0) {
+      if (cup.userPortfolio[fieldValues.transferFrom] === 0) {
+        setErrorText("Select a currency with a balance.");
+        temp.transferFrom = "Select a currency with a balance.";
+      } else if (fieldValues.transferFrom === values.transferTo) {
+        setErrorText("Cannot transfer between same currency.");
+        temp.transferFrom = "Cannot transfer between same currency.";
+      } else {
         temp.transferFrom = "";
         setErrorText("");
+      }
+    }
+    if (fieldValues.transferTo) {
+      if (fieldValues.transferTo === values.transferFrom) {
+        setErrorText("Cannot transfer between same currency.");
+        temp.transferTo = "Cannot transfer between same currency.";
       } else {
-        setErrorText("Select a currency with a balance.");
-        temp.transferFrom = "Select a valid currency.";
+        temp.transferTo = "";
+        setErrorText("");
       }
     }
     if (fieldValues.transferAmount) {
-      const regexCheck = /^[0-9]{1,5}(?:\.[0-9]{1,5})?$/.test(
+      const regexCheck = /^[0-9]{1,8}(?:\.[0-9]{1,5})?$/.test(
         fieldValues.transferAmount
       );
       if (!regexCheck) {
@@ -146,13 +158,8 @@ const TradeCryptoDialog = ({ cup }: DistributePrizesDialogProps) => {
       ) {
         temp.transferAmount = "";
       } else {
-        temp.transferAmount = "Enter a valid amount.";
+        temp.transferAmount = "Cannot afford transaction.";
       }
-    }
-    if (fieldValues.transferFrom) {
-      if (fieldValues.transferFrom === fieldValues.transferTo)
-        temp.transferTo = "Cannot transfer between same currency.";
-      else temp.transferTo = "";
     }
     setErrors({
       ...temp,
@@ -188,6 +195,7 @@ const TradeCryptoDialog = ({ cup }: DistributePrizesDialogProps) => {
         errorText={errorText}
         open={open}
         loading={loading}
+        loadingText={""}
         handleSubmit={handleSubmit}
         toggleDialog={toggleDialog}
       >
@@ -202,11 +210,13 @@ const TradeCryptoDialog = ({ cup }: DistributePrizesDialogProps) => {
             helperText: errors["transferFrom"],
           })}
         >
-          {Object.keys(cup.userPortfolio).map((key) => (
-            <MenuItem key={key} value={key}>
-              {key} {`(Available: ${cup.userPortfolio[key]})`}
-            </MenuItem>
-          ))}
+          {Object.keys(cup.userPortfolio)
+            .sort()
+            .map((key) => (
+              <MenuItem key={key} value={key}>
+                {key} {`(Available: ${cup.userPortfolio[key]})`}
+              </MenuItem>
+            ))}
         </Select>
         <p className={createCupStyles.fieldName}>Amount: </p>
         <TextField
@@ -231,11 +241,13 @@ const TradeCryptoDialog = ({ cup }: DistributePrizesDialogProps) => {
             helperText: errors["transferTo"],
           })}
         >
-          {Object.keys(cup.userPortfolio).map((key) => (
-            <MenuItem key={key} value={key}>
-              {key}
-            </MenuItem>
-          ))}
+          {Object.keys(cup.userPortfolio)
+            .sort()
+            .map((key) => (
+              <MenuItem key={key} value={key}>
+                {key}
+              </MenuItem>
+            ))}
         </Select>
       </ActionDialog>
     </div>
