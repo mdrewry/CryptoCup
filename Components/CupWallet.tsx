@@ -36,14 +36,14 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
   };
   return (
     <div>
-      {Object.keys(portfolios[user.uid]).map((key) => (
+      {Object.keys(portfolios[user.uid]).sort().map((key) => (
         <div key={key}>
           <div className={styles.walleticon}>
             <Icon
-              icon="cryptocurrency:usd"
-              color="#83bd67"
-              width="30"
-              height="30"
+              icon={`cryptocurrency:${key.toLowerCase()}`}
+              color="#40bd67"
+              width="28"
+              height="28"
             />
             <h6 className={styles.walletmoney}>
               {key} {portfolios[user.uid][key]}
@@ -52,7 +52,22 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
           {/* <h4 className={styles.conversion}>(444.33 USD as of 3/1/22 12:00 AM)</h4> */}
         </div>
       ))}
-      <Button onClick={handleUpdate}>Update Crypto Prices</Button>
+      <Button
+        style={{
+          background: "#2F3869",
+          fontFamily: "Space Mono",
+          fontSize: 15  ,
+          borderRadius: 60,
+          fontWeight: 600,
+          height: 35,
+          padding: 10,
+          width: 215,
+          color: "white",
+          marginTop: 10,
+          marginBottom: 5,
+        }}
+       onClick={handleUpdate}>Update Crypto Prices
+       </Button>
     </div>
   );
 };
