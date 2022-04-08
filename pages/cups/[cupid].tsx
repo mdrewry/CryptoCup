@@ -10,13 +10,7 @@ import DistributePrizesDialog from "../../Components/DistributePrizesDialog";
 import TradeCryptoDialog from "../../Components/TradeCryptoDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
-import {
-  getDoc,
-  Timestamp,
-  doc,
-  onSnapshot,
-  getDocs,
-} from "firebase/firestore";
+import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
 import Leaderboard from "../../Components/Leaderboards";
 import CupWallet from "../../Components/CupWallet";
 import Grid from "@mui/material/Grid";
@@ -69,12 +63,6 @@ const CupDetails: NextPage = () => {
     setLoading(false);
   }, []);
 
-  useEffect(() => {
-    // setTimeout( () => {
-    //     setLoading(false);
-    //   },2000)
-  }, []);
-
   return (
     <div>
       <Head>
@@ -97,7 +85,7 @@ const CupDetails: NextPage = () => {
                 cup={{
                   id: cupid,
                   ethAddress,
-                  rankings: Object.keys(userPortfolios),
+                  userPortfolios,
                 }}
               />
             )}
@@ -126,7 +114,9 @@ const CupDetails: NextPage = () => {
                     This Cup is currently accepting players. Join now!
                   </h4>
                   <div>
-                    <JoinCupDialog cup={{ name, id: cupid, buyIn, ethAddress }} />
+                    <JoinCupDialog
+                      cup={{ name, id: cupid, buyIn, ethAddress }}
+                    />
                   </div>
                 </div>
                 <h5>Standings:</h5>
@@ -137,15 +127,20 @@ const CupDetails: NextPage = () => {
                 <Grid item xs={3}>
                   <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
                   <CupWallet cupid={cupid} portfolios={userPortfolios} />
-                  <WalletLine/>
+                  <WalletLine />
                   <div className={styles.total}>
                     <h6>Total: ${userPortfolios[user.uid]["USD"]} USD</h6>
-                    <h4 className={styles.ogbudget}>(Original budget: ${userPortfolios[user.uid]["USD"]} USD)</h4>
+                    <h4 className={styles.ogbudget}>
+                      (Original budget: ${userPortfolios[user.uid]["USD"]} USD)
+                    </h4>
                   </div>
                   {cupState === "active" && (
                     <div className={styles.center}>
                       <TradeCryptoDialog
-                        cup={{ id: cupid, userPortfolio: userPortfolios[user.uid] }}
+                        cup={{
+                          id: cupid,
+                          userPortfolio: userPortfolios[user.uid],
+                        }}
                       />
                     </div>
                   )}
