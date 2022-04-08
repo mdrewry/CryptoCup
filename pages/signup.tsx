@@ -22,7 +22,7 @@ import { auth } from "../config/firebase.config";
 
 const Signup: NextPage = () => {
   const useStyles = makeStyles((theme) => ({
-    textField: {
+    text: {
       [`& fieldset`]: {
         borderRadius: 25,
       },
@@ -83,6 +83,7 @@ const Signup: NextPage = () => {
       },
     },
   }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const classes = useStyles();
 
   const months = [1,2,3,4,5,6,7,8,9,10,11,12];
@@ -304,7 +305,7 @@ const Signup: NextPage = () => {
               </Grid>
               <Grid item xs>
                 <TextField
-                  className={classes.textField}
+                  className={classes.text}
                   onChange={handleInputValue}
                   onBlur={handleInputValue}
                   name={"firstName"}
@@ -321,7 +322,7 @@ const Signup: NextPage = () => {
               </Grid>
               <Grid item xs>
                 <TextField
-                  className={classes.textField}
+                  className={classes.text}
                   onChange={handleInputValue}
                   onBlur={handleInputValue}
                   name={"lastName"}
@@ -338,7 +339,7 @@ const Signup: NextPage = () => {
               </Grid>
               <Grid item xs>
                 <TextField
-                  className={classes.textField}
+                  className={classes.text}
                   onChange={handleInputValue}
                   onBlur={handleInputValue}
                   name={"email"}
@@ -355,7 +356,7 @@ const Signup: NextPage = () => {
               </Grid>
               <Grid item xs>
                 <TextField
-                  className={classes.textField}
+                  className={classes.text}
                   onChange={handleInputValue}
                   onBlur={handleInputValue}
                   name={"password"}
@@ -373,7 +374,7 @@ const Signup: NextPage = () => {
               </Grid>
               <Grid item xs>
                 <TextField
-                  className={classes.textField}
+                  className={classes.text}
                   onChange={handleInputValue}
                   onBlur={handleInputValue}
                   name={"confirm"}
@@ -428,7 +429,7 @@ const Signup: NextPage = () => {
                 >
                   <MenuItem value="none" disabled>Month</MenuItem>
                   {months.map((index) => (
-                    <MenuItem value={index}>{index}</MenuItem>
+                    <MenuItem key={index} value={index}>{index}</MenuItem>
                   ))}
                 </TextField>
                 }

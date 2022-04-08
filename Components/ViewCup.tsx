@@ -62,7 +62,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
     const unsubscribeSnapshot = onSnapshot(cupsInUserRef, async (snapshot) => {
       let results: Array<any> = [];
       const userCups: Array<any> = snapshot.docs[0]?.data().cups;
-      if (userCups !== null) {
+      if (userCups !== undefined) {
         await Promise.all(
           userCups.map(async (cupRef: any) => {
             const doc = await getDoc(cupRef);
@@ -111,8 +111,8 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
                   .toLowerCase()
                   .includes(cupNameFilter.toLowerCase());
             })
-            .map((c) => (
-              <Grid item xs={12} md={6} lg={4} xl={3}>
+            .map((c, index) => (
+              <Grid key={index} item xs={12} md={6} lg={4} xl={3}>
                 <Button onClick={(e) => handleRedirect(c.id)}>
                   <div style={{ textAlign: "left", textTransform: "none" }}>
                     <img

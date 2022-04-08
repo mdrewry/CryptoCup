@@ -47,13 +47,14 @@ const Footer = () => {
             </Button>
           </Grid>
           <Grid item>
-            {user.uid ? (
+          {/* eslint-disable-next-line react-hooks/exhaustive-deps */}
+            {user.uid !== "" ? (
               <Button onClick={logout}>
-                <a>SIGN OUT</a>
+                <a suppressHydrationWarning>SIGN OUT</a>
               </Button>
             ) : (
               <Button onClick={login}>
-                <a>LOG IN/SIGN UP</a>
+                <a suppressHydrationWarning>LOG IN/SIGN UP</a>
               </Button>
             )}
           </Grid>

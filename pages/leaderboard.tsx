@@ -13,22 +13,22 @@ const Leaderboard: NextPage = () => {
     const [leaderboard,setLeaderboard]=useState<QueryDocumentSnapshot<DocumentData>[]>([]);
     const [loading,setLoading] = useState<boolean>(true);
     const usersRef=collection(db,"users");
-    const getLeaderboard=async()=>{
-        const data=await getDocs(usersRef);
-        const result: QueryDocumentSnapshot<DocumentData>[] = [];
-        data.forEach((c)=>{
-            result.push(c);
-        }
-        )
-        // setCups(data.docs.map((item)=>{
-        //     return {...item.data(),id:item.id}
-        // }));
-        
-        setLeaderboard(result);
-        // setLoading(false);
-    };
     
     useEffect(()=>{
+        const getLeaderboard=async()=>{
+            const data=await getDocs(usersRef);
+            const result: QueryDocumentSnapshot<DocumentData>[] = [];
+            data.forEach((c)=>{
+                result.push(c);
+            }
+            )
+            // setCups(data.docs.map((item)=>{
+            //     return {...item.data(),id:item.id}
+            // }));
+            
+            setLeaderboard(result);
+            // setLoading(false);
+        };
         getLeaderboard();
         setTimeout( () => {
             setLoading(false);
