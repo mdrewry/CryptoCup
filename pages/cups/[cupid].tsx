@@ -40,7 +40,7 @@ const CupDetails: NextPage = () => {
   useEffect(() => {
     const cupDocRef = doc(db, "cups", cupid);
     onSnapshot(cupDocRef, async (snapshot) => {
-      if(snapshot.exists()){
+      if (snapshot.exists()) {
         const data: any = snapshot.data();
         setImageURL(data.imageURL);
         setName(data.name);
@@ -122,7 +122,9 @@ const CupDetails: NextPage = () => {
                   </div>
                 </div>
                 <h5>Standings:</h5>
-                <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                {Object.keys(userPortfolios).length > 0 && (
+                  <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                )}
               </div>
             ) : (
               <Grid container spacing={5}>
@@ -149,7 +151,9 @@ const CupDetails: NextPage = () => {
                 </Grid>
                 <Grid item xs={9}>
                   <h5 className={styles.cupwallet}>Standings:</h5>
-                  <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                  {Object.keys(userPortfolios).length > 0 && (
+                    <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                  )}
                 </Grid>
               </Grid>
             )}
