@@ -40,7 +40,7 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
         <div key={key}>
           <div className={styles.walleticon}>
             <Icon
-              icon={`cryptocurrency:${key.toLowerCase()}`}
+              icon={key !== "SHIB" ?`cryptocurrency:${ key.toLowerCase()}`: "cryptocurrency:sand"}
               color="#40bd67"
               width="28"
               height="28"
