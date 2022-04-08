@@ -64,10 +64,12 @@ const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
         const cupUsers: Array<any> = snapshot.docs[0]?.data().users;
         //const portfolios = (await getDoc(cupDocRef)).get("userPortfolios");
         if (cupUsers != null) {
+          const portfolios = (await getDoc(cupDocRef)).get("userPortfolios");
           await Promise.all(
             cupUsers.map(async (userRefs) => {
               const doc = await getDoc(userRefs);
               const data: any = doc.data();
+
               const playerPortfolio = portfolios[doc.id];
               let total = 0;
               Object.entries(playerPortfolio).map((x: any) => {
