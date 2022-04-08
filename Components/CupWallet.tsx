@@ -49,7 +49,7 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
               {key} {(portfolios[user.uid][key]).toFixed(3)} 
             </h6>
           </div>
-          <h4 className={styles.conversion}>${(portfolios[user.uid][key] * cryptos[key].price).toFixed(2)}</h4> 
+          <h4 className={styles.conversion}>${(portfolios[user.uid][key] * cryptos[key].price).toFixed(2)} ({(cryptos[key].day).toFixed(2)}%)</h4> 
         </div>
       ))}
       <Button
