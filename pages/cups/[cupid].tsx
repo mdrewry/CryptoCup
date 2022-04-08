@@ -15,6 +15,8 @@ import Leaderboard from "../../Components/Leaderboards";
 import CupWallet from "../../Components/CupWallet";
 import Grid from "@mui/material/Grid";
 import WalletLine from "../../Icons/WalletLine.js";
+import { CryptoContext } from "../../context/CryptoProvider";
+
 
 const CupDetails: NextPage = () => {
   const router = useRouter();
@@ -27,6 +29,8 @@ const CupDetails: NextPage = () => {
   const [directorID, setDirectorID] = useState("");
   const [cupState, setCupState] = useState("");
   const [buyIn, setBuyIn] = useState(0);
+  const [totalBudget, setTotalBudget] = useState(0);
+  const [earnings, setEarnings] = useState(0);
   const [startDate, setStartDate] = useState(Timestamp.now());
   const [endDate, setEndDate] = useState(Timestamp.now());
   const [joinedUser, setJoinedUser] = useState(false);
@@ -36,6 +40,7 @@ const CupDetails: NextPage = () => {
     query: { id },
   } = router;
   const user = useContext(UserContext);
+  const cryptos = useContext(CryptoContext);
 
   useEffect(() => {
     const cupDocRef = doc(db, "cups", cupid);
@@ -52,8 +57,16 @@ const CupDetails: NextPage = () => {
         setEndDate(data.endDate);
         setEthAddress(data.ethAddress);
         setUserPortfolios(data.userPortfolios);
+        setTotalBudget(data.totalBudget);
+        
         if (user.uid in data.userPortfolios) {
           setJoinedUser(true);
+          let total = 0;
+          Object.entries(data.userPortfolios[user.uid]).map((x: any) => {
+            total = total + cryptos[x[0]].price * x[1];
+          });
+          total = parseFloat(total.toFixed(2));
+          setEarnings(total);
         }
         const userDocRef = doc(db, "users", data.director);
         const userDocSnap = await getDoc(userDocRef);
@@ -133,9 +146,9 @@ const CupDetails: NextPage = () => {
                   <CupWallet cupid={cupid} portfolios={userPortfolios} />
                   <WalletLine />
                   <div className={styles.total}>
-                    <h6>Total: ${userPortfolios[user.uid]["USD"]} USD</h6>
+                    <h6>Total: ${earnings} USD</h6>
                     <h4 className={styles.ogbudget}>
-                      (Original budget: ${userPortfolios[user.uid]["USD"]} USD)
+                      (Original budget: ${totalBudget} USD)
                     </h4>
                   </div>
                   {cupState === "active" && (
