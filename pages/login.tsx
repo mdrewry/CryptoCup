@@ -45,6 +45,7 @@ const Login: NextPage = () => {
       },
     },
   }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const classes = useStyles();
 
   const initialFormValues = {
