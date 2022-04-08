@@ -254,7 +254,7 @@ const Profile: NextPage = () => {
                 <h4>News Preferences</h4>
                 <p>Select all that apply.</p>
                 <div>
-                  {coins.map((tag, i) => (
+                  {coins.map((tag:any, i) => (
                     <div key={i}>
                       <FormControlLabel
                         label={tag.coin + "(" + tag.code + ")"}
@@ -315,7 +315,7 @@ const Profile: NextPage = () => {
             <h4 className={styles.info}>News Preferences</h4>
             <h6 className={styles.subtitle}>
               {user.newsPreferences.map(
-                (tag) =>
+                (tag:any) =>
                   tag.check && (
                     <h6 className={styles.subtitle}>
                       * {tag.coin} ({tag.code})
