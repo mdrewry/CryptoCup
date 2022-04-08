@@ -33,7 +33,7 @@ export default async function handler(
     let { userPortfolios } = data;
     let portfolio: any = userPortfolios[userID];
     portfolio[transferFrom] -= parseFloat(transferAmount);
-    portfolio[transferTo] += tradeRatio * parseFloat(transferAmount);
+    portfolio[transferTo] += parseFloat((tradeRatio * parseFloat(transferAmount)).toFixed(5));
     userPortfolios[userID] = portfolio;
     await updateDoc(cupDocRef, {
       userPortfolios,
