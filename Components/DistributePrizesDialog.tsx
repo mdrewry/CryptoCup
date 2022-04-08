@@ -2,13 +2,15 @@ import React, { useContext, useState } from "react";
 import Button from "@mui/material/Button";
 import ActionDialog from "./ActionDialog";
 import { UserContext } from "../context/UserProvider";
+import { CryptoContext } from "../context/CryptoProvider";
 import { getSmartContract } from "../functions/smartContract";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../config/firebase.config";
 type DistributePrizesDialogProps = {
-  cup: { id: String; ethAddress: string; rankings: string[] };
+  cup: { id: String; ethAddress: string; userPortfolios: any };
 };
 const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
+  const cryptos = useContext(CryptoContext);
   const user = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -18,11 +20,28 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
     setErrorText("ㅤ");
   };
 
+  const calculateRankings = () => {
+    const portfolios = cup.userPortfolios;
+    const summedPortfolios = Object.keys(portfolios).map((key) => {
+      let total = 0;
+      Object.keys(portfolios[key]).forEach((ticker) => {
+        total += cryptos[ticker].price * portfolios[key][ticker];
+      });
+      total = parseFloat(total.toFixed(4));
+      return { playerID: key, total };
+    });
+    const sortedPortfolios = summedPortfolios.sort(
+      (a: any, b: any) => b.total - a.total
+    );
+    return sortedPortfolios.map((p) => p.playerID);
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
+    const playersSorted = calculateRankings();
     try {
       const wallets = await Promise.all(
-        cup.rankings.map(async (id) => {
+        playersSorted.map(async (id) => {
           const userDocSnap = await getDoc(doc(db, "users", id));
           const data: any = userDocSnap.data();
           return data.wallet;

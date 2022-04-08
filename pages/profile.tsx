@@ -65,6 +65,7 @@ const Profile: NextPage = () => {
   const [fname, setFname] = React.useState(user.firstName);
   const [lname, setLname] = React.useState(user.lastName);
   const [email, setEmail] = React.useState(user.email);
+  const [birthday, setBirthday] = React.useState(user.birthday);
   const [coins, setCoins] = React.useState(user.newsPreferences);
   const cupsRef = collection(db, "cups");
   const editForm = () => {
@@ -74,7 +75,7 @@ const Profile: NextPage = () => {
     setEditMode(false);
   };
 
-  const editConfirm =async () => {
+  const editConfirm = async () => {
     const userDocRef = doc(db, "users", user.uid);
     updateDoc(userDocRef, {
       email: email,
@@ -242,19 +243,21 @@ const Profile: NextPage = () => {
             </div>
             <h6 className={styles.title}>{user.uid}</h6>
             <h4 className={styles.title}>Birthday</h4>
-            <h6 className={styles.subtitle}>
-              {moment(user.birthday.toDate()).format("M/D/YYYY")}
-            </h6>
+            {birthday && (
+              <h6 className={styles.subtitle}>
+                {moment(birthday).format("M/D/YYYY")}
+              </h6>
+            )}
 
             <div>
               <FormControl className={styles.title}>
                 <h4>News Preferences</h4>
                 <p>Select all that apply.</p>
                 <div>
-                  {coins.map((tag, i) => (
+                  {coins.map((tag:any, i) => (
                     <div key={i}>
                       <FormControlLabel
-                        label={tag.coin + "("+tag.code+")"}
+                        label={tag.coin + "(" + tag.code + ")"}
                         labelPlacement="end"
                         control={
                           <Checkbox
@@ -303,16 +306,16 @@ const Profile: NextPage = () => {
             <h6 className={styles.subtitle}>{user.email}</h6>
 
             <h4 className={styles.info}>Birthday</h4>
-            {user.birthday && (
+            {birthday && (
               <h6 className={styles.subtitle}>
-                {moment(user.birthday.toDate()).format("M/D/YYYY")}
+                {moment(birthday).format("M/D/YYYY")}
               </h6>
             )}
 
             <h4 className={styles.info}>News Preferences</h4>
             <h6 className={styles.subtitle}>
               {user.newsPreferences.map(
-                (tag) =>
+                (tag:any) =>
                   tag.check && (
                     <h6 className={styles.subtitle}>
                       * {tag.coin} ({tag.code})
@@ -327,32 +330,34 @@ const Profile: NextPage = () => {
                 <p>loading</p>
               ) : (
                 <Grid container>
-                  {cups.map((c) => (
-                    <Grid item xs={4}>
-                      <Button onClick={(e) => handleRedirect(c.id)}>
-                        <div
-                          style={{ textAlign: "left", textTransform: "none" }}
-                        >
-                          <img
-                            className={cupstyles.placeholder}
-                            src={c.get("imageURL")}
-                          ></img>
-                          <h5 className={cupstyles.name}>{c.get("name")}</h5>
-                          <div className={cupstyles.cuptype}>
-                            {c.get("cupType")}
+                  {cups.map((c, i) => (
+                    <div key={i}>
+                      <Grid item xs={4}>
+                        <Button onClick={(e) => handleRedirect(c.id)}>
+                          <div
+                            style={{ textAlign: "left", textTransform: "none" }}
+                          >
+                            <img
+                              className={cupstyles.placeholder}
+                              src={c.get("imageURL")}
+                            ></img>
+                            <h5 className={cupstyles.name}>{c.get("name")}</h5>
+                            <div className={cupstyles.cuptype}>
+                              {c.get("cupType")}
+                            </div>
+                            <p>
+                              {moment(c.get("startDate").toDate()).format(
+                                "M/D/YYYY"
+                              )}
+                              &nbsp;-&nbsp;
+                              {moment(c.get("endDate").toDate()).format(
+                                "M/D/YYYY"
+                              )}
+                            </p>
                           </div>
-                          <p>
-                            {moment(c.get("startDate").toDate()).format(
-                              "M/D/YYYY"
-                            )}
-                            &nbsp;-&nbsp;
-                            {moment(c.get("endDate").toDate()).format(
-                              "M/D/YYYY"
-                            )}
-                          </p>
-                        </div>
-                      </Button>
-                    </Grid>
+                        </Button>
+                      </Grid>
+                    </div>
                   ))}
                 </Grid>
               )}

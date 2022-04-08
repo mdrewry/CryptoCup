@@ -10,6 +10,7 @@ import Footer from "../Components/Footer";
 import AuthRouteManagement from "../Components/AuthRouteManagement";
 import UserProvider from "../context/UserProvider";
 import WalletProvider from "../context/WalletProvider";
+import CryptoProvider from "../context/CryptoProvider";
 declare module "@mui/material/styles" {
   interface Theme {
     status: {
@@ -48,38 +49,40 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UserProvider>
       <WalletProvider>
-        <ThemeProvider theme={theme}>
-          <Box sx={{ display: "flex", height: "100vh" }}>
-            {displaySidebar && (
+        <CryptoProvider>
+          <ThemeProvider theme={theme}>
+            <Box sx={{ display: "flex", height: "100vh" }}>
+              {displaySidebar && (
+                <Box
+                  component="nav"
+                  sx={{
+                    width: { sm: `${sideBarWidth}px` },
+                    flexShrink: { sm: 0 },
+                  }}
+                  aria-label="folders"
+                >
+                  <SideNavBar sideBarWidth={sideBarWidth} path={path} />
+                </Box>
+              )}
               <Box
-                component="nav"
+                component="main"
                 sx={{
-                  width: { sm: `${sideBarWidth}px` },
-                  flexShrink: { sm: 0 },
+                  flexGrow: 1,
+                  overflow: "auto",
+                  width: {
+                    sm: displaySidebar
+                      ? `calc(100% - ${sideBarWidth}px)`
+                      : "100%",
+                  },
                 }}
-                aria-label="folders"
               >
-                <SideNavBar sideBarWidth={sideBarWidth} path={path} />
+                <Component {...pageProps} />
+                <AuthRouteManagement pathname={pathname} setPath={setPath} />
+                <Footer />
               </Box>
-            )}
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                overflow: "auto",
-                width: {
-                  sm: displaySidebar
-                    ? `calc(100% - ${sideBarWidth}px)`
-                    : "100%",
-                },
-              }}
-            >
-              <Component {...pageProps} />
-              <AuthRouteManagement pathname={pathname} setPath={setPath} />
-              <Footer />
             </Box>
-          </Box>
-        </ThemeProvider>
+          </ThemeProvider>
+        </CryptoProvider>
       </WalletProvider>
     </UserProvider>
   );
