@@ -202,7 +202,7 @@ const CreateCup: NextPage = () => {
       const data = await response.json();
       if (data.error) throw data.error.message;
       setLoadingText("");
-      Router.push("/dashboard");
+      Router.push("/joincup");
     } catch (error) {
       console.log(error);
     }
