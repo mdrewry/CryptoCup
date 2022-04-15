@@ -45,12 +45,11 @@
 .containerLogo {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  margin-top: 33px;
 }
 
 .logo {
   margin-left: 29px;
-  margin-top: 33px;
 }
 
 .summaryContainer{
@@ -70,6 +69,10 @@
     margin-top: 2.5%;
     margin-bottom: 2.5%;
   }
+}
+
+.title{
+  align-items: center;
 }
 
 .title1{
