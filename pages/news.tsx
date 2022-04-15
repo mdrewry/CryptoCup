@@ -4,23 +4,15 @@ import styles from "../styles/News.module.css";
 import { useRouter } from "next/router";
 import {
   collection,
-  deleteDoc,
-  doc,
   DocumentData,
   getDocs,
-  limit,
-  query,
   QueryDocumentSnapshot,
-  updateDoc,
-  where,
 } from "firebase/firestore";
 import { db } from "../config/firebase.config";
 import { useState, useEffect } from "react";
 import FadeDisplay from "../Components/FadeDisplay";
 
-import { List, Grid } from "@mui/material";
-import { style } from "@mui/system";
-import { ResultStorage } from "firebase-functions/v1/testLab";
+import { Grid } from "@mui/material";
 
 const News: NextPage = () => {
   const router = useRouter();
@@ -62,7 +54,7 @@ const News: NextPage = () => {
         <p></p>
         <h5 className={styles.newsTitle}>Trending</h5>
         {loading ? (
-          <div>loading</div>
+          <p>loading</p>
         ) : (
           <div>
             <a href={trending.get("source")}>

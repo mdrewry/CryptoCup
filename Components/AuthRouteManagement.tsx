@@ -13,15 +13,6 @@ const AuthRouteManagement = ({
 }: AuthRouteManagementProps) => {
   const user = useContext(UserContext);
 
-  //routes user based on auth change to either dashboard or landing
-  useEffect(() => {
-    const parsedPath = pathname.substring(1).split("/")[0];
-    if (user.uid === "") {
-      if (!["", "login", "signup"].some((r) => r === parsedPath))
-        Router.push("/");
-    } else Router.push("/dashboard");
-  }, [user.uid]);
-
   //prevents user from accessing routes via url that are restricted
   useEffect(() => {
     const parsedPath = pathname.substring(1).split("/")[0];
@@ -48,7 +39,7 @@ const AuthRouteManagement = ({
     } else {
       setPath(parsedPath);
     }
-  }, [pathname]);
+  }, [pathname, user.uid]);
 
   return <></>;
 };

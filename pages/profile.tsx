@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import cupstyles from "../styles/Cups.module.css";
 import React, { useState, useEffect, useContext } from "react";
+import update from "immutability-helper";
 import {
   doc,
   updateDoc,
@@ -9,14 +10,13 @@ import {
   getDocs,
   QueryDocumentSnapshot,
   DocumentData,
-  Timestamp,
-  addDoc,
+  query,
+  where,
 } from "firebase/firestore";
 import styles from "../styles/Profile.module.css";
 import { makeStyles } from "@material-ui/core/styles";
 import { db } from "../config/firebase.config";
-import { useRouter } from "next/router";
-import { ButtonBase, IconButton } from "@material-ui/core";
+import Router from "next/router";
 import { UserContext } from "../context/UserProvider";
 import Avatar from "@mui/material/Avatar";
 import Grid from "@mui/material/Grid";
@@ -24,11 +24,20 @@ import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputBase from "@mui/material/InputBase";
 import EditIcon from "@mui/icons-material/Edit";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  StorageReference,
+  uploadBytes,
+} from "firebase/storage";
 
 import moment from "moment";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 const Profile: NextPage = () => {
   const user = useContext(UserContext);
+
   const useStyles = makeStyles((theme) => ({
     textField: {
       "&": {
@@ -47,61 +56,34 @@ const Profile: NextPage = () => {
         borderRadius: 25,
       },
     },
-    birthday: {
-      "&": {
-        marginTop: "6px",
-      },
-      "& .MuiInputBase-input": {
-        borderRadius: 25,
-        fontFamily: "Space Mono",
-        fontSize: 20,
-        color: "#ffffff",
-        backgroundColor: "rgba(47, 56, 105, 0.6)",
-        width: 140,
-        padding: "15px 15px",
-      },
-      "& .css-1uwzc1h-MuiSelect-select-MuiInputBase-input:focus": {
-        borderRadius: 25,
-      },
-      "&:focus": {
-        borderRadius: 25,
-        padding: "15px 15px",
-      },
-      "& .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon": {
-        color: "#ffffff",
-      },
-      "& .css-bpeome-MuiSvgIcon-root-MuiSelect-icon": {
-        color: "#ffffff",
-      },
-    },
-    tos: {
-      "& .css-ahj2mt-MuiTypography-root": {
-        color: "#ffffff",
-        fontSize: "20px",
-        fontFamily: "Space Mono",
-        width: "500px",
-        marginTop: "30px",
-      },
-    },
   }));
   const classes = useStyles();
   const [cups, setCups] = useState<QueryDocumentSnapshot<DocumentData>[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [tempImage, setTempImage] = React.useState(user.imageURL);
   const [fname, setFname] = React.useState(user.firstName);
   const [lname, setLname] = React.useState(user.lastName);
   const [email, setEmail] = React.useState(user.email);
+  const [birthday, setBirthday] = React.useState(user.birthday);
+  const [coins, setCoins] = React.useState(user.newsPreferences);
   const cupsRef = collection(db, "cups");
   const editForm = () => {
     setEditMode(true);
   };
   const editCancel = () => {
     setEditMode(false);
-    console.log(editMode);
   };
-  const editConfirm = () => {
+
+  const editConfirm = async () => {
     const userDocRef = doc(db, "users", user.uid);
-    updateDoc(userDocRef, { email: email, firstName: fname, lastName: lname });
+    updateDoc(userDocRef, {
+      email: email,
+      firstName: fname,
+      lastName: lname,
+      imageURL: tempImage,
+      newsPreferences: coins,
+    });
     setEditMode(false);
   };
   const changeFName = (event: {
@@ -137,13 +119,11 @@ const Profile: NextPage = () => {
     getCups();
     setTimeout(() => {
       setLoading(false);
-    }, 2000);
+    }, 1000);
   }, []);
-  const router = useRouter();
-  const {
-    query: { id },
-  } = router;
-
+  const handleRedirect = (route: string) => {
+    Router.push(`cups/${route}`);
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -198,22 +178,34 @@ const Profile: NextPage = () => {
             </Grid>
             <div>
               <FormControl className={styles.info}>
-                <label htmlFor="imageUpload" className={styles.info}>
-                  <IconButton >
-                    <Avatar
-                      sx={{ width: 200, height: 200 }}
-                      src={user.imageURL}
-                      alt={user.uid}
-                    />
-                  </IconButton>
-                </label>
-                <input
-                  type="file"
-                  hidden
-                  accept="image/*"
-                  onChange={changeFName}
-                  id="imageUpload"
-                />
+                <div>
+                  <Avatar
+                    sx={{ width: 200, height: 200 }}
+                    src={tempImage}
+                    alt={user.uid}
+                  />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const storage = getStorage();
+                      if (e.target.files) {
+                        const storageRef = ref(
+                          storage,
+                          "images/" + e.target.files[0].name
+                        );
+                        uploadBytes(storageRef, e.target.files[0]).then(
+                          (snapshot) => {
+                            getDownloadURL(snapshot.ref).then((downloadURL) => {
+                              setTempImage(downloadURL);
+                            });
+                          }
+                        );
+                      }
+                    }}
+                    id="imageUpload"
+                  />
+                </div>
               </FormControl>
             </div>
             <div>
@@ -251,11 +243,40 @@ const Profile: NextPage = () => {
             </div>
             <h6 className={styles.title}>{user.uid}</h6>
             <h4 className={styles.title}>Birthday</h4>
-            <h6 className={styles.subtitle}>
-              {moment(user.birthday.toDate()).format("M/D/YYYY")}
-            </h6>
-            <h4 className={styles.info}>News Preferences</h4>
-            <p className={styles.subtitle}>Select all that apply.</p>
+            {birthday && (
+              <h6 className={styles.subtitle}>
+                {moment(birthday).format("M/D/YYYY")}
+              </h6>
+            )}
+
+            <div>
+              <FormControl className={styles.title}>
+                <h4>News Preferences</h4>
+                <p>Select all that apply.</p>
+                <div>
+                  {coins.map((tag:any, i) => (
+                    <div key={i}>
+                      <FormControlLabel
+                        label={tag.coin + "(" + tag.code + ")"}
+                        labelPlacement="end"
+                        control={
+                          <Checkbox
+                            checked={tag.check}
+                            color="secondary"
+                            onChange={(e) => {
+                              const temp = update(coins, {
+                                [i]: { check: { $set: !coins[i].check } },
+                              });
+                              setCoins(temp);
+                            }}
+                          />
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
+              </FormControl>
+            </div>
           </div>
         ) : (
           <div>
@@ -265,7 +286,7 @@ const Profile: NextPage = () => {
               </Grid>
               <Grid item xs className={styles.edit}>
                 <Button onClick={editForm}>
-                  <EditIcon />
+                  <EditIcon color="secondary" fontSize="large" />
                 </Button>
               </Grid>
             </Grid>
@@ -285,39 +306,58 @@ const Profile: NextPage = () => {
             <h6 className={styles.subtitle}>{user.email}</h6>
 
             <h4 className={styles.info}>Birthday</h4>
-            <h6 className={styles.subtitle}>
-              {moment(user.birthday.toDate()).format("M/D/YYYY")}
-            </h6>
+            {birthday && (
+              <h6 className={styles.subtitle}>
+                {moment(birthday).format("M/D/YYYY")}
+              </h6>
+            )}
 
             <h4 className={styles.info}>News Preferences</h4>
             <h6 className={styles.subtitle}>
-              {user.newsPreferences.map((tag) => (
-                <h6 className={styles.subtitle}>* {tag.toUpperCase()}</h6>
-              ))}
+              {user.newsPreferences.map(
+                (tag:any) =>
+                  tag.check && (
+                    <h6 className={styles.subtitle}>
+                      * {tag.coin} ({tag.code})
+                    </h6>
+                  )
+              )}
             </h6>
-            {user.newsPreferences.length != 0 ? (
-              <div></div>
-            ) : (
-              <h6 className={styles.subtitle}>* None</h6>
-            )}
 
             <h2 className={styles.info}>Cup History</h2>
             <h6 className={styles.info}>
               {loading ? (
-                <div>loading</div>
+                <p>loading</p>
               ) : (
                 <Grid container>
-                  {cups.map((c) => (
-                    <Grid item xs={4}>
-                      <h5>{c.get("name")}</h5>
-                      <div className={cupstyles.cuptype}>
-                        {c.get("cupType")}
-                      </div>
-                      <p>
-                        {moment(c.get("startDate")).format("M/D/YYYY")}-
-                        {moment(c.get("endDate")).format("M/D/YYYY")}
-                      </p>
-                    </Grid>
+                  {cups.map((c, i) => (
+                    <div key={i}>
+                      <Grid item xs={4}>
+                        <Button onClick={(e) => handleRedirect(c.id)}>
+                          <div
+                            style={{ textAlign: "left", textTransform: "none" }}
+                          >
+                            <img
+                              className={cupstyles.placeholder}
+                              src={c.get("imageURL")}
+                            ></img>
+                            <h5 className={cupstyles.name}>{c.get("name")}</h5>
+                            <div className={cupstyles.cuptype}>
+                              {c.get("cupType")}
+                            </div>
+                            <p>
+                              {moment(c.get("startDate").toDate()).format(
+                                "M/D/YYYY"
+                              )}
+                              &nbsp;-&nbsp;
+                              {moment(c.get("endDate").toDate()).format(
+                                "M/D/YYYY"
+                              )}
+                            </p>
+                          </div>
+                        </Button>
+                      </Grid>
+                    </div>
                   ))}
                 </Grid>
               )}

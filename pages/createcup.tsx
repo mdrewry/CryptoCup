@@ -88,6 +88,7 @@ const CreateCup: NextPage = () => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("");
   const [values, setValues] = useState(initValues);
   const [errors, setErrors] = useState({} as any);
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -95,10 +96,13 @@ const CreateCup: NextPage = () => {
   };
   const handleInputValue = (e: any) => {
     const { name, value } = e.target;
-    setValues({
-      ...values,
-      [name]: value,
-    });
+    if (name === "password")
+      setValues({ ...values, [name]: value.toUpperCase() });
+    else
+      setValues({
+        ...values,
+        [name]: value,
+      });
     validate({ [name]: value });
   };
 
@@ -112,11 +116,11 @@ const CreateCup: NextPage = () => {
     if ("password" in fieldValues) {
       temp.password = fieldValues.password ? "" : "This field is required.";
       if (fieldValues.password)
-        temp.password = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/.test(
+        temp.password = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/.test(
           fieldValues.password
         )
           ? ""
-          : "Password must be at least 6 characters long containing numbers and letters.";
+          : "Password must be at least 4 characters long containing numbers and letters.";
     }
     if ("startDate" in fieldValues) {
       if (fieldValues.startDate < moment(new Date()))
@@ -154,14 +158,19 @@ const CreateCup: NextPage = () => {
 
   const createCupContract = async (e: any) => {
     e.preventDefault();
+    if (!validate(values)) return;
     setLoading(true);
+    setLoadingText("Opening Metamask");
     try {
       const factoryContract = await getSmartContract(user.wallet, "");
+      setLoadingText("Awaiting Transaction");
       const txn = await factoryContract.newCup(
         BigNumber.from(Web3.utils.toWei(values.buyIn, "ether")),
         values.playerCuts
       );
+      setLoadingText("Verifying Transaction");
       const receipt = await txn.wait();
+      setLoadingText("Success");
       const event = receipt.events?.find(
         (event: any) => event.event === "CupCreated"
       );
@@ -169,35 +178,34 @@ const CreateCup: NextPage = () => {
       await createCup(ethAddress);
     } catch (err) {
       console.log(err);
-      setLoading(false);
     }
+    setLoadingText("");
+    setLoading(false);
   };
 
   const createCup = async (ethAddress: string) => {
-    if (validate(values)) {
-      try {
-        const response = await fetch("/api/createcup", {
-          method: "POST",
-          body: JSON.stringify({
-            director: user.uid,
-            ethAddress,
-            ...values,
-            buyIn: parseFloat(values.buyIn),
-            startDate: values.startDate.toDate(),
-            endDate: values.endDate.toDate(),
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await response.json();
-        if (data.error) throw data.error.message;
-        Router.push("/dashboard");
-      } catch (error) {
-        console.log(error);
-      }
+    try {
+      const response = await fetch("/api/createcup", {
+        method: "POST",
+        body: JSON.stringify({
+          director: user.uid,
+          ethAddress,
+          ...values,
+          buyIn: parseFloat(values.buyIn),
+          startDate: values.startDate.toDate(),
+          endDate: values.endDate.toDate(),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      if (data.error) throw data.error.message;
+      setLoadingText("");
+      Router.push("/joincup");
+    } catch (error) {
+      console.log(error);
     }
-    setLoading(false);
   };
 
   return (
@@ -216,9 +224,12 @@ const CreateCup: NextPage = () => {
       </div>
       <div className={createCupStyles.container}>
         {loading ? (
-          <CircularProgress />
+          <div className={createCupStyles.loading}>
+            <CircularProgress />
+            <h4 style={{ marginTop: 10 }}>{loadingText}</h4>
+          </div>
         ) : (
-          <form autoComplete="off" onSubmit={createCupContract}>
+          <form onSubmit={createCupContract}>
             <FormControl>
               {page == 0 ? (
                 <Grid>
@@ -240,12 +251,11 @@ const CreateCup: NextPage = () => {
                     />
                   </Grid>
                   <Grid item xs={12}>
-                    <p className={createCupStyles.fieldName}>Cup Password: </p>
+                    <p className={createCupStyles.fieldName}>Cup Code: </p>
                     <TextField
                       className={classes.textField}
                       value={values.password}
                       name="password"
-                      type="password"
                       onChange={handleInputValue}
                       onBlur={handleInputValue}
                       {...(errors["password"] && {
@@ -356,6 +366,22 @@ const CreateCup: NextPage = () => {
                     >
                       Create Cup
                     </Button>
+                    <Grid className={createCupStyles.center} item xs={12}>
+                      {user.wallet ? (
+                        <></>
+                      ) : (
+                        <p
+                          style={{
+                            color: "red",
+                            fontStyle: "italic",
+                            marginTop: "15px",
+                            marginBottom: "5px",
+                          }}
+                        >
+                          There is no wallet connected to this account.
+                        </p>
+                      )}
+                    </Grid>
                   </Grid>
                 </Grid>
               )}

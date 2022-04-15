@@ -50,7 +50,7 @@ class UserProvider extends Component<{}, { user: User }> {
           user.wallet = data?.wallet;
           user.firstName = data?.firstName;
           user.lastName = data?.lastName;
-          user.birthday = data?.birthday;
+          user.birthday = data?.birthday.toDate();
           user.cupWins = data?.cupWins;
           user.cupsPlayed = data?.cupsPlayed;
           user.headsUpPlayed = data?.headsUpPlayed;

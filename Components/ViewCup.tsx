@@ -44,7 +44,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
 
             const startDate = data.startDate.toDate();
             const endDate = data.endDate.toDate();
-            if (moment(startDate) > moment())
+            if (data.currentState == "created")
               cups.push({
                 ...data,
                 startDate,
@@ -62,18 +62,14 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
     const unsubscribeSnapshot = onSnapshot(cupsInUserRef, async (snapshot) => {
       let results: Array<any> = [];
       const userCups: Array<any> = snapshot.docs[0]?.data().cups;
-      if (userCups !== null) {
+      if (userCups !== undefined) {
         await Promise.all(
           userCups.map(async (cupRef: any) => {
             const doc = await getDoc(cupRef);
             const data: any = doc.data();
             const startDate = data.startDate.toDate();
             const endDate = data.endDate.toDate();
-            if (
-              filter == 0 &&
-              moment(startDate) <= moment() &&
-              moment(endDate) > moment()
-            )
+            if (filter == 0 && data.currentState === "active")
               results.push({
                 ...data,
                 startDate,
@@ -81,7 +77,7 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
                 id: doc.id,
                 ref: doc.ref,
               });
-            else if (filter == 1 && moment(startDate) > moment())
+            else if (filter == 1 && data.currentState === "created")
               results.push({
                 ...data,
                 startDate,
@@ -115,8 +111,8 @@ const Cups = ({ filter, cupNameFilter }: ContentProps) => {
                   .toLowerCase()
                   .includes(cupNameFilter.toLowerCase());
             })
-            .map((c) => (
-              <Grid item xs={12} md={6} lg={4} xl={3}>
+            .map((c, index) => (
+              <Grid key={index} item xs={12} md={6} lg={4} xl={3}>
                 <Button onClick={(e) => handleRedirect(c.id)}>
                   <div style={{ textAlign: "left", textTransform: "none" }}>
                     <img

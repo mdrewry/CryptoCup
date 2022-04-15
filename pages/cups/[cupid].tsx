@@ -1,19 +1,37 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/CupDetails.module.css";
+import { makeStyles } from "@material-ui/core/styles";
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { UserContext } from "../../context/UserProvider";
 import JoinCupDialog from "../../Components/JoinCupDialog";
 import EndRegistrationDialog from "../../Components/EndRegistrationDialog";
 import DistributePrizesDialog from "../../Components/DistributePrizesDialog";
+import TradeCryptoDialog from "../../Components/TradeCryptoDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
 import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
-import { Icon } from "@iconify/react";
 import Leaderboard from "../../Components/Leaderboards";
+import CupWallet from "../../Components/CupWallet";
+import Grid from "@mui/material/Grid";
+import Divider from '@mui/material/Divider';
+import { CryptoContext } from "../../context/CryptoProvider";
+
 
 const CupDetails: NextPage = () => {
+  const useStyles = makeStyles((theme) => ({
+    line: {
+      "& ": {
+        backgroundColor: "white",
+        borderWidth: "1px",
+        marginTop: "11px",
+      },
+    },
+  }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const classes = useStyles();
+  
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [cupid] = useState(router.asPath.substring(1).split("/")[1]);
@@ -24,62 +42,59 @@ const CupDetails: NextPage = () => {
   const [directorID, setDirectorID] = useState("");
   const [cupState, setCupState] = useState("");
   const [buyIn, setBuyIn] = useState(0);
+  const [totalBudget, setTotalBudget] = useState(0);
+  const [earnings, setEarnings] = useState(0);
   const [startDate, setStartDate] = useState(Timestamp.now());
   const [endDate, setEndDate] = useState(Timestamp.now());
   const [joinedUser, setJoinedUser] = useState(false);
-  const [usd, setUsd] = useState(0);
   const [ethAddress, setEthAddress] = useState("");
-  const [userPortfolios, setUserPortfolios] = useState({});
+  const [userPortfolios, setUserPortfolios] = useState<any>({});
   const {
     query: { id },
   } = router;
   const user = useContext(UserContext);
+  const cryptos = useContext(CryptoContext);
 
-  const getCups = async () => {
+  useEffect(() => {
     const cupDocRef = doc(db, "cups", cupid);
-    const cupDocSnap = await getDoc(cupDocRef);
-    if (cupDocSnap.exists()) {
-      const data = cupDocSnap.data();
-      setImageURL(data.imageURL);
-      setName(data.name);
-      setCupType(data.cupType);
-      setDirectorID(data.director);
-      setUserPortfolios(data.userPortfolios);
-      setCupState(data.currentState);
-      const userDocRef = doc(db, "users", data.director);
-      const userDocSnap = await getDoc(userDocRef);
-      if (userDocSnap.exists()) {
-        const userData = userDocSnap.data();
-        setDirector(userData.firstName + " " + userData.lastName);
-      }
-      setBuyIn(data.buyIn);
-      setStartDate(data.startDate);
-      setEndDate(data.endDate);
-      setEthAddress(data.ethAddress);
-    }
-    onSnapshot(cupDocRef, (snapshot) => {
-      if(snapshot.exists()){
-        const cupPortfolios = snapshot.data()?.userPortfolios;
-        if (user.uid in cupPortfolios) {
+    onSnapshot(cupDocRef, async (snapshot) => {
+      if (snapshot.exists()) {
+        const data: any = snapshot.data();
+        setImageURL(data.imageURL);
+        setName(data.name);
+        setCupType(data.cupType);
+        setDirectorID(data.director);
+        setCupState(data.currentState);
+        setBuyIn(data.buyIn);
+        setStartDate(data.startDate);
+        setEndDate(data.endDate);
+        setEthAddress(data.ethAddress);
+        setUserPortfolios(data.userPortfolios);
+        setTotalBudget(data.totalBudget);
+        
+        if (user.uid in data.userPortfolios) {
           setJoinedUser(true);
-          setUsd(cupPortfolios[user.uid]["usd"]);
+          let total = 0;
+          Object.entries(data.userPortfolios[user.uid]).map((x: any) => {
+            total = total + cryptos[x[0]].price * x[1];
+          });
+          total = parseFloat(total.toFixed(2));
+          setEarnings(total);
         }
+        const userDocRef = doc(db, "users", data.director);
+        const userDocSnap = await getDoc(userDocRef);
+        const userData: any = userDocSnap.data();
+        setDirector(userData.firstName + " " + userData.lastName);
+        setLoading(false);
       }
     });
     setLoading(false);
-  };
-
-  useEffect(() => {
-    getCups();
-    // setTimeout( () => {
-    //     setLoading(false);
-    //   },2000)
   }, []);
 
   return (
     <div>
       <Head>
-        <title>CupDetails</title>
+        <title>{name}</title>
         <meta name="description" content="Generated by create next app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -90,24 +105,30 @@ const CupDetails: NextPage = () => {
           <p>loading</p>
         ) : (
           <div>
-            {user.uid === directorID &&
-              moment(startDate.toDate()).isBefore(moment()) &&
-              cupState === "created" && (
-                <EndRegistrationDialog cup={{ id: cupid, ethAddress }} />
-              )}
-            {user.uid === directorID &&
-              moment(endDate.toDate()).isBefore(moment()) &&
-              cupState === "active" && (
-                <DistributePrizesDialog
-                  cup={{
-                    id: cupid,
-                    ethAddress,
-                    rankings: Object.keys(userPortfolios),
-                  }}
-                />
-              )}
+            {user.uid === directorID && cupState === "created" && (
+              <EndRegistrationDialog cup={{ id: cupid, ethAddress }} />
+            )}
+            {user.uid === directorID && cupState === "active" && (
+              <DistributePrizesDialog
+                cup={{
+                  id: cupid,
+                  ethAddress,
+                  userPortfolios,
+                }}
+              />
+            )}
             <h5 className={styles.name}>{name}</h5>
-            <div className={styles.cuptype}>{cupType}</div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <div className={styles.cuptype}>{cupType}</div>
+              <div style={{ width: 20 }} />
+              <div className={styles.cuptype}>{cupState}</div>
+            </div>
             <h6 className={styles.commis}>Cup Commissioner: {director}</h6>
             <h6 className={styles.buyin}>Buy-In: {buyIn} ETH</h6>
             <h6 className={styles.date}>
@@ -115,33 +136,52 @@ const CupDetails: NextPage = () => {
               {moment(endDate.toDate()).format("M/D/YYYY")}
             </h6>
             {!joinedUser ? (
-              <div className={styles.center}>
-                <h4 className={styles.joinnow}>
-                  This Cup is currently accepting players. Join now!
-                </h4>
-                <div>
-                  <JoinCupDialog cup={{ name, id: cupid, buyIn, ethAddress }} />
+              <div>
+                <div className={styles.center}>
+                  <h4 className={styles.joinnow}>
+                    This Cup is currently accepting players. Join now!
+                  </h4>
+                  <div>
+                    <JoinCupDialog
+                      cup={{ name, id: cupid, buyIn, ethAddress }}
+                    />
+                  </div>
                 </div>
+                <h5>Standings:</h5>
+                {Object.keys(userPortfolios).length > 0 && (
+                  <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                )}
               </div>
             ) : (
-              <div>
-                <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
-                <div className={styles.walleticon}>
-                  <Icon
-                    icon="cryptocurrency:usd"
-                    color="#83bd67"
-                    width="30"
-                    height="30"
-                  />
-                  <h6 className={styles.walletmoney}>{usd} USD</h6>
-                </div>
-                <h6 className={styles.asd}>Total: $123.12 USD</h6>
-                <h4 className={styles.ogbudget}>
-                  (Original budget: $123.12 USD)
-                </h4>
-                <h1>Leaderboard</h1>
-                <Leaderboard cupid={cupid} portfolios={userPortfolios} />
-              </div>
+              <Grid container spacing={5}>
+                <Grid item xs={3}>
+                  <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
+                  <CupWallet cupid={cupid} portfolios={userPortfolios} />
+                  <Divider className={classes.line}/>
+                  <div className={styles.total}>
+                    <h6>Total: ${earnings} USD</h6>
+                    <h4 className={styles.ogbudget}>
+                      (Original budget: ${totalBudget} USD)
+                    </h4>
+                  </div>
+                  {cupState === "active" && (
+                    <div className={styles.center}>
+                      <TradeCryptoDialog
+                        cup={{
+                          id: cupid,
+                          userPortfolio: userPortfolios[user.uid],
+                        }}
+                      />
+                    </div>
+                  )}
+                </Grid>
+                <Grid item xs={9}>
+                  <h5 className={styles.cupwallet}>Standings:</h5>
+                  {Object.keys(userPortfolios).length > 0 && (
+                    <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                  )}
+                </Grid>
+              </Grid>
             )}
           </div>
         )}

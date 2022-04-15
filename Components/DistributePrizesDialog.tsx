@@ -2,40 +2,67 @@ import React, { useContext, useState } from "react";
 import Button from "@mui/material/Button";
 import ActionDialog from "./ActionDialog";
 import { UserContext } from "../context/UserProvider";
+import { CryptoContext } from "../context/CryptoProvider";
 import { getSmartContract } from "../functions/smartContract";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../config/firebase.config";
 type DistributePrizesDialogProps = {
-  cup: { id: String; ethAddress: string; rankings: string[] };
+  cup: { id: String; ethAddress: string; userPortfolios: any };
 };
 const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
+  const cryptos = useContext(CryptoContext);
   const user = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("");
   const toggleDialog = () => {
     setOpen(!open);
     setErrorText("ㅤ");
   };
 
+  const calculateRankings = () => {
+    const portfolios = cup.userPortfolios;
+    const summedPortfolios = Object.keys(portfolios).map((key) => {
+      let total = 0;
+      Object.keys(portfolios[key]).forEach((ticker) => {
+        total += cryptos[ticker].price * portfolios[key][ticker];
+      });
+      total = parseFloat(total.toFixed(4));
+      return { playerID: key, total };
+    });
+    const sortedPortfolios = summedPortfolios.sort(
+      (a: any, b: any) => b.total - a.total
+    );
+    return sortedPortfolios.map((p) => p.playerID);
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
+    setLoadingText("Calculating Rankings");
+    const playersSorted = calculateRankings();
     try {
       const wallets = await Promise.all(
-        cup.rankings.map(async (id) => {
+        playersSorted.map(async (id) => {
           const userDocSnap = await getDoc(doc(db, "users", id));
           const data: any = userDocSnap.data();
           return data.wallet;
         })
       );
+      setLoadingText("Opening Metamask");
       const cupContract = await getSmartContract(user.wallet, cup.ethAddress);
+      setLoadingText("Awaiting Transaction");
       const txn = await cupContract.endCup(wallets);
+      setLoadingText("Verifying Transaction");
       const receipt = await txn.wait();
+      setLoadingText("Success");
       await handleCupUpdate();
     } catch (error) {
       setErrorText("Transaction Failed");
-      setLoading(false);
     }
+    toggleDialog();
+    setLoading(false);
+    setLoadingText("");
   };
   const handleCupUpdate = async () => {
     try {
@@ -58,13 +85,12 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
     } catch (err: any) {
       console.log(err);
     }
-    setLoading(false);
-    toggleDialog();
   };
   return (
     <div>
       <h4>
-        This Cup is finished. Click here to distribute prizes to the winners!
+        When your cup is finished, click here to distribute prizes to the
+        winners!
       </h4>
       <Button
         style={{
@@ -77,7 +103,8 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
           padding: 10,
           width: 260,
           color: "white",
-          marginBottom: 30,
+          marginTop: 21,
+          marginBottom: 31,
         }}
         onClick={toggleDialog}
       >
@@ -90,6 +117,7 @@ const DistributePrizesDialog = ({ cup }: DistributePrizesDialogProps) => {
         errorText={errorText}
         open={open}
         loading={loading}
+        loadingText={loadingText}
         handleSubmit={handleSubmit}
         toggleDialog={toggleDialog}
       />

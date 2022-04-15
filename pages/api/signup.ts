@@ -38,7 +38,16 @@ export default async function handler(
         totalEarnings: 0,
         totalPercentGain: 0,
         walletVerified: false,
-        newsPreferences: [],
+        newsPreferences: [
+          { coin: "Bitcoin", check: false, code: "BIT" },
+          { coin: "Ethereum", check: false, code: "ETH" },
+          { coin: "Solana", check: false, code: "SOL" },
+          { coin: "Cardano", check: false, code: "ADA" },
+          { coin: "Polkadot", check: false, code: "DOT" },
+          { coin: "Dogecoin", check: false, code: "DOGE" },
+          { coin: "Shiba-inu", check: false, code: "SHIB" },
+          { coin: "Ripple", check: false, code: "XRP" },
+        ],
         imageURL: images[Math.floor(Math.random() * 3)],
       });
   } catch (error) {

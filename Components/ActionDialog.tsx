@@ -10,6 +10,7 @@ type ActionDialogProps = {
   prompt: String;
   submitButtonText: String;
   errorText: String;
+  loadingText: String;
   open: boolean;
   loading: boolean;
   handleSubmit: () => Promise<void>;
@@ -23,6 +24,7 @@ const ActionDialog = ({
   errorText,
   open,
   loading,
+  loadingText,
   handleSubmit,
   toggleDialog,
   children,
@@ -90,7 +92,30 @@ const ActionDialog = ({
           }}
         >
           {loading ? (
-            <CircularProgress />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <CircularProgress />
+              {loadingText && (
+                <DialogContentText
+                  style={{
+                    marginTop: "10px",
+                    fontFamily: "Space Mono",
+                    fontStyle: "italic",
+                    fontWeight: "400",
+                    fontSize: "20px",
+                    color: "#FFFFFF",
+                  }}
+                  id="loading-text"
+                >
+                  {loadingText}
+                </DialogContentText>
+              )}
+            </div>
           ) : (
             <>
               <Button

@@ -12,6 +12,7 @@ const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
   const [open, setOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("");
   const toggleDialog = () => {
     setOpen(!open);
     setErrorText("ㅤ");
@@ -19,16 +20,22 @@ const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
 
   const handleSubmit = async () => {
     setLoading(true);
+    setLoadingText("Opening Metamask");
     try {
       const cupContract = await getSmartContract(user.wallet, cup.ethAddress);
+      setLoadingText("Awaiting Transaction");
       const txn = await cupContract.startCup();
+      setLoadingText("Verifying Transaction");
       const receipt = await txn.wait();
+      setLoadingText("Success");
       await handleCupUpdate();
     } catch (error) {
       console.log(error);
       setErrorText("Transaction Failed");
-      setLoading(false);
     }
+    toggleDialog();
+    setLoadingText("");
+    setLoading(false);
   };
   const handleCupUpdate = async () => {
     try {
@@ -51,8 +58,6 @@ const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
     } catch (err: any) {
       console.log(err);
     }
-    setLoading(false);
-    toggleDialog();
   };
   return (
     <div>
@@ -70,7 +75,8 @@ const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
           padding: 10,
           width: 242,
           color: "white",
-          marginBottom: 30,
+          marginTop: 21,
+          marginBottom: 31,
         }}
         onClick={toggleDialog}
       >
@@ -83,6 +89,7 @@ const EndRegistrationDialog = ({ cup }: EndRegistrationDialogProps) => {
         errorText={errorText}
         open={open}
         loading={loading}
+        loadingText={loadingText}
         handleSubmit={handleSubmit}
         toggleDialog={toggleDialog}
       />

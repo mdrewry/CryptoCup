@@ -17,15 +17,17 @@ import {
   DocumentReference,
   limit,
 } from "firebase/firestore";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
+import { CryptoContext } from "../context/CryptoProvider";
 
 type ContentProps = {
   cupid: string;
-  portfolios: {};
+  portfolios: any;
 };
 const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
+  const cryptos = useContext(CryptoContext);
   const [leaderboard, setLeaderboard] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -60,15 +62,26 @@ const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
       const unsubscribeSnapshot = onSnapshot(cupQuery, async (snapshot) => {
         let results: Array<any> = [];
         const cupUsers: Array<any> = snapshot.docs[0]?.data().users;
+        //const portfolios = (await getDoc(cupDocRef)).get("userPortfolios");
         if (cupUsers != null) {
+          const portfolios = (await getDoc(cupDocRef)).get("userPortfolios");
           await Promise.all(
             cupUsers.map(async (userRefs) => {
               const doc = await getDoc(userRefs);
               const data: any = doc.data();
-              results.push({ ...data });
+
+              const playerPortfolio = portfolios[doc.id];
+              let total = 0;
+              Object.entries(playerPortfolio).map((x: any) => {
+                total = total + cryptos[x[0]].price * x[1];
+              });
+              total = parseFloat(total.toFixed(2));
+              results.push({ ...data, total });
               return 0;
             })
           );
+          results.sort((a, b) => (a.total < b.total ? 1 : -1));
+          //console.log(results);
         }
         setLeaderboard(results);
         setLoading(false);
@@ -89,8 +102,8 @@ const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
       ) : (
         <div>
           {leaderboard.map((c, index) => (
-            <Grid container>
-              <h5>{index + 1}</h5>
+            <Grid key={index} container className={cupstyles.center}>
+              <h5 className={cupstyles.rankNum}>{index + 1}</h5>
               <Grid item xs={1} md={1} lg={1} xl={1}>
                 <img
                   className={cupstyles.leaderboardProfile}
@@ -101,9 +114,15 @@ const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
                 <h6>
                   {c.firstName} {c.lastName}
                 </h6>
-                <p>
-                  {c.cupWins} Wins - ${c.totalEarnings}
-                </p>
+                <div>
+                  {cupid === "" ? (
+                    <p>
+                      {c.cupWins} Wins - ${c.totalEarnings}
+                    </p>
+                  ) : (
+                    <p>${c.total} USD</p>
+                  )}
+                </div>
               </Grid>
             </Grid>
           ))}
