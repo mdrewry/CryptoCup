@@ -14,6 +14,7 @@ const Footer = () => {
   async function logout() {
     try {
       await signOut(auth);
+      Router.push("/");
     } catch (error) {
       console.log(error);
       alert("Error signing out.");

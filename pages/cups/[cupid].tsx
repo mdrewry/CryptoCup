@@ -156,7 +156,9 @@ const CupDetails: NextPage = () => {
               <Grid container spacing={5}>
                 <Grid item xs={3}>
                   <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
-                  <CupWallet cupid={cupid} portfolios={userPortfolios} />
+                  {user.uid && (
+                    <CupWallet cupid={cupid} portfolios={userPortfolios} />
+                  )}
                   <Divider className={classes.line}/>
                   <div className={styles.total}>
                     <h6>Total: ${earnings} USD</h6>
