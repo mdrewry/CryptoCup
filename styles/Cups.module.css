@@ -63,9 +63,16 @@
     counter-set: rank 1;
 }
 
-
-
 .content-img{
     counter-increment: rank;
     content: counter(rank);
+}
+
+.dashIncline{
+    display: flex;
+}
+
+.dashHeader {
+    margin-bottom: 15px;
+    font-weight: bold;
 }

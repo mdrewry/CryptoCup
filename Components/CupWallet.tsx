@@ -2,19 +2,37 @@ import React, { useContext } from "react";
 import { UserContext } from "../context/UserProvider";
 import { useRouter } from "next/router";
 import styles from "../styles/CupDetails.module.css";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from "@mui/material/Button";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { CryptoContext } from "../context/CryptoProvider";
+import Divider from '@mui/material/Divider';
+import TradeCryptoDialog from "./TradeCryptoDialog";
 type ContentProps = {
   cupid: string;
   portfolios: any;
+  earnings: Number;
+  totalBudget: Number;
+  cupState: string;
 };
-const CupWallet = ({ cupid, portfolios }: ContentProps) => {
+const CupWallet = ({ cupid, portfolios, earnings, totalBudget, cupState }: ContentProps) => {
+  const useStyles = makeStyles((theme) => ({
+    line: {
+      "& ": {
+        backgroundColor: "white",
+        borderWidth: "1px",
+        marginTop: "11px",
+      },
+    },
+  }));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const classes = useStyles();
+  
   const user = useContext(UserContext);
   const cryptos = useContext(CryptoContext);
   const [loading, setLoading] = useState<boolean>(true);
-
+  
   const router = useRouter();
   const {
     query: { id },
@@ -67,7 +85,24 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
           marginBottom: 5,
         }}
        onClick={handleUpdate}>Update Crypto Prices
-       </Button>
+      </Button>
+      <Divider className={classes.line}/>
+      <div className={styles.total}>
+        <h6>Total: ${earnings} USD</h6>
+        <h4 className={styles.ogbudget}>
+          (Original budget: ${totalBudget} USD)
+        </h4>
+      </div>
+      {cupState === "active" && (
+        <div className={styles.center}>
+          <TradeCryptoDialog
+            cup={{
+              id: cupid,
+              userPortfolio: portfolios[user.uid],
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

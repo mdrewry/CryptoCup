@@ -1,37 +1,22 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../../styles/CupDetails.module.css";
-import { makeStyles } from "@material-ui/core/styles";
 import React, { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/router";
 import { UserContext } from "../../context/UserProvider";
 import JoinCupDialog from "../../Components/JoinCupDialog";
 import EndRegistrationDialog from "../../Components/EndRegistrationDialog";
 import DistributePrizesDialog from "../../Components/DistributePrizesDialog";
-import TradeCryptoDialog from "../../Components/TradeCryptoDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
 import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
 import Leaderboard from "../../Components/Leaderboards";
 import CupWallet from "../../Components/CupWallet";
 import Grid from "@mui/material/Grid";
-import Divider from '@mui/material/Divider';
 import { CryptoContext } from "../../context/CryptoProvider";
 
 
-const CupDetails: NextPage = () => {
-  const useStyles = makeStyles((theme) => ({
-    line: {
-      "& ": {
-        backgroundColor: "white",
-        borderWidth: "1px",
-        marginTop: "11px",
-      },
-    },
-  }));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const classes = useStyles();
-  
+const CupDetails: NextPage = () => {  
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [cupid] = useState(router.asPath.substring(1).split("/")[1]);
@@ -157,9 +142,9 @@ const CupDetails: NextPage = () => {
                 <Grid item xs={3}>
                   <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
                   {user.uid && (
-                    <CupWallet cupid={cupid} portfolios={userPortfolios} />
+                    <CupWallet cupid={cupid} portfolios={userPortfolios} earnings={earnings} totalBudget={totalBudget} cupState={cupState}/>
                   )}
-                  <Divider className={classes.line}/>
+                  {/* <Divider className={classes.line}/>
                   <div className={styles.total}>
                     <h6>Total: ${earnings} USD</h6>
                     <h4 className={styles.ogbudget}>
@@ -175,7 +160,7 @@ const CupDetails: NextPage = () => {
                         }}
                       />
                     </div>
-                  )}
+                  )} */}
                 </Grid>
                 <Grid item xs={9}>
                   <h5 className={styles.cupwallet}>Standings:</h5>
