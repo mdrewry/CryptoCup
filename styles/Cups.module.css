@@ -4,6 +4,10 @@
     min-height: 100vh;
 }
 
+.leaderPadding{
+    margin-top: 32px;
+}
+
 .cuptype{
     color: #ffffff;
     font-family: "Space Mono";
@@ -48,11 +52,17 @@
     margin-bottom: 27px;
 }
 
+.leaderContainer{
+    align-items: center;
+    margin-bottom: 27px;
+    display: flex;
+}
+
 .rankNum {
     margin-right: 15px;
 }
 
-.leaderboardProfile{
+.leaderProfile{
     display: inline-grid;
     width: 79px;
     height: 79px;
@@ -63,9 +73,22 @@
     counter-set: rank 1;
 }
 
-
+.namewins{
+    display: block;
+    margin-left: 15px;
+}
 
 .content-img{
     counter-increment: rank;
     content: counter(rank);
+}
+
+.dashPadding{
+    display: flex;
+    padding-bottom: 100px;
+}
+
+.dashHeader {
+    margin-bottom: 15px;
+    font-weight: bold;
 }

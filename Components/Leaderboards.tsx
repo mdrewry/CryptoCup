@@ -24,9 +24,8 @@ import { CryptoContext } from "../context/CryptoProvider";
 
 type ContentProps = {
   cupid: string;
-  portfolios: any;
 };
-const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
+const Leaderboard = ({ cupid }: ContentProps) => {
   const cryptos = useContext(CryptoContext);
   const [leaderboard, setLeaderboard] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -62,7 +61,6 @@ const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
       const unsubscribeSnapshot = onSnapshot(cupQuery, async (snapshot) => {
         let results: Array<any> = [];
         const cupUsers: Array<any> = snapshot.docs[0]?.data().users;
-        //const portfolios = (await getDoc(cupDocRef)).get("userPortfolios");
         if (cupUsers != null) {
           const portfolios = (await getDoc(cupDocRef)).get("userPortfolios");
           await Promise.all(
@@ -81,7 +79,6 @@ const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
             })
           );
           results.sort((a, b) => (a.total < b.total ? 1 : -1));
-          //console.log(results);
         }
         setLeaderboard(results);
         setLoading(false);
@@ -96,21 +93,19 @@ const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
   } = router;
 
   return (
-    <div className={cupstyles.padding}>
+    <div className={cupstyles.leaderPadding}>
       {loading ? (
         <p>loading</p>
       ) : (
         <div>
           {leaderboard.map((c, index) => (
-            <Grid key={index} container className={cupstyles.center}>
+            <div className={cupstyles.leaderContainer}>
               <h5 className={cupstyles.rankNum}>{index + 1}</h5>
-              <Grid item xs={1} md={1} lg={1} xl={1}>
                 <img
-                  className={cupstyles.leaderboardProfile}
+                  className={cupstyles.leaderProfile}
                   src={c.imageURL}
                 />
-              </Grid>
-              <Grid item xs={12} md={6} lg={4} xl={3}>
+              <div className={cupstyles.namewins}>
                 <h6>
                   {c.firstName} {c.lastName}
                 </h6>
@@ -123,8 +118,8 @@ const Leaderboard = ({ cupid, portfolios }: ContentProps) => {
                     <p>${c.total} USD</p>
                   )}
                 </div>
-              </Grid>
-            </Grid>
+              </div>
+            </div>
           ))}
         </div>
       )}
