@@ -86,7 +86,7 @@ const Cups = () => {
                       <div className={styles.cuptype}>{c.cupType}</div>
                       <p>
                         {moment(c.startDate).format("M/D/YYYY")}
-                        &nbsp;-&nbsp;
+                      &nbsp;-&nbsp;
                         {moment(c.endDate).format("M/D/YYYY")}
                       </p>
                     </div>
@@ -95,10 +95,10 @@ const Cups = () => {
                 <Grid item xs={3}>
                   <h6 className={styles.dashHeader}>STANDINGS</h6>
                   {Object.keys(c.userPortfolios).length > 0 && (
-                      <Leaderboard cupid={c.id} portfolios={c.userPortfolios} />
+                      <Leaderboard cupid={c.id} />
                   )}
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={2.5}>
                   <h6 className={styles.dashHeader}>TRADE</h6>
                   {user.uid && (
                     <CupWallet cupid={c.id} portfolios={c.userPortfolios}/>

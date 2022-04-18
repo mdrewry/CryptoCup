@@ -123,7 +123,7 @@ const CupDetails: NextPage = () => {
                 </div>
                 <h5>Standings:</h5>
                 {Object.keys(userPortfolios).length > 0 && (
-                  <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                  <Leaderboard cupid={cupid}/>
                 )}
               </div>
             ) : (
@@ -137,7 +137,7 @@ const CupDetails: NextPage = () => {
                 <Grid item xs={9}>
                   <h5 className={styles.cupwallet}>Standings:</h5>
                   {Object.keys(userPortfolios).length > 0 && (
-                    <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                    <Leaderboard cupid={cupid}/>
                   )}
                 </Grid>
               </Grid>
