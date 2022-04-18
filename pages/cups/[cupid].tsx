@@ -15,9 +15,8 @@ import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
 import Leaderboard from "../../Components/Leaderboards";
 import CupWallet from "../../Components/CupWallet";
 import Grid from "@mui/material/Grid";
-import Divider from '@mui/material/Divider';
+import Divider from "@mui/material/Divider";
 import { CryptoContext } from "../../context/CryptoProvider";
-
 
 const CupDetails: NextPage = () => {
   const useStyles = makeStyles((theme) => ({
@@ -31,10 +30,10 @@ const CupDetails: NextPage = () => {
   }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const classes = useStyles();
-  
+
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
-  const [cupid] = useState(router.asPath.substring(1).split("/")[1]);
+  const [cupid, setCupid] = useState(router.asPath.substring(1).split("/")[1]);
   const [imageURL, setImageURL] = useState("");
   const [name, setName] = useState("");
   const [cupType, setCupType] = useState("");
@@ -56,6 +55,9 @@ const CupDetails: NextPage = () => {
   const cryptos = useContext(CryptoContext);
 
   useEffect(() => {
+    const cupid = router.asPath.substring(1).split("/")[1];
+    if (cupid === "[cupid]") return;
+    setCupid(cupid);
     const cupDocRef = doc(db, "cups", cupid);
     onSnapshot(cupDocRef, async (snapshot) => {
       if (snapshot.exists()) {
@@ -71,7 +73,7 @@ const CupDetails: NextPage = () => {
         setEthAddress(data.ethAddress);
         setUserPortfolios(data.userPortfolios);
         setTotalBudget(data.totalBudget);
-        
+
         if (user.uid in data.userPortfolios) {
           setJoinedUser(true);
           let total = 0;
@@ -88,8 +90,7 @@ const CupDetails: NextPage = () => {
         setLoading(false);
       }
     });
-    setLoading(false);
-  }, []);
+  }, [router.asPath.substring(1).split("/")[1]]);
 
   return (
     <div>
@@ -157,7 +158,7 @@ const CupDetails: NextPage = () => {
                 <Grid item xs={3}>
                   <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
                   <CupWallet cupid={cupid} portfolios={userPortfolios} />
-                  <Divider className={classes.line}/>
+                  <Divider className={classes.line} />
                   <div className={styles.total}>
                     <h6>Total: ${earnings} USD</h6>
                     <h4 className={styles.ogbudget}>
