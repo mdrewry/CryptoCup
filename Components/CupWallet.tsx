@@ -34,7 +34,7 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
 
     let scores: Array<any> = [];
     Object.entries(cryptos).map((x: any) => {
-        let z_score = (cryptos[x[0]].day - avg) / std_dev;
+        let z_score = ((cryptos[x[0]].day - avg) / std_dev).toFixed(2);
         let c_id = cryptos[x[0]].ticker;
         let rank = -1;
         scores.push({ c_id, z_score, rank });
@@ -90,7 +90,7 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
               </h6>
             </div>
             <h4 className={styles.conversion}>
-              ${(portfolios[user.uid][key] * cryptos[key].price).toFixed(2)} ({zScores[index]?.z_score.toFixed(2)})
+              ${(portfolios[user.uid][key] * cryptos[key].price).toFixed(2)} ({zScores[index]?.z_score})
             </h4>
           </div>
         ))}
