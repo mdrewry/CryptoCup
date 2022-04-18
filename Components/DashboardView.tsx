@@ -23,7 +23,7 @@ const Cups = () => {
   const {
     query: { id },
   } = router;
-  
+
   const user = useContext(UserContext);
   const [cups, setCups] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -34,7 +34,7 @@ const Cups = () => {
       collection(db, "cupsInUser"),
       where("userID", "==", userDocRef)
     );
-    
+
     const unsubscribeSnapshot = onSnapshot(cupsInUserRef, async (snapshot) => {
       let results: Array<any> = [];
       const userCups: Array<any> = snapshot.docs[0]?.data().cups;
@@ -45,7 +45,10 @@ const Cups = () => {
             const data: any = doc.data();
             const startDate = data.startDate.toDate();
             const endDate = data.endDate.toDate();
-            if (data.currentState === "created" || data.currentState === "active")
+            if (
+              data.currentState === "created" ||
+              data.currentState === "active"
+            )
               results.push({
                 ...data,
                 startDate,
@@ -71,40 +74,36 @@ const Cups = () => {
         <CircularProgress />
       ) : (
         <div>
-          {cups
-            .map((c, index) => (
-              <Grid container spacing={3} className={styles.dashPadding}>
-                <Grid key={index} item xs={3}>
-                  <Button onClick={(e) => handleRedirect(c.id)}>
-                    <div style={{ textAlign: "left", textTransform: "none" }}>
-                      <img
-                        className={styles.placeholder}
-                        src={c.imageURL}
-                      ></img>
-                      <h5 className={styles.name}>{c.name}</h5>
-                      <div className={styles.cuptype}>{c.cupType}</div>
-                      <p>
-                        {moment(c.startDate).format("M/D/YYYY")}
+          {cups.map((c, index) => (
+            <Grid container spacing={3} className={styles.dashPadding}>
+              <Grid key={index} item xs={12} md={12} lg={3}>
+                <Button onClick={(e) => handleRedirect(c.id)}>
+                  <div style={{ textAlign: "left", textTransform: "none" }}>
+                    <img className={styles.placeholder} src={c.imageURL}></img>
+                    <h5 className={styles.name}>{c.name}</h5>
+                    <div className={styles.cuptype}>{c.cupType}</div>
+                    <p>
+                      {moment(c.startDate).format("M/D/YYYY")}
                       &nbsp;-&nbsp;
-                        {moment(c.endDate).format("M/D/YYYY")}
-                      </p>
-                    </div>
-                  </Button>
-                </Grid>
-                <Grid item xs={3}>
-                  <h6 className={styles.dashHeader}>STANDINGS</h6>
-                  {Object.keys(c.userPortfolios).length > 0 && (
-                      <Leaderboard cupid={c.id} />
-                  )}
-                </Grid>
-                <Grid item xs={3}>
-                  <h6 className={styles.dashHeader}>TRADE</h6>
-                  {user.uid && (
-                    <CupWallet cupid={c.id} portfolios={c.userPortfolios}/>
-                  )}
-                </Grid>
+                      {moment(c.endDate).format("M/D/YYYY")}
+                    </p>
+                  </div>
+                </Button>
               </Grid>
-           ))}
+              <Grid item xs={12} md={12} lg={3}>
+                <h6 className={styles.dashHeader}>STANDINGS</h6>
+                {Object.keys(c.userPortfolios).length > 0 && (
+                  <Leaderboard cupid={c.id} />
+                )}
+              </Grid>
+              <Grid item xs={12} md={12} lg={3}>
+                <h6 className={styles.dashHeader}>TRADE</h6>
+                {user.uid && (
+                  <CupWallet cupid={c.id} portfolios={c.userPortfolios} />
+                )}
+              </Grid>
+            </Grid>
+          ))}
         </div>
       )}
     </div>
