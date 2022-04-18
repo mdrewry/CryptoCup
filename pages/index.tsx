@@ -12,8 +12,13 @@ import LocalAtmRoundedIcon from "@mui/icons-material/LocalAtmRounded";
 import FaqDiamond from "../Icons/FaqDiamond.js";
 import Grid from '@mui/material/Grid';
 import Button from "@mui/material/Button";
+import Router from "next/router";
 
 const Home: NextPage = () => {
+  async function login() {
+    Router.push("/login");
+  }
+  
   return (
     <div className={styles.container}>
       <Head>
@@ -42,7 +47,7 @@ const Home: NextPage = () => {
             </Button>
           </Grid>
           <Grid item xs>
-            <LaunchButton variant="contained">LAUNCH</LaunchButton>
+            <LaunchButton variant="contained" onClick={login}>LAUNCH</LaunchButton>
           </Grid>
         </div>
       </Grid>

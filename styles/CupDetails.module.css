@@ -63,6 +63,11 @@
     margin-bottom: 22px;
 }
 
+.scroll{
+    max-height: 300px;
+    overflow: auto;
+}
+
 .walleticon{
     display: flex;
     align-items: center;

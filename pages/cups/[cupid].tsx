@@ -7,30 +7,26 @@ import { UserContext } from "../../context/UserProvider";
 import JoinCupDialog from "../../Components/JoinCupDialog";
 import EndRegistrationDialog from "../../Components/EndRegistrationDialog";
 import DistributePrizesDialog from "../../Components/DistributePrizesDialog";
-import TradeCryptoDialog from "../../Components/TradeCryptoDialog";
 import moment from "moment";
 import { db } from "../../config/firebase.config";
 import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
 import Leaderboard from "../../Components/Leaderboards";
 import CupWallet from "../../Components/CupWallet";
 import Grid from "@mui/material/Grid";
-import WalletLine from "../../Icons/WalletLine.js";
 import { CryptoContext } from "../../context/CryptoProvider";
 
 
-const CupDetails: NextPage = () => {
+const CupDetails: NextPage = () => {  
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
-  const [cupid] = useState(router.asPath.substring(1).split("/")[1]);
+  const [cupid, setCupid] = useState(router.asPath.substring(1).split("/")[1]);
   const [imageURL, setImageURL] = useState("");
   const [name, setName] = useState("");
-  const [cupType, setCupType] = useState("");
   const [director, setDirector] = useState("");
   const [directorID, setDirectorID] = useState("");
   const [cupState, setCupState] = useState("");
+  const [cupType, setCupType] = useState("");
   const [buyIn, setBuyIn] = useState(0);
-  const [totalBudget, setTotalBudget] = useState(0);
-  const [earnings, setEarnings] = useState(0);
   const [startDate, setStartDate] = useState(Timestamp.now());
   const [endDate, setEndDate] = useState(Timestamp.now());
   const [joinedUser, setJoinedUser] = useState(false);
@@ -40,33 +36,27 @@ const CupDetails: NextPage = () => {
     query: { id },
   } = router;
   const user = useContext(UserContext);
-  const cryptos = useContext(CryptoContext);
 
   useEffect(() => {
+    const cupid = router.asPath.substring(1).split("/")[1];
+    if (cupid === "[cupid]") return;
+    setCupid(cupid);
     const cupDocRef = doc(db, "cups", cupid);
     onSnapshot(cupDocRef, async (snapshot) => {
       if (snapshot.exists()) {
         const data: any = snapshot.data();
         setImageURL(data.imageURL);
         setName(data.name);
-        setCupType(data.cupType);
         setDirectorID(data.director);
         setCupState(data.currentState);
+        setCupType(data.cupType);
         setBuyIn(data.buyIn);
         setStartDate(data.startDate);
         setEndDate(data.endDate);
         setEthAddress(data.ethAddress);
-        setUserPortfolios(data.userPortfolios);
-        setTotalBudget(data.totalBudget);
-        
+        setUserPortfolios(data.userPortfolios);        
         if (user.uid in data.userPortfolios) {
           setJoinedUser(true);
-          let total = 0;
-          Object.entries(data.userPortfolios[user.uid]).map((x: any) => {
-            total = total + cryptos[x[0]].price * x[1];
-          });
-          total = parseFloat(total.toFixed(2));
-          setEarnings(total);
         }
         const userDocRef = doc(db, "users", data.director);
         const userDocSnap = await getDoc(userDocRef);
@@ -75,8 +65,7 @@ const CupDetails: NextPage = () => {
         setLoading(false);
       }
     });
-    setLoading(false);
-  }, []);
+  }, [router.asPath.substring(1).split("/")[1]]);
 
   return (
     <div>
@@ -136,36 +125,21 @@ const CupDetails: NextPage = () => {
                 </div>
                 <h5>Standings:</h5>
                 {Object.keys(userPortfolios).length > 0 && (
-                  <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                  <Leaderboard cupid={cupid}/>
                 )}
               </div>
             ) : (
               <Grid container spacing={5}>
                 <Grid item xs={3}>
                   <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
-                  <CupWallet cupid={cupid} portfolios={userPortfolios} />
-                  <WalletLine />
-                  <div className={styles.total}>
-                    <h6>Total: ${earnings} USD</h6>
-                    <h4 className={styles.ogbudget}>
-                      (Original budget: ${totalBudget} USD)
-                    </h4>
-                  </div>
-                  {cupState === "active" && (
-                    <div className={styles.center}>
-                      <TradeCryptoDialog
-                        cup={{
-                          id: cupid,
-                          userPortfolio: userPortfolios[user.uid],
-                        }}
-                      />
-                    </div>
+                  {user.uid && (
+                    <CupWallet cupid={cupid} portfolios={userPortfolios}/>
                   )}
                 </Grid>
                 <Grid item xs={9}>
                   <h5 className={styles.cupwallet}>Standings:</h5>
                   {Object.keys(userPortfolios).length > 0 && (
-                    <Leaderboard cupid={cupid} portfolios={userPortfolios} />
+                    <Leaderboard cupid={cupid}/>
                   )}
                 </Grid>
               </Grid>
