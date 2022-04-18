@@ -22,13 +22,11 @@ const CupDetails: NextPage = () => {
   const [cupid] = useState(router.asPath.substring(1).split("/")[1]);
   const [imageURL, setImageURL] = useState("");
   const [name, setName] = useState("");
-  const [cupType, setCupType] = useState("");
   const [director, setDirector] = useState("");
   const [directorID, setDirectorID] = useState("");
   const [cupState, setCupState] = useState("");
+  const [cupType, setCupType] = useState("");
   const [buyIn, setBuyIn] = useState(0);
-  const [totalBudget, setTotalBudget] = useState(0);
-  const [earnings, setEarnings] = useState(0);
   const [startDate, setStartDate] = useState(Timestamp.now());
   const [endDate, setEndDate] = useState(Timestamp.now());
   const [joinedUser, setJoinedUser] = useState(false);
@@ -38,7 +36,6 @@ const CupDetails: NextPage = () => {
     query: { id },
   } = router;
   const user = useContext(UserContext);
-  const cryptos = useContext(CryptoContext);
 
   useEffect(() => {
     const cupDocRef = doc(db, "cups", cupid);
@@ -47,24 +44,16 @@ const CupDetails: NextPage = () => {
         const data: any = snapshot.data();
         setImageURL(data.imageURL);
         setName(data.name);
-        setCupType(data.cupType);
         setDirectorID(data.director);
         setCupState(data.currentState);
+        setCupType(data.cupType);
         setBuyIn(data.buyIn);
         setStartDate(data.startDate);
         setEndDate(data.endDate);
         setEthAddress(data.ethAddress);
-        setUserPortfolios(data.userPortfolios);
-        setTotalBudget(data.totalBudget);
-        
+        setUserPortfolios(data.userPortfolios);        
         if (user.uid in data.userPortfolios) {
           setJoinedUser(true);
-          let total = 0;
-          Object.entries(data.userPortfolios[user.uid]).map((x: any) => {
-            total = total + cryptos[x[0]].price * x[1];
-          });
-          total = parseFloat(total.toFixed(2));
-          setEarnings(total);
         }
         const userDocRef = doc(db, "users", data.director);
         const userDocSnap = await getDoc(userDocRef);
@@ -142,25 +131,8 @@ const CupDetails: NextPage = () => {
                 <Grid item xs={3}>
                   <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
                   {user.uid && (
-                    <CupWallet cupid={cupid} portfolios={userPortfolios} earnings={earnings} totalBudget={totalBudget} cupState={cupState}/>
+                    <CupWallet cupid={cupid} portfolios={userPortfolios}/>
                   )}
-                  {/* <Divider className={classes.line}/>
-                  <div className={styles.total}>
-                    <h6>Total: ${earnings} USD</h6>
-                    <h4 className={styles.ogbudget}>
-                      (Original budget: ${totalBudget} USD)
-                    </h4>
-                  </div>
-                  {cupState === "active" && (
-                    <div className={styles.center}>
-                      <TradeCryptoDialog
-                        cup={{
-                          id: cupid,
-                          userPortfolio: userPortfolios[user.uid],
-                        }}
-                      />
-                    </div>
-                  )} */}
                 </Grid>
                 <Grid item xs={9}>
                   <h5 className={styles.cupwallet}>Standings:</h5>

@@ -26,7 +26,6 @@ const Cups = () => {
   } = router;
 
   const user = useContext(UserContext);
-  const cryptos = useContext(CryptoContext);
   const [cups, setCups] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -47,15 +46,6 @@ const Cups = () => {
             const data: any = doc.data();
             const startDate = data.startDate.toDate();
             const endDate = data.endDate.toDate();
-            let total = 0;
-            if (user.uid in data.userPortfolios) {
-              // let total = 0;
-              Object.entries(data.userPortfolios[user.uid]).map((x: any) => {
-                total = total + cryptos[x[0]].price * x[1];
-              });
-              total = parseFloat(total.toFixed(2));
-              // setEarnings(total);
-            }
             if (data.currentState === "created" || data.currentState === "active")
               results.push({
                 ...data,
@@ -63,7 +53,6 @@ const Cups = () => {
                 endDate,
                 id: doc.id,
                 ref: doc.ref,
-                earnings: total, //incorrect way of updating cupwallet
               });
             return 0;
           })
@@ -112,7 +101,7 @@ const Cups = () => {
                 <Grid item xs={3}>
                   <h6 className={styles.dashHeader}>TRADE</h6>
                   {user.uid && (
-                    <CupWallet cupid={c.id} portfolios={c.userPortfolios} earnings={c.earnings} totalBudget={c.totalBudget} cupState={c.currentState}/>
+                    <CupWallet cupid={c.id} portfolios={c.userPortfolios}/>
                   )}
                 </Grid>
               </Grid>

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { UserContext } from "../context/UserProvider";
 import { useRouter } from "next/router";
 import styles from "../styles/CupDetails.module.css";
@@ -8,15 +8,14 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { CryptoContext } from "../context/CryptoProvider";
 import Divider from '@mui/material/Divider';
+import { getDoc, Timestamp, doc, onSnapshot } from "firebase/firestore";
+import { db } from "../config/firebase.config";
 import TradeCryptoDialog from "./TradeCryptoDialog";
 type ContentProps = {
   cupid: string;
   portfolios: any;
-  earnings: Number;
-  totalBudget: Number;
-  cupState: string;
 };
-const CupWallet = ({ cupid, portfolios, earnings, totalBudget, cupState }: ContentProps) => {
+const CupWallet = ({ cupid, portfolios }: ContentProps) => {
   const useStyles = makeStyles((theme) => ({
     line: {
       "& ": {
@@ -32,11 +31,35 @@ const CupWallet = ({ cupid, portfolios, earnings, totalBudget, cupState }: Conte
   const user = useContext(UserContext);
   const cryptos = useContext(CryptoContext);
   const [loading, setLoading] = useState<boolean>(true);
+  const [earnings, setEarnings] = useState(0);
+  const [totalBudget, setTotalBudget] = useState(0);
+  const [cupState, setCupState] = useState("");
   
   const router = useRouter();
   const {
     query: { id },
   } = router;
+
+  useEffect(() => {
+    const cupDocRef = doc(db, "cups", cupid);
+    onSnapshot(cupDocRef, async (snapshot) => {
+      if (snapshot.exists()) {
+        const data: any = snapshot.data();
+        setCupState(data.currentState);
+        setTotalBudget(data.totalBudget);
+        setEarnings(data.totalBudget);
+        if (user.uid in data.userPortfolios) {
+          let total = 0;
+          Object.entries(data.userPortfolios[user.uid]).map((x: any) => {
+            total = total + cryptos[x[0]].price * x[1];
+          });
+          total = parseFloat(total.toFixed(2));
+          setEarnings(total);
+        }
+      }
+    });
+  }, []);
+
   const handleUpdate = async () => {
     try {
       const response = await fetch("/api/cryptoinfo", {
