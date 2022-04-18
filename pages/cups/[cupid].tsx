@@ -19,7 +19,7 @@ import { CryptoContext } from "../../context/CryptoProvider";
 const CupDetails: NextPage = () => {  
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
-  const [cupid] = useState(router.asPath.substring(1).split("/")[1]);
+  const [cupid, setCupid] = useState(router.asPath.substring(1).split("/")[1]);
   const [imageURL, setImageURL] = useState("");
   const [name, setName] = useState("");
   const [director, setDirector] = useState("");
@@ -38,6 +38,9 @@ const CupDetails: NextPage = () => {
   const user = useContext(UserContext);
 
   useEffect(() => {
+    const cupid = router.asPath.substring(1).split("/")[1];
+    if (cupid === "[cupid]") return;
+    setCupid(cupid);
     const cupDocRef = doc(db, "cups", cupid);
     onSnapshot(cupDocRef, async (snapshot) => {
       if (snapshot.exists()) {
@@ -62,8 +65,7 @@ const CupDetails: NextPage = () => {
         setLoading(false);
       }
     });
-    setLoading(false);
-  }, []);
+  }, [router.asPath.substring(1).split("/")[1]]);
 
   return (
     <div>
