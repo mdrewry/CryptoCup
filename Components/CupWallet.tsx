@@ -27,18 +27,18 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
   }));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const classes = useStyles();
-  
+  const router = useRouter();
   const user = useContext(UserContext);
   const cryptos = useContext(CryptoContext);
   const [loading, setLoading] = useState<boolean>(true);
   const [earnings, setEarnings] = useState(0);
   const [totalBudget, setTotalBudget] = useState(0);
   const [cupState, setCupState] = useState("");
-  
-  const router = useRouter();
+  const [dashboard] = useState(router.asPath === "/dashboard");
   const {
     query: { id },
   } = router;
+  console.log(dashboard);
 
   useEffect(() => {
     const cupDocRef = doc(db, "cups", cupid);
@@ -77,22 +77,24 @@ const CupWallet = ({ cupid, portfolios }: ContentProps) => {
   };
   return (
     <div>
-      {Object.keys(portfolios[user.uid]).sort().map((key) => (
-        <div key={key}>
-          <div className={styles.walleticon}>
-            <Icon
-              icon={key !== "SHIB" ?`cryptocurrency:${ key.toLowerCase()}`: "cryptocurrency:sand"}
-              color="#40bd67"
-              width="28"
-              height="28"
-            />
-            <h6 className={styles.walletmoney}>
-              {key} {(portfolios[user.uid][key]).toFixed(3)} 
-            </h6>
+      <div className={`${dashboard ? styles.scroll : ""}`}>
+        {Object.keys(portfolios[user.uid]).sort().map((key) => (
+          <div key={key}>
+            <div className={styles.walleticon}>
+              <Icon
+                icon={key !== "SHIB" ?`cryptocurrency:${ key.toLowerCase()}`: "cryptocurrency:sand"}
+                color="#40bd67"
+                width="28"
+                height="28"
+              />
+              <h6 className={styles.walletmoney}>
+                {key} {(portfolios[user.uid][key]).toFixed(3)} 
+              </h6>
+            </div>
+            <h4 className={styles.conversion}>${(portfolios[user.uid][key] * cryptos[key].price).toFixed(2)}</h4> 
           </div>
-          <h4 className={styles.conversion}>${(portfolios[user.uid][key] * cryptos[key].price).toFixed(2)}</h4> 
-        </div>
-      ))}
+        ))}
+      </div>
       <Button
         style={{
           background: "#2F3869",

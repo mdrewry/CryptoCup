@@ -93,7 +93,7 @@ const Leaderboard = ({ cupid }: ContentProps) => {
   } = router;
 
   return (
-    <div className={cupstyles.leaderboardPadding}>
+    <div className={cupstyles.leaderPadding}>
       {loading ? (
         <p>loading</p>
       ) : (
@@ -102,7 +102,7 @@ const Leaderboard = ({ cupid }: ContentProps) => {
             <div className={cupstyles.leaderContainer}>
               <h5 className={cupstyles.rankNum}>{index + 1}</h5>
                 <img
-                  className={cupstyles.leaderboardProfile}
+                  className={cupstyles.leaderProfile}
                   src={c.imageURL}
                 />
               <div className={cupstyles.namewins}>

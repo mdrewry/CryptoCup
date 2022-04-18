@@ -14,7 +14,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import moment from "moment";
 import { UserContext } from "../context/UserProvider";
-import { CryptoContext } from "../context/CryptoProvider";
 import Button from "@mui/material/Button";
 import Leaderboard from "./Leaderboards";
 import CupWallet from "./CupWallet";
@@ -24,7 +23,7 @@ const Cups = () => {
   const {
     query: { id },
   } = router;
-
+  
   const user = useContext(UserContext);
   const [cups, setCups] = useState<Array<any>>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -74,7 +73,7 @@ const Cups = () => {
         <div>
           {cups
             .map((c, index) => (
-              <Grid container spacing={3} className={styles.dashIncline}>
+              <Grid container spacing={3} className={styles.dashPadding}>
                 <Grid key={index} item xs={3}>
                   <Button onClick={(e) => handleRedirect(c.id)}>
                     <div style={{ textAlign: "left", textTransform: "none" }}>
@@ -98,14 +97,14 @@ const Cups = () => {
                       <Leaderboard cupid={c.id} />
                   )}
                 </Grid>
-                <Grid item xs={2.5}>
+                <Grid item xs={3}>
                   <h6 className={styles.dashHeader}>TRADE</h6>
                   {user.uid && (
                     <CupWallet cupid={c.id} portfolios={c.userPortfolios}/>
                   )}
                 </Grid>
               </Grid>
-            ))}
+           ))}
         </div>
       )}
     </div>

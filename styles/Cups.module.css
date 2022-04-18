@@ -4,9 +4,8 @@
     min-height: 100vh;
 }
 
-.leaderboardPadding{
+.leaderPadding{
     margin-top: 32px;
-    min-height: 100vh;
 }
 
 .cuptype{
@@ -63,7 +62,7 @@
     margin-right: 15px;
 }
 
-.leaderboardProfile{
+.leaderProfile{
     display: inline-grid;
     width: 79px;
     height: 79px;
@@ -84,8 +83,9 @@
     content: counter(rank);
 }
 
-.dashIncline{
+.dashPadding{
     display: flex;
+    padding-bottom: 100px;
 }
 
 .dashHeader {
