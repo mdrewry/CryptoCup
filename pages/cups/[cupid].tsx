@@ -14,6 +14,7 @@ import Leaderboard from "../../Components/Leaderboards";
 import CupWallet from "../../Components/CupWallet";
 import Grid from "@mui/material/Grid";
 import { CryptoContext } from "../../context/CryptoProvider";
+import { CircularProgress } from "material-ui";
 
 const CupDetails: NextPage = () => {
   const router = useRouter();
@@ -79,7 +80,9 @@ const CupDetails: NextPage = () => {
       <img className={styles.bannerImage} src={bannerImageURL}></img>
       <div className={styles.container}>
         {loading ? (
-          <p>loading</p>
+          <div className={styles.name}>
+            <CircularProgress />
+          </div>
         ) : (
           <div>
             {user.uid === directorID && cupState === "created" && (

@@ -12,7 +12,7 @@ import { db } from "../config/firebase.config";
 import { useState, useEffect } from "react";
 import FadeDisplay from "../Components/FadeDisplay";
 
-import { Grid } from "@mui/material";
+import { CircularProgress, Grid } from "@mui/material";
 
 const News: NextPage = () => {
   const router = useRouter();
@@ -54,7 +54,9 @@ const News: NextPage = () => {
         <p></p>
         <h5 className={styles.newsTitle}>Trending</h5>
         {loading ? (
-          <p>loading</p>
+          <div className={styles.newsTitle}>
+            <CircularProgress />
+          </div>
         ) : (
           <div>
             <a href={trending.get("source")}>
@@ -83,7 +85,9 @@ const News: NextPage = () => {
         )}
         <h1 className={styles.title}>Read More</h1>
         {loading ? (
-          <div></div>
+          <div className={styles.newsTitle}>
+            <CircularProgress />
+          </div>
         ) : (
           <Grid container xs={12}>
             {newsDocs.map((article) => (

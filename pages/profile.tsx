@@ -33,7 +33,7 @@ import {
 } from "firebase/storage";
 
 import moment from "moment";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { Checkbox, CircularProgress, FormControlLabel } from "@mui/material";
 
 const Profile: NextPage = () => {
   const user = useContext(UserContext);
@@ -327,7 +327,9 @@ const Profile: NextPage = () => {
             <h2 className={styles.info}>Cup History</h2>
             <h6 className={styles.info}>
               {loading ? (
-                <p>loading</p>
+                <div className={styles.info}>
+                  <CircularProgress />
+                </div>
               ) : (
                 <Grid container>
                   {cups.map((c, i) => (
