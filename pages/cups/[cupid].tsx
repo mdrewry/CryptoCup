@@ -14,7 +14,7 @@ import Leaderboard from "../../Components/Leaderboards";
 import CupWallet from "../../Components/CupWallet";
 import Grid from "@mui/material/Grid";
 import { CryptoContext } from "../../context/CryptoProvider";
-import { CircularProgress } from "material-ui";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const CupDetails: NextPage = () => {
   const router = useRouter();
