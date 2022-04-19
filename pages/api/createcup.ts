@@ -19,10 +19,26 @@ export default async function handler(
   } = req.body;
   try {
     const images = [
-      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FbtcProfilePhoto.png?alt=media&token=bce0bd8f-9e4f-432b-8744-cfeb797417df",
-      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FethProfilePhoto.png?alt=media&token=f32de942-3e76-4c26-9aa9-dc5b3cef7de1",
-      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FrocketProfilePhoto.png?alt=media&token=67fd1033-8a16-42dd-b75e-99811ff932b7",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupImg1.png?alt=media&token=479da394-c5bb-4df4-b658-2ac6f3b8f7e1",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupImg2.png?alt=media&token=586f5e2e-6e83-428d-961e-8529dbc0c5af",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupImg3.png?alt=media&token=bcf41fd8-52ce-4ffd-929a-8e24f6c92d24",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupImg4.png?alt=media&token=7c409b48-7e1e-477b-a160-b2ee42615d45",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupImg5.png?alt=media&token=8de28192-bad8-47b8-8ea5-36ba77997f41",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupImg6.png?alt=media&token=81acd831-efea-4c63-856c-03500b6cdd6e",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupImg7.png?alt=media&token=a1bf0255-5fdb-40e9-b0ec-2aff003878e0",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupImg8.png?alt=media&token=c2f8b75c-ab69-4d2f-b205-9528658250af",
     ];
+    const bannerImages = [
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupHeaderImg1.png?alt=media&token=977be6c2-2e08-415e-b63d-50cebd604d92",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupHeaderImg2.png?alt=media&token=3a906086-7d86-4b60-95e3-bc2bec953f4b",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupHeaderImg3.png?alt=media&token=a5f6f677-c935-44c0-ab29-b18c6cc2bdbc",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupHeaderImg4.png?alt=media&token=e6a6ac1f-0a13-4ec1-a14b-089da07c7c1e",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupHeaderImg5.png?alt=media&token=8b4781df-d127-42bb-8970-245c175c1d1b",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupHeaderImg6.png?alt=media&token=ce73f03d-268b-4ad1-87a8-1289d2afbdc1",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupHeaderImg7.png?alt=media&token=df2285e4-c7b8-4642-888a-ee4dfd577a87",
+      "https://firebasestorage.googleapis.com/v0/b/cryptocup-uf.appspot.com/o/images%2FcupPhotos%2FcupHeaderImg8.png?alt=media&token=495ff55f-e091-47ae-b11e-9b25d0d3b904",
+    ];
+    const imgSelected = Math.floor(Math.random() * images.length);
     await addDoc(collection(db, "cups"), {
       buyIn: parseFloat(buyIn),
       cryptosAvailable: [
@@ -46,7 +62,8 @@ export default async function handler(
       ethAddress: ethAddress,
       userPortfolios: {},
       totalBudget: parseInt(inGameBudget),
-      imageURL: images[Math.floor(Math.random() * 3)],
+      imageURL: images[imgSelected],
+      bannerImageURL: bannerImages[imgSelected],
     }).then(async (ref) => {
       await addDoc(collection(db, "usersInCup"), { users: [], cupID: ref });
     });

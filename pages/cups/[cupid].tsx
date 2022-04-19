@@ -15,12 +15,12 @@ import CupWallet from "../../Components/CupWallet";
 import Grid from "@mui/material/Grid";
 import { CryptoContext } from "../../context/CryptoProvider";
 
-
-const CupDetails: NextPage = () => {  
+const CupDetails: NextPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
   const [cupid, setCupid] = useState(router.asPath.substring(1).split("/")[1]);
   const [imageURL, setImageURL] = useState("");
+  const [bannerImageURL, setBannerImageURL] = useState("");
   const [name, setName] = useState("");
   const [director, setDirector] = useState("");
   const [directorID, setDirectorID] = useState("");
@@ -46,6 +46,7 @@ const CupDetails: NextPage = () => {
       if (snapshot.exists()) {
         const data: any = snapshot.data();
         setImageURL(data.imageURL);
+        setBannerImageURL(data?.bannerImageURL);
         setName(data.name);
         setDirectorID(data.director);
         setCupState(data.currentState);
@@ -54,7 +55,7 @@ const CupDetails: NextPage = () => {
         setStartDate(data.startDate);
         setEndDate(data.endDate);
         setEthAddress(data.ethAddress);
-        setUserPortfolios(data.userPortfolios);        
+        setUserPortfolios(data.userPortfolios);
         if (user.uid in data.userPortfolios) {
           setJoinedUser(true);
         }
@@ -75,7 +76,7 @@ const CupDetails: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <img className={styles.placeholder} src={imageURL}></img>
+      <img className={styles.bannerImage} src={bannerImageURL}></img>
       <div className={styles.container}>
         {loading ? (
           <p>loading</p>
@@ -125,7 +126,7 @@ const CupDetails: NextPage = () => {
                 </div>
                 <h5>Standings:</h5>
                 {Object.keys(userPortfolios).length > 0 && (
-                  <Leaderboard cupid={cupid}/>
+                  <Leaderboard cupid={cupid} />
                 )}
               </div>
             ) : (
@@ -133,13 +134,13 @@ const CupDetails: NextPage = () => {
                 <Grid item xs={3}>
                   <h5 className={styles.cupwallet}>Your Cup Wallet:</h5>
                   {user.uid && (
-                    <CupWallet cupid={cupid} portfolios={userPortfolios}/>
+                    <CupWallet cupid={cupid} portfolios={userPortfolios} />
                   )}
                 </Grid>
                 <Grid item xs={9}>
                   <h5 className={styles.cupwallet}>Standings:</h5>
                   {Object.keys(userPortfolios).length > 0 && (
-                    <Leaderboard cupid={cupid}/>
+                    <Leaderboard cupid={cupid} />
                   )}
                 </Grid>
               </Grid>

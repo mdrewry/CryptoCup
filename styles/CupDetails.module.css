@@ -1,96 +1,105 @@
 .placeholder {
-    display: inline-block;
-    width: 100%;
-    height: 263px;
-    border: 2px solid;
-    border-color: #ffffff;
-    border-radius: 15px;
-    border-style: 'solid';
+  display: inline-block;
+  width: 100%;
+  height: 263px;
+  border: 2px solid;
+  border-color: #ffffff;
+  border-radius: 15px;
+  border-style: "solid";
+}
+.bannerImage {
+  display: inline-block;
+  width: 100%;
+  height: 263px;
+  border: solid;
+  border-width: 2px 2px 2px 0px;
+  border-color: #ffffff;
+  border-style: "solid";
 }
 
 .container {
-    margin-top: 27px;
-    margin-left: 30px;
-    min-height: 100vh;
-  }
-
-.title{
-    display: flex;
+  margin-top: 27px;
+  margin-left: 30px;
+  min-height: 100vh;
 }
 
-.name{
-    font-size: 35px;
-    margin-bottom: 18px;
+.title {
+  display: flex;
 }
 
-.cuptype{
-    color: #ffffff;
-    font-family: "Space Mono";
-    font-size: 16px;
-    text-transform: uppercase;
-    font-weight: 700;
-    line-height: 30px;
-    border-radius: 50px;
-    background: #DA93D3;
-    width: 101px;
-    height: 30px;
-    text-align: center;
+.name {
+  font-size: 35px;
+  margin-bottom: 18px;
 }
 
-.commis{
-    font-style: italic;
-    margin-top: 14px;
+.cuptype {
+  color: #ffffff;
+  font-family: "Space Mono";
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 30px;
+  border-radius: 50px;
+  background: #da93d3;
+  width: 101px;
+  height: 30px;
+  text-align: center;
 }
 
-.buyin{
-    margin-top: 12px;
+.commis {
+  font-style: italic;
+  margin-top: 14px;
 }
 
-.date{
-    margin-top: 12px;
+.buyin {
+  margin-top: 12px;
 }
 
-.center{
-    text-align: center;
+.date {
+  margin-top: 12px;
+}
+
+.center {
+  text-align: center;
 }
 
 .joinnow {
-    margin-top: 54px;
+  margin-top: 54px;
 }
 
 .cupwallet {
-    margin-top: 32px;
-    margin-bottom: 22px;
+  margin-top: 32px;
+  margin-bottom: 22px;
 }
 
-.scroll{
-    max-height: 300px;
-    overflow: auto;
+.scroll {
+  max-height: 300px;
+  overflow: auto;
 }
 
-.walleticon{
-    display: flex;
-    align-items: center;
-    margin-bottom: 4px;
+.walleticon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
 }
 
-.walletmoney{
-    margin-left: 27px;
+.walletmoney {
+  margin-left: 27px;
 }
 
-.conversion{
-    font-size: 14px;
-    line-height: 30px;
-    margin-left: 57px;
-    margin-bottom: 11px;
+.conversion {
+  font-size: 14px;
+  line-height: 30px;
+  margin-left: 57px;
+  margin-bottom: 11px;
 }
 
-.total{
-    text-align: right;
-    margin-top: 16px;
+.total {
+  text-align: right;
+  margin-top: 16px;
 }
 
-.ogbudget{
-    font-size: 14px;
-    line-height: 30px;
+.ogbudget {
+  font-size: 14px;
+  line-height: 30px;
 }
