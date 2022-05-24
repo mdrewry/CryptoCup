@@ -89,9 +89,9 @@ const News: NextPage = () => {
             <CircularProgress />
           </div>
         ) : (
-          <Grid container xs={12}>
-            {newsDocs.map((article) => (
-              <Grid item xs={4}>
+          <Grid container>
+            {newsDocs.map((article, key) => (
+              <Grid key={key} item xs={4}>
                 <div>
                   <a href={article.get("source")}>
                     <div className={styles.newsCard}>

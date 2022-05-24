@@ -66,7 +66,7 @@ const Profile: NextPage = () => {
   const [lname, setLname] = React.useState(user.lastName);
   const [email, setEmail] = React.useState(user.email);
   const [birthday, setBirthday] = React.useState(user.birthday);
-  const [coins, setCoins] = React.useState(user.newsPreferences);
+  const [coins, setCoins] = useState<any>(user.newsPreferences);
   const cupsRef = collection(db, "cups");
   const editForm = () => {
     setEditMode(true);
@@ -254,7 +254,7 @@ const Profile: NextPage = () => {
                 <h4>News Preferences</h4>
                 <p>Select all that apply.</p>
                 <div>
-                  {coins.map((tag:any, i) => (
+                  {coins.map((tag: any, i: any) => (
                     <div key={i}>
                       <FormControlLabel
                         label={tag.coin + "(" + tag.code + ")"}
@@ -264,7 +264,7 @@ const Profile: NextPage = () => {
                             checked={tag.check}
                             color="secondary"
                             onChange={(e) => {
-                              const temp = update(coins, {
+                              const temp: any = update(coins, {
                                 [i]: { check: { $set: !coins[i].check } },
                               });
                               setCoins(temp);
@@ -315,7 +315,7 @@ const Profile: NextPage = () => {
             <h4 className={styles.info}>News Preferences</h4>
             <h6 className={styles.subtitle}>
               {user.newsPreferences.map(
-                (tag:any) =>
+                (tag: any) =>
                   tag.check && (
                     <h6 className={styles.subtitle}>
                       * {tag.coin} ({tag.code})

@@ -99,12 +99,9 @@ const Leaderboard = ({ cupid }: ContentProps) => {
       ) : (
         <div>
           {leaderboard.map((c, index) => (
-            <div className={cupstyles.leaderContainer}>
+            <div key={index} className={cupstyles.leaderContainer}>
               <h5 className={cupstyles.rankNum}>{index + 1}</h5>
-                <img
-                  className={cupstyles.leaderProfile}
-                  src={c.imageURL}
-                />
+              <img className={cupstyles.leaderProfile} src={c.imageURL} />
               <div className={cupstyles.namewins}>
                 <h6>
                   {c.firstName} {c.lastName}
